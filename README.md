@@ -8,7 +8,7 @@ NOTE: This project is **EXPERIMENTAL**
 
 Basic usage examples for the SDK.
 
-## Get Acquia Network Subscription Data
+## Acquia Network
 
 ```php
 
@@ -27,7 +27,7 @@ echo $subscription->dashboardUrl();
 
 ```
 
-# Acquia Search
+## Acquia Search
 
 ```php
 
