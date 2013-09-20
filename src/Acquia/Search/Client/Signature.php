@@ -58,16 +58,16 @@ class Signature
 
     /**
      * @param string $indexId
-     * @param string $url
+     * @param string $string
      * @param int $requestTime
      * @param string &$nonce
      *
      * @return string
      */
-    public function generate($indexId, $url, $requestTime, &$nonce = null)
+    public function generate($indexId, $string, $requestTime, &$nonce = null)
     {
         $nonce = $this->noncer->generate();
         $derivedKey = $this->derivedKey->generate($indexId);
-        return hash_hmac('sha1', $requestTime . $nonce . $url, $derivedKey);
+        return hash_hmac('sha1', $requestTime . $nonce . $string, $derivedKey);
     }
 }

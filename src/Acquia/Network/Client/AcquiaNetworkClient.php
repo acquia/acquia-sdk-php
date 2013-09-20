@@ -104,6 +104,10 @@ class AcquiaNetworkClient extends Client
     {
         $signature = new Signature($this->acquiaId, $this->acquiaKey, $this->noncer);
 
+        $serverAddress = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
+        $httpHost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+        $https = isset($_SERVER['HTTPS']) ? 1 : 0;
+
         $body = '<?xml version="1.0"?>
           <methodCall>
             <methodName>acquia.agent.subscription</methodName>
@@ -121,9 +125,9 @@ class AcquiaNetworkClient extends Client
                         </struct>
                       </value>
                     </member>
-                    <member><name>ip</name><value><string>127.0.0.1</string></value></member>
-                    <member><name>host</name><value><string>apachesolrissues.dev</string></value></member>
-                    <member><name>ssl</name><value><boolean>0</boolean></value></member>
+                    <member><name>ip</name><value><string>' . $serverAddress . '</string></value></member>
+                    <member><name>host</name><value><string>' . $httpHost . '</string></value></member>
+                    <member><name>ssl</name><value><boolean>' . $https . '</boolean></value></member>
                     <member>
                       <name>body</name>
                       <value>
@@ -145,6 +149,7 @@ class AcquiaNetworkClient extends Client
         ;
 
         $xml = $this->post('xmlrpc.php', array(), $body)->send()->xml();
-        return Subscription::loadFromResponse($this->acquiaId, $this->acquiaKey, new Response($xml));
+        $xmlrpcResponse = new XmlrpcResponse($xml);
+        return Subscription::loadFromResponse($this->acquiaId, $this->acquiaKey, $xmlrpcResponse);
     }
 }

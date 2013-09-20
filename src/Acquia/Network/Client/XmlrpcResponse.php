@@ -3,7 +3,7 @@
 
 namespace Acquia\Network\Client;
 
-class Response extends \ArrayObject
+class XmlrpcResponse extends \ArrayObject
 {
     /**
      * @param \SimpleXMLElement $param
@@ -14,7 +14,7 @@ class Response extends \ArrayObject
     }
 
     /**
-     * @param array  $element
+     * @param array $element
      */
     public function parseXml($members)
     {
@@ -53,6 +53,9 @@ class Response extends \ArrayObject
 
             case 'boolean':
                 return (bool) $element;
+
+            case 'double':
+                return (double) $element;
 
             case 'int':
                 return (int) $element;

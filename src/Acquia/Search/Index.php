@@ -66,7 +66,7 @@ class Index
             'base_url' => $this->baseUrl,
             'index_id' => $this->indexId,
             'acquia_key' => $this->subscription->key(),
-            'salt' => $this->subscription->derivedKeySalt()
+            'salt' => $this->subscription['derived_key_salt'],
         ));
     }
 }

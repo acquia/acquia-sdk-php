@@ -120,16 +120,15 @@ class AcquiaSearchPlugin implements EventSubscriberInterface
     }
 
     /**
-     * Request before-send event handler
+     * Request before-send event handler.
      *
-     * @param Event $event Event received
-     *
-     *
+     * @param \Guzzle\Common\Event $event
      */
     public function onRequestBeforeSend(Event $event)
     {
-        // @todo No signature required for HEAD requests.
-        $this->signRequest($event['request']);
+        if ($event['request']->getMethod() != 'HEAD') {
+            $this->signRequest($event['request']);
+        }
     }
 
     /**
@@ -140,8 +139,14 @@ class AcquiaSearchPlugin implements EventSubscriberInterface
         $requestTime = $this->getRequestTime();
         $signature = new Signature($this->derivedKey, $this->noncer);
 
-        $url = $request->getPath() . '?' . $request->getQuery();
-        $hash = $signature->generate($this->indexId, $url, $requestTime);
+        $url = $request->getPath();
+        if ('POST' == $request->getMethod()) {
+            $body = (string) $request->getPostFields();
+            $hash = $signature->generate($this->indexId, $body, $requestTime);
+        } else {
+            $url .= '?' . $request->getQuery();
+            $hash = $signature->generate($this->indexId, $url, $requestTime);
+        }
 
         $request->addCookie('acquia_solr_time', $requestTime);
         $request->addCookie('acquia_solr_nonce', $signature->nonce());
