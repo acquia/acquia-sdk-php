@@ -31,6 +31,9 @@ echo $subscription->dashboardUrl();
 
 ```php
 
+// NOTE: The $subscription object should be cached to avoid too many Acquia
+// Network API calls.
+
 $searchService = new \Acquia\Search\Service($subscription);
 $acquiaSearch = $searchService->getClient();
 
