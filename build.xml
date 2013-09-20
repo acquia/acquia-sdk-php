@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="acquia-sdk-php" default="build">
 
-  <target name="build" depends="pdepend,composer"/>
+  <target name="build" depends="composer"/>
 
   <target name="clean" description="Cleanup build artifacts">
     <delete file="${basedir}/build/composer.phar"/>
