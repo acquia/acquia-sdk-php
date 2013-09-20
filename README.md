@@ -34,7 +34,7 @@ echo $subscription->dashboardUrl();
 $searchService = new \Acquia\Search\Service($subscription);
 $acquiaSearch = $searchService->getClient();
 
-// Do a quick search for keywords ...
+// Do a quick search by keyword ...
 $results = $acquiaSearch->select('my keywords');
 
 // ... or build the Solr parameters manually.

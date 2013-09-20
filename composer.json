@@ -1,7 +1,7 @@
 {
     "name": "cpliakas/acquia-sdk-php",
     "type": "library",
-    "description": "Acquia SDK for PHP.",
+    "description": "An experimental PHP SDK for Acquia.",
     "keywords": ["acquia"],
     "homepage": "https://github.com/cpliakas/acquia-sdk-php",
     "license": "GPL-3.0",
