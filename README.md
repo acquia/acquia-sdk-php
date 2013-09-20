@@ -52,7 +52,7 @@ $results = $acquiaSearch->get('/solr/XXXX-XXXXX/admin/ping?wt=json')->send()->js
 # Installation
 
 The Acquia SDK can be installed with [Composer](http://getcomposer.org) by
-adding this package as a dependency.
+adding this library as a dependency.
 
 ```json
 {
