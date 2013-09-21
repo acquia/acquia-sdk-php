@@ -12,9 +12,14 @@ class Service
     protected $subscription;
 
     /**
-     * @var \ArrayObject
+     * @var boolean
      */
-    protected $indexes;
+    protected $https = true;
+
+    /**
+     * @var \Acquia\Search\Indexes
+     */
+    private $indexes;
 
     /**
      * @param \Acquia\Network\Subscription $subscription
@@ -22,6 +27,17 @@ class Service
     public function __construct(Subscription $subscription)
     {
         $this->subscription = $subscription;
+    }
+
+    /**
+     * @param boolean $https
+     *
+     * @return \Acquia\Search\Service
+     */
+    public function https($https = true)
+    {
+        $this->https = (bool) $https;
+        return $this;
     }
 
     /**
@@ -48,14 +64,15 @@ class Service
     }
 
     /**
-     * @return Indexes
+     * @return \Acquia\Search\Indexes
      */
     public function indexes()
     {
         if (!isset($this->indexes)) {
             $indexes = array();
+            $proto = $this->https ? 'https://' : 'http://';
             foreach ($this->subscription['heartbeat_data']['search_cores'] as $indexInfo) {
-                $baseUrl = 'https://' . $indexInfo['balancer'];
+                $baseUrl = $proto . $indexInfo['balancer'];
                 $indexId = $indexInfo['core_id'];
                 $indexes[$indexId] = new Index($this->subscription, $baseUrl, $indexId);
             }
