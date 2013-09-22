@@ -46,7 +46,7 @@ Network API:
 ```php
 
 // Save the Acquia Search credentials to a JSON file.
-file_put_contents('/path/to/acquia_search.json', searchService);
+file_put_contents('/path/to/acquia_search.json', $searchService);
 
 ```
 
