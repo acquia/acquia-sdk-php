@@ -40,8 +40,8 @@ $results = $acquiaSearch->select('my keywords');
 ```
 
 Use the [service builder](http://guzzlephp.org/webservice-client/using-the-service-builder.html)
-to instantiate an Acquia Search client without having to make an Acquia Network
-API call.
+to instantiate an Acquia Search. This will avoid excessive calls to the Acquia
+Network API:
 
 ```php
 
