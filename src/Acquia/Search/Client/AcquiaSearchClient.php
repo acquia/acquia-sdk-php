@@ -85,6 +85,13 @@ class AcquiaSearchClient extends Client
         return $path = '/solr/' . $this->getConfig('index_id');
     }
 
+    /**
+     * @param array $params
+     * @param array|null $headers
+     * @param array $options
+     *
+     * @return array
+     */
     public function select($params = array(), $headers = null, array $options = array())
     {
         if (is_string($params)) {
@@ -112,6 +119,13 @@ class AcquiaSearchClient extends Client
         }
     }
 
+    /**
+     * @param array $params
+     * @param array|null $headers
+     * @param array $options
+     *
+     * @return array
+     */
     public function ping(array $params = array(), $headers = null, array $options = array())
     {
         $params += array('wt' => 'json');

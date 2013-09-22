@@ -29,23 +29,47 @@ echo $subscription->dashboardUrl();
 
 ## Acquia Search
 
-```php
+Simple keyword search:
 
-// NOTE: The $subscription object should be cached to avoid too many Acquia
-// Network API calls.
+```php
 
 $searchService = new \Acquia\Search\Service($subscription);
 $acquiaSearch = $searchService->getClient();
-
-// Do a quick search by keyword ...
 $results = $acquiaSearch->select('my keywords');
 
-// ... or build the Solr parameters manually.
+```
+
+Use the [service builder](http://guzzlephp.org/webservice-client/using-the-service-builder.html)
+to instantiate an Acquia Search client without having to make an Acquia Network
+API call.
+
+```php
+
+// Save the Acquia Search credentials to a JSON file.
+file_put_contents('/path/to/acquia_search.json', searchService);
+
+```
+
+```php
+
+use Guzzle\Service\Builder\ServiceBuilder;
+
+// Load the credentials and instantiate a client.
+$builder = ServiceBuilder::factory('/path/to/acquia_search.json');
+$acquiaSearch = $builder->get('XXXX-XXXXX');
+
+```
+
+More advanced search usage:
+
+```php
+
+// Build the Solr parameters manually.
 // @see http://wiki.apache.org/solr/CommonQueryParameters
 $params = array('q' => 'my keywords', 'rows' => 20);
 $results = $acquiaSearch->select($params);
 
-// Issue arbitrary requests to Solr.
+// Issue arbitrary Solr requests to Acquia Search.
 // @see http://guzzlephp.org/http-client/request.html#get-requests
 // @see http://lucene.apache.org/solr/
 $results = $acquiaSearch->get('/solr/XXXX-XXXXX/admin/ping?wt=json')->send()->json();
