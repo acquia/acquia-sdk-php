@@ -92,8 +92,8 @@ class AcquiaSearchClient extends AcquiaServiceClient
      */
     public function select($params = array(), $headers = null, array $options = array())
     {
-        if (is_string($params)) {
-            $params = array('q' => $params);
+        if (!is_array($params)) {
+            $params = array('q' => (string) $params);
         }
 
         $params['wt'] = 'json';
