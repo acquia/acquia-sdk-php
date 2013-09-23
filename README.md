@@ -61,8 +61,8 @@ $results = $acquiaSearch['XXXX-XXXXX']->select('my keywords');
 
 #### Credential Management
 
-Save the Acquia Search credentials in a JSON file in to avoid having to make
-excessive Acquia Network API calls.
+Save the Acquia Search credentials in a JSON file in order to avoid having to
+make excessive Acquia Network API calls.
 
 ```php
 $acquiaSearch->asJson('/path/to/acquia_search.json');
