@@ -11,7 +11,7 @@ class AcquiaSearchClient extends AcquiaServiceClient
     /**
      * @var int
      */
-    protected $maxQueryLength = 2;
+    protected $maxQueryLength = 3500;
 
     /**
      * {@inheritdoc}
