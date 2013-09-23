@@ -28,11 +28,13 @@ class AcquiaServiceClient extends Client
     }
 
     /**
+     * @param int $length
+     *
      * @return Acquia\Common\NoncerAbstract
      */
-    public static function noncerFactory()
+    public static function noncerFactory($length = NoncerAbstract::DEFAULT_LENGTH)
     {
-        $noncer = new self::$noncerClass();
+        $noncer = new self::$noncerClass($length);
         if (!$noncer instanceof NoncerAbstract) {
             throw new \UnexpectedValueException('Noncer must be an instance of Acquia\Common\NoncerAbstract');
         }
