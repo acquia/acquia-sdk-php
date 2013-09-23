@@ -14,7 +14,7 @@ class AcquiaServiceClient extends Client
     /**
      * @param string $class
      */
-    public function setNoncerClass($class)
+    public static function setNoncerClass($class)
     {
         self::$noncerClass = $class;
     }
@@ -22,7 +22,7 @@ class AcquiaServiceClient extends Client
     /**
      * @return string
      */
-    public function getNoncerClass()
+    public static function getNoncerClass()
     {
         return self::$noncerClass;
     }
