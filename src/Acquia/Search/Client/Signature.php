@@ -51,7 +51,7 @@ class Signature
      *
      * @return string
      */
-    public function nonce()
+    public function getNonce()
     {
         return $this->noncer->getLastNonce();
     }

@@ -35,15 +35,15 @@ class AcquiaSearchPlugin implements EventSubscriberInterface
 
     /**
      * @param string $indexId
-     * @param string $acquiaKey
+     * @param string $networkKey
      * @param string $salt
      * @param \Acquia\Common\NoncerAbstract $noncer
      */
-    public function __construct($indexId, $acquiaKey, $salt, NoncerAbstract $noncer = null)
+    public function __construct($indexId, $networkKey, $salt, NoncerAbstract $noncer)
     {
         $this->indexId = $indexId;
-        $this->derivedKey = new DerivedKey($salt, $acquiaKey);
-        $this->noncer = $noncer ?: new RandomStringNoncer();
+        $this->derivedKey = new DerivedKey($salt, $networkKey);
+        $this->noncer = $noncer;
     }
 
     /**
@@ -149,7 +149,7 @@ class AcquiaSearchPlugin implements EventSubscriberInterface
         }
 
         $request->addCookie('acquia_solr_time', $requestTime);
-        $request->addCookie('acquia_solr_nonce', $signature->nonce());
+        $request->addCookie('acquia_solr_nonce', $signature->getNonce());
         $request->addCookie('acquia_solr_hmac', $hash . ';');
     }
 }

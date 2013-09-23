@@ -9,12 +9,12 @@ class Signature
     /**
      * @var string
      */
-    protected $acquiaId;
+    protected $networkId;
 
     /**
      * @var string
      */
-    protected $acquiaKey;
+    protected $networkKey;
 
     /**
      * @var \Acquia\Common\NoncerAbstract
@@ -27,30 +27,30 @@ class Signature
     protected $requestTime = 0;
 
     /**
-     * @param string $acquiaId
-     * @param string $acquiaKey
+     * @param string $networkId
+     * @param string $networkKey
      */
-    public function __construct($acquiaId, $acquiaKey, NoncerAbstract $noncer)
+    public function __construct($networkId, $networkKey, NoncerAbstract $noncer)
     {
-        $this->acquiaId = $acquiaId;
-        $this->acquiaKey = $acquiaKey;
+        $this->networkId = $networkId;
+        $this->networkKey = $networkKey;
         $this->noncer = $noncer;
     }
 
     /**
      * @return string
      */
-    public function getAcquiaId()
+    public function getNetworkId()
     {
-        return $this->acquiaId;
+        return $this->networkId;
     }
 
     /**
      * @return string
      */
-    public function getAcquiaKey()
+    public function getNetworkKey()
     {
-        return $this->acquiaKey;
+        return $this->networkKey;
     }
 
     /**
@@ -94,7 +94,7 @@ class Signature
      *
      * @return string
      */
-    public function nonce()
+    public function getNonce()
     {
         return $this->noncer->getLastNonce();
     }
@@ -111,18 +111,18 @@ class Signature
 
          if (empty($params['rpc_version']) || $params['rpc_version'] < 2) {
               $encoded_params = serialize($params);
-              $string = $time . ':' . $nonce . ':' . $this->acquiaKey . ':' . serialize($params);
+              $string = $time . ':' . $nonce . ':' . $this->networkKey . ':' . serialize($params);
 
               return base64_encode(
-                  pack("H*", sha1((str_pad($this->acquiaKey, 64, chr(0x00)) ^ (str_repeat(chr(0x5c), 64))) .
-                  pack("H*", sha1((str_pad($this->acquiaKey, 64, chr(0x00)) ^ (str_repeat(chr(0x36), 64))) .
+                  pack("H*", sha1((str_pad($this->networkKey, 64, chr(0x00)) ^ (str_repeat(chr(0x5c), 64))) .
+                  pack("H*", sha1((str_pad($this->networkKey, 64, chr(0x00)) ^ (str_repeat(chr(0x36), 64))) .
                   $string)))));
         } elseif ($params['rpc_version'] == 2) {
               $string = $time . ':' . $nonce . ':' . json_encode($params);
-              return sha1((str_pad($this->acquiaKey, 64, chr(0x00)) ^ (str_repeat(chr(0x5c), 64))) . pack("H*", sha1((str_pad($this->acquiaKey, 64, chr(0x00)) ^ (str_repeat(chr(0x36), 64))) . $string)));
+              return sha1((str_pad($this->networkKey, 64, chr(0x00)) ^ (str_repeat(chr(0x5c), 64))) . pack("H*", sha1((str_pad($this->networkKey, 64, chr(0x00)) ^ (str_repeat(chr(0x36), 64))) . $string)));
         } else {
               $string = $time . ':' . $nonce;
-              return sha1((str_pad($this->acquiaKey, 64, chr(0x00)) ^ (str_repeat(chr(0x5c), 64))) . pack("H*", sha1((str_pad($this->acquiaKey, 64, chr(0x00)) ^ (str_repeat(chr(0x36), 64))) . $string)));
+              return sha1((str_pad($this->networkKey, 64, chr(0x00)) ^ (str_repeat(chr(0x5c), 64))) . pack("H*", sha1((str_pad($this->networkKey, 64, chr(0x00)) ^ (str_repeat(chr(0x36), 64))) . $string)));
         }
     }
 }

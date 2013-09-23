@@ -4,6 +4,8 @@ namespace Acquia\Common;
 
 abstract class NoncerAbstract
 {
+    const DEFAULT_LENGTH = 24;
+
     /**
      * @var string
      */
@@ -12,12 +14,12 @@ abstract class NoncerAbstract
     /**
      * @var int
      */
-    protected $length = '';
+    protected $length;
 
     /**
-     * @var string
+     * @var string $length
      */
-    public function __construct($length = 24)
+    public function __construct($length = self::DEFAULT_LENGTH)
     {
         $this->length = $length;
     }

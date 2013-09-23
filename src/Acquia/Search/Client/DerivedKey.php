@@ -16,27 +16,27 @@ class DerivedKey
     /**
      * @var string
      */
-    protected $acquiaKey;
+    protected $networkKey;
 
     /**
      * @param string $salt
      *   The derived key salt, or the shared secret used to generate the key.
-     * @param string $acquiaKey
+     * @param string $networkKey
      *   The Acquia Network key of the subscription the index is associated
      *   with.
      */
-    public function __construct($salt, $acquiaKey)
+    public function __construct($salt, $networkKey)
     {
         $this->salt = $salt;
-        $this->acquiaKey = $acquiaKey;
+        $this->networkKey = $networkKey;
     }
 
     /**
      * @return string
      */
-    public function getAcquiaKey()
+    public function getNetworkKey()
     {
-        return $this->acquiaKey;
+        return $this->networkKey;
     }
 
     /**
@@ -56,6 +56,6 @@ class DerivedKey
     public function generate($indexId)
     {
         $string = $indexId . 'solr' . $this->salt;
-        return hash_hmac('sha1', str_pad($string, 80, $string), $this->acquiaKey);
+        return hash_hmac('sha1', str_pad($string, 80, $string), $this->networkKey);
     }
 }

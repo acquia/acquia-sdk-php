@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Acquia\Network\Client;
 
 class XmlrpcResponse extends \ArrayObject

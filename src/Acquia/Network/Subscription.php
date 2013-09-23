@@ -4,36 +4,25 @@ namespace Acquia\Network;
 
 class Subscription extends \ArrayObject
 {
-    const NOT_FOUND = 1000;
-    const KEY_MISMATCH = 1100;
-    const EXPIRED = 1200;
-    const REPLAY_ATTACK = 1300;
-    const KEY_NOT_FOUND = 1400;
-    const MESSAGE_FUTURE = 1500;
-    const MESSAGE_EXPIRED = 1600;
-    const MESSAGE_INVALID = 1700;
-    const VALIDATION_ERROR = 1800;
-    const PROVISION_ERROR = 9000;
-
     /**
-     * @param string $acquiaId
-     * @param string $acquiaKey
-     * @param ]Acquia\Network\Client\XmlrpcResponse
+     * @param string $networkId
+     * @param string $networkKey
+     * @param \Acquia\Network\Client\XmlrpcResponse
      *
      * @return \Acquia\Network\Subscription
      */
-    public static function loadFromResponse($acquiaId, $acquiaKey, Client\XmlrpcResponse $xmlrpcResponse)
+    public static function loadFromResponse($networkId, $networkKey, Client\XmlrpcResponse $xmlrpcResponse)
     {
         $subscription = new static($xmlrpcResponse['body']);
-        $subscription['id'] = $acquiaId;
-        $subscription['key'] = $acquiaKey;
+        $subscription['id'] = $networkId;
+        $subscription['key'] = $networkKey;
         return $subscription;
     }
 
     /**
      * @return bool
      */
-    public function active()
+    public function isActive()
     {
         return !empty($this['active']);
     }
@@ -41,7 +30,7 @@ class Subscription extends \ArrayObject
     /**
      * @return string
      */
-    public function id()
+    public function getId()
     {
         return $this['id'];
     }
@@ -49,7 +38,7 @@ class Subscription extends \ArrayObject
     /**
      * @return string
      */
-    public function key()
+    public function getKey()
     {
         return $this['key'];
     }
@@ -57,7 +46,7 @@ class Subscription extends \ArrayObject
     /**
      * @return string
      */
-    public function uuid()
+    public function getUuid()
     {
         return $this['uuid'];
     }
@@ -65,7 +54,7 @@ class Subscription extends \ArrayObject
     /**
      * @return string
      */
-    public function dashboardUrl()
+    public function getDashboardUrl()
     {
         return $this['href'];
     }
@@ -73,7 +62,7 @@ class Subscription extends \ArrayObject
     /**
      * @return \DateTime
      */
-    public function expires()
+    public function getExpirationDate()
     {
         return new \DateTime($this['expiration_date']['value']);
     }
@@ -81,7 +70,7 @@ class Subscription extends \ArrayObject
     /**
      * @return string
      */
-    public function product()
+    public function getProductName()
     {
         return $this['product']['view'];
     }
@@ -91,6 +80,6 @@ class Subscription extends \ArrayObject
      */
     public function __toString()
     {
-        return $this->uuid();
+        return $this->getUuid();
     }
 }

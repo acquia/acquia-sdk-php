@@ -2,11 +2,11 @@
 
 namespace Acquia\Search\Client;
 
+use Acquia\Common\AcquiaServiceClient;
 use Guzzle\Common\Collection;
 use Guzzle\Http\Url;
-use Guzzle\Service\Client;
 
-class AcquiaSearchClient extends Client
+class AcquiaSearchClient extends AcquiaServiceClient
 {
     /**
      * @var int
@@ -18,27 +18,33 @@ class AcquiaSearchClient extends Client
      */
     public static function factory($config = array())
     {
+        $indexId = isset($config['index_id']) ? $config['index_id'] : '';
+
+        $defaults = array(
+            'base_path' => '/solr/' . $indexId,
+        );
+
         $required = array(
             'base_url',
             'index_id',
-            'acquia_key',
+            'network_key',
             'salt',
         );
 
         // Instantiate the Acquia Search plugin.
-        $config = Collection::fromConfig($config, array('noncer' => null), $required);
+        $config = Collection::fromConfig($config, $defaults, $required);
         $client = new static($config->get('base_url'), $config);
 
         // Attach the Acquia Search plugin to the client.
         $client->addSubscriber(new AcquiaSearchPlugin(
             $config->get('index_id'),
-            $config->get('acquia_key'),
+            $config->get('network_key'),
             $config->get('salt'),
-            $config->get('noncer')
+            self::noncerFactory()
         ));
 
         // Set template that doesn't expand URI template expressions.
-        $client->setUriTemplate(new SolrUriTemplate());
+        $client->setUriTemplate(new AcquiaSearchUriTemplate());
 
         return $client;
     }
@@ -78,14 +84,6 @@ class AcquiaSearchClient extends Client
     }
 
     /**
-     * @return string
-     */
-    public function basePath()
-    {
-        return $path = '/solr/' . $this->getConfig('index_id');
-    }
-
-    /**
      * @param array $params
      * @param array|null $headers
      * @param array $options
@@ -109,7 +107,7 @@ class AcquiaSearchClient extends Client
         );
 
         // Issue GET or POST request depending on url length.
-        $uri = $this->basePath() . '/select';
+        $uri = '{base_path}/select';
         if ($this->useGetMethod($uri, $params)) {
             $options['query'] = $params;
             return $this->get($uri, $headers, $options)->send()->json();
@@ -131,7 +129,7 @@ class AcquiaSearchClient extends Client
         $params += array('wt' => 'json');
         $options['query'] = $params;
         return $this
-            ->head($this->basePath() . '/admin/ping', $headers, $options)
+            ->head('{base_path}/admin/ping', $headers, $options)
             ->send()
             ->json()
         ;

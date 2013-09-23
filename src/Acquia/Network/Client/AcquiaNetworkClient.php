@@ -2,25 +2,23 @@
 
 namespace Acquia\Network\Client;
 
-use Acquia\Common\NoncerAbstract;
-use Acquia\Common\RandomStringNoncer;
+use Acquia\Common\AcquiaServiceClient;
 use Acquia\Network\Subscription;
 use Guzzle\Common\Collection;
-use Guzzle\Service\Client;
 
-class AcquiaNetworkClient extends Client
+class AcquiaNetworkClient extends AcquiaServiceClient
 {
     const NONCE_LENGTH = 55;
 
     /**
      * @var string
      */
-    protected $acquiaId;
+    protected $networkId;
 
     /**
      * @var string
      */
-    protected $acquiaKey;
+    protected $networkKey;
 
     /**
      * @var \Acquia\Common\NoncerAbstract
@@ -36,57 +34,53 @@ class AcquiaNetworkClient extends Client
     {
         $defaults = array(
             'base_url' => 'https://rpc.acquia.com',
-            'noncer' => null,
         );
 
         $required = array(
             'base_url',
-            'acquia_id',
-            'acquia_key',
-            'noncer',
+            'network_id',
+            'network_key',
         );
 
         // Instantiate the Acquia Search plugin.
         $config = Collection::fromConfig($config, $defaults, $required);
         return new static(
             $config->get('base_url'),
-            $config->get('acquia_id'),
-            $config->get('acquia_key'),
-            $config->get('noncer'),
+            $config->get('network_id'),
+            $config->get('network_key'),
             $config
         );
     }
 
     /**
-     *
+     * @param string $networkUri
+     * @param string $networkId
+     * @param string $networkKey
+     * @param mixed $config
      */
-    public function __construct($baseUrl, $acquiaId, $acquiaKey, NoncerAbstract $noncer = null, $config = null)
+    public function __construct($networkUri, $networkId, $networkKey, $config = null)
     {
-        if ($noncer === null) {
-            $noncer = new RandomStringNoncer(self::NONCE_LENGTH);
-        }
+        $this->networkId = $networkId;
+        $this->networkKey = $networkKey;
+        $this->noncer = self::noncerFactory(self::NONCE_LENGTH);
 
-        $this->acquiaId = $acquiaId;
-        $this->acquiaKey = $acquiaKey;
-        $this->noncer = $noncer;
-
-        parent::__construct($baseUrl, $config);
+        parent::__construct($networkUri, $config);
     }
 
     /**
      * @return string
      */
-    public function getAcquiaId()
+    public function getNetworkId()
     {
-        return $this->acquiaId;
+        return $this->networkId;
     }
 
     /**
      * @return string
      */
-    public function getAcquiaKey()
+    public function getNetworkKey()
     {
-        return $this->acquiaKey;
+        return $this->networkKey;
     }
 
     /**
@@ -102,7 +96,7 @@ class AcquiaNetworkClient extends Client
      */
     public function checkSubscription()
     {
-        $signature = new Signature($this->acquiaId, $this->acquiaKey, $this->noncer);
+        $signature = new Signature($this->networkId, $this->networkKey, $this->noncer);
 
         $serverAddress = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
         $httpHost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
@@ -118,10 +112,10 @@ class AcquiaNetworkClient extends Client
                     <member><name>authenticator</name>
                       <value>
                         <struct>
-                          <member><name>identifier</name><value><string>' . $this->acquiaId . '</string></value></member>
+                          <member><name>identifier</name><value><string>' . $this->networkId . '</string></value></member>
                           <member><name>time</name><value><int>' . $signature->getRequestTime() . '</int></value></member>
                           <member><name>hash</name><value><string>' . $signature->generate() . '</string></value></member>
-                          <member><name>nonce</name><value><string>' . $signature->nonce() . '</string></value></member>
+                          <member><name>nonce</name><value><string>' . $signature->getNonce() . '</string></value></member>
                         </struct>
                       </value>
                     </member>
@@ -150,6 +144,6 @@ class AcquiaNetworkClient extends Client
 
         $xml = $this->post('xmlrpc.php', array(), $body)->send()->xml();
         $xmlrpcResponse = new XmlrpcResponse($xml);
-        return Subscription::loadFromResponse($this->acquiaId, $this->acquiaKey, $xmlrpcResponse);
+        return Subscription::loadFromResponse($this->networkId, $this->networkKey, $xmlrpcResponse);
     }
 }
