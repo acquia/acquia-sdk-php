@@ -68,7 +68,7 @@ make excessive API calls to the Acquia Network.
 $acquiaSearch->asJson('/path/to/acquia_search.json');
 ```
 
-Load the service builder from the JSON file and instantiate a client.
+Load the service builder from the JSON file and execute a simple keyword search.
 
 ```php
 $acquiaSearch = AcquiaSearchService::factory('/path/to/acquia_search.json');
