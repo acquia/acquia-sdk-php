@@ -38,13 +38,15 @@ class AcquiaSearchService extends AcquiaService
             );
 
             foreach ($subscription['heartbeat_data']['search_cores'] as $indexInfo) {
+
+                $derivedKey = new Client\DerivedKey($subscription['derived_key_salt'], $subscription->getKey());
+
                 $config['services'][$indexInfo['core_id']] = array(
                     'class' => 'Acquia\Search\Client\AcquiaSearchClient',
                     'params' => array(
                         'base_url' => self::getProtocol() . $indexInfo['balancer'],
                         'index_id' => $indexInfo['core_id'],
-                        'network_key' => $subscription->getKey(),
-                        'salt' => $subscription['derived_key_salt'],
+                        'derived_key' => $derivedKey->generate($indexInfo['core_id']),
                     ),
                 );
             }

@@ -27,8 +27,7 @@ class AcquiaSearchClient extends AcquiaServiceClient
         $required = array(
             'base_url',
             'index_id',
-            'network_key',
-            'salt',
+            'derived_key',
         );
 
         // Instantiate the Acquia Search plugin.
@@ -38,8 +37,7 @@ class AcquiaSearchClient extends AcquiaServiceClient
         // Attach the Acquia Search plugin to the client.
         $client->addSubscriber(new AcquiaSearchPlugin(
             $config->get('index_id'),
-            $config->get('network_key'),
-            $config->get('salt'),
+            $config->get('derived_key'),
             self::noncerFactory()
         ));
 

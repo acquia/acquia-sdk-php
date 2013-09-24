@@ -10,7 +10,7 @@ use Acquia\Common\NoncerAbstract;
 class Signature
 {
     /**
-     * @var \Acquia\Search\Client\DerivedKey
+     * @var string
      */
     protected $derivedKey;
 
@@ -20,18 +20,18 @@ class Signature
     protected $noncer;
 
     /**
-     * @param \Acquia\Search\Client\DerivedKey $derivedKey
+     * @param string $derivedKey
      * @param \Acquia\Common\NoncerAbstract $noncer
      * @param int $requestTime
      */
-    public function __construct(DerivedKey $derivedKey, NoncerAbstract $noncer)
+    public function __construct($derivedKey, NoncerAbstract $noncer)
     {
         $this->derivedKey = $derivedKey;
         $this->noncer = $noncer;
     }
 
     /**
-     * @return \Acquia\Search\DerivedKey
+     * @return string
      */
     public function getDerivedKey()
     {
@@ -57,17 +57,15 @@ class Signature
     }
 
     /**
-     * @param string $indexId
      * @param string $string
      * @param int $requestTime
      * @param string &$nonce
      *
      * @return string
      */
-    public function generate($indexId, $string, $requestTime, &$nonce = null)
+    public function generate($string, $requestTime, &$nonce = null)
     {
         $nonce = $this->noncer->generate();
-        $derivedKey = $this->derivedKey->generate($indexId);
-        return hash_hmac('sha1', $requestTime . $nonce . $string, $derivedKey);
+        return hash_hmac('sha1', $requestTime . $nonce . $string, $this->derivedKey);
     }
 }

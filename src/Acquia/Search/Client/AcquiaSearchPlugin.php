@@ -3,7 +3,6 @@
 namespace Acquia\Search\Client;
 
 use Acquia\Common\NoncerAbstract;
-use Acquia\Common\RandomStringNoncer;
 use Guzzle\Common\Event;
 use Guzzle\Http\Message\Request;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -19,7 +18,7 @@ class AcquiaSearchPlugin implements EventSubscriberInterface
     protected $indexId;
 
     /**
-     * @var \Acquia\Search\Client\DerivedKey
+     * @var string
      */
     protected $derivedKey;
 
@@ -35,14 +34,13 @@ class AcquiaSearchPlugin implements EventSubscriberInterface
 
     /**
      * @param string $indexId
-     * @param string $networkKey
-     * @param string $salt
+     * @param string $derivedKey
      * @param \Acquia\Common\NoncerAbstract $noncer
      */
-    public function __construct($indexId, $networkKey, $salt, NoncerAbstract $noncer)
+    public function __construct($indexId, $derivedKey, NoncerAbstract $noncer)
     {
         $this->indexId = $indexId;
-        $this->derivedKey = new DerivedKey($salt, $networkKey);
+        $this->derivedKey = $derivedKey;
         $this->noncer = $noncer;
     }
 
@@ -76,7 +74,7 @@ class AcquiaSearchPlugin implements EventSubscriberInterface
     }
 
     /**
-     * @return \Acquia\Search\Client\DerivedKey
+     * @return string
      */
     public function getDerivedKey()
     {
@@ -142,10 +140,10 @@ class AcquiaSearchPlugin implements EventSubscriberInterface
         $url = $request->getPath();
         if ('POST' == $request->getMethod()) {
             $body = (string) $request->getPostFields();
-            $hash = $signature->generate($this->indexId, $body, $requestTime);
+            $hash = $signature->generate($body, $requestTime);
         } else {
             $url .= '?' . $request->getQuery();
-            $hash = $signature->generate($this->indexId, $url, $requestTime);
+            $hash = $signature->generate($url, $requestTime);
         }
 
         $request->addCookie('acquia_solr_time', $requestTime);
