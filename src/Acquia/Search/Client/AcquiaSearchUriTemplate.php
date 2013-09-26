@@ -19,6 +19,6 @@ class AcquiaSearchUriTemplate extends UriTemplate
      */
     public function expand($template, array $variables)
     {
-        return str_replace('{base_path}', $variables['base_path'], $template);
+        return str_replace('{+base_path}', $variables['base_path'], $template);
     }
 }

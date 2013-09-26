@@ -83,9 +83,9 @@ $results = $acquiaSearch['XXXX-XXXXX']->select('my keywords');
 $params = array('q' => 'my keywords', 'rows' => 20);
 $results = $index->select($params);
 
-// Issue arbitrary Solr requests to Acquia Search. The {base_path} expression is
-// automatically expanded to "/solr/XXXX-XXXXX" for the index being queried.
+// Issue arbitrary Solr requests to Acquia Search. The {+base_path} expression
+// is automatically expanded to "/solr/XXXX-XXXXX" for the index being queried.
 // @see http://guzzlephp.org/http-client/request.html#get-requests
 // @see http://lucene.apache.org/solr/
-$results = $index->get('{base_path}/admin/ping?wt=json')->send()->json();
+$results = $index->get('{+base_path}/admin/ping?wt=json')->send()->json();
 ```

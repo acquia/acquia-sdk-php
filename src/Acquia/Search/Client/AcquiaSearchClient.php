@@ -20,14 +20,14 @@ class AcquiaSearchClient extends AcquiaClient
     {
         $indexId = isset($config['index_id']) ? $config['index_id'] : '';
 
-        $defaults = array(
-            'base_path' => '/solr/' . $indexId,
-        );
-
         $required = array(
             'base_url',
             'index_id',
             'derived_key',
+        );
+
+        $defaults = array(
+            'base_path' => '/solr/' . $indexId,
         );
 
         // Instantiate the Acquia Search plugin.
@@ -125,7 +125,7 @@ class AcquiaSearchClient extends AcquiaClient
         );
 
         // Issue GET or POST request depending on url length.
-        $uri = '{base_path}/select';
+        $uri = '{+base_path}/select';
         if ($this->useGetMethod($uri, $params)) {
             $options['query'] = $params;
             return $this->get($uri, $headers, $options)->send()->json();
@@ -147,7 +147,7 @@ class AcquiaSearchClient extends AcquiaClient
         $params += array('wt' => 'json');
         $options['query'] = $params;
         return $this
-            ->head('{base_path}/admin/ping', $headers, $options)
+            ->head('{+base_path}/admin/ping', $headers, $options)
             ->send()
             ->json()
         ;
