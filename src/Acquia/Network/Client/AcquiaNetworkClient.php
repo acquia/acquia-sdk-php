@@ -2,11 +2,11 @@
 
 namespace Acquia\Network\Client;
 
-use Acquia\Common\AcquiaServiceClient;
+use Acquia\Common\AcquiaClient;
 use Acquia\Network\Subscription;
 use Guzzle\Common\Collection;
 
-class AcquiaNetworkClient extends AcquiaServiceClient
+class AcquiaNetworkClient extends AcquiaClient
 {
     const NONCE_LENGTH = 55;
 
@@ -32,14 +32,14 @@ class AcquiaNetworkClient extends AcquiaServiceClient
      */
     public static function factory($config = array())
     {
-        $defaults = array(
-            'base_url' => 'https://rpc.acquia.com',
-        );
-
         $required = array(
             'base_url',
             'network_id',
             'network_key',
+        );
+
+        $defaults = array(
+            'base_url' => 'https://rpc.acquia.com',
         );
 
         // Instantiate the Acquia Search plugin.
@@ -65,6 +65,25 @@ class AcquiaNetworkClient extends AcquiaServiceClient
         $this->noncer = self::noncerFactory(self::NONCE_LENGTH);
 
         parent::__construct($networkUri, $config);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBuilderClass()
+    {
+        return 'Acquia\Network\AcquiaNetworkService';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBuilderParams()
+    {
+        return array(
+            'network_id' => $this->networkId,
+            'network_key' => $this->networkKey,
+        );
     }
 
     /**

@@ -11,20 +11,10 @@ class AcquiaService extends ServiceBuilder
      */
     public function asJson($filename = null)
     {
-        $data = array(
+        $json = Json::encode(array(
             'class' => get_class($this),
             'services' => $this->builderConfig,
-        );
-
-        $options = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
-        if (defined('JSON_PRETTY_PRINT')) {
-            $options = $options | JSON_PRETTY_PRINT;
-        }
-        if (defined('JSON_UNESCAPED_SLASHES')) {
-            $options = $options | JSON_UNESCAPED_SLASHES;
-        }
-
-        $json = json_encode($data, $options);
+        ));
 
         if ($filename !== null) {
             file_put_contents($filename, $json);

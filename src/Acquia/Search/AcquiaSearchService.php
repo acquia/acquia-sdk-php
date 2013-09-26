@@ -32,14 +32,14 @@ class AcquiaSearchService extends AcquiaService
                 throw new \UnexpectedValueException('Index data not found in subscription');
             }
 
+            $derivedKey = new Client\DerivedKey($subscription['derived_key_salt'], $subscription->getKey());
+
             $config = array(
                 'class' => __CLASS__,
                 'services' => array(),
             );
 
             foreach ($subscription['heartbeat_data']['search_cores'] as $indexInfo) {
-
-                $derivedKey = new Client\DerivedKey($subscription['derived_key_salt'], $subscription->getKey());
 
                 $config['services'][$indexInfo['core_id']] = array(
                     'class' => 'Acquia\Search\Client\AcquiaSearchClient',

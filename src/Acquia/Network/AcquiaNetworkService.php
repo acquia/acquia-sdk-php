@@ -21,15 +21,17 @@ class AcquiaNetworkService extends AcquiaService
                 'services' => array(),
             );
 
+            $networkId = $subscription->getId();
             $config['services'] = array(
-                'acquia_network' => array(
+                $networkId => array(
                     'class' => 'Acquia\Network\Client\AcquiaSearchClient',
                     'params' => array(
-                        'network_id' => $subscription->getId(),
+                        'network_id' => $networkId,
                         'network_key' => $subscription->getKey(),
                     ),
                 ),
             );
+
         }
 
         return parent::factory($config, $globalParameters);

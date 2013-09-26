@@ -2,11 +2,11 @@
 
 namespace Acquia\Search\Client;
 
-use Acquia\Common\AcquiaServiceClient;
+use Acquia\Common\AcquiaClient;
 use Guzzle\Common\Collection;
 use Guzzle\Http\Url;
 
-class AcquiaSearchClient extends AcquiaServiceClient
+class AcquiaSearchClient extends AcquiaClient
 {
     /**
      * @var int
@@ -45,6 +45,26 @@ class AcquiaSearchClient extends AcquiaServiceClient
         $client->setUriTemplate(new AcquiaSearchUriTemplate());
 
         return $client;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBuilderClass()
+    {
+        return 'Acquia\Search\AcquiaSearchService';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBuilderParams()
+    {
+        return array(
+            'base_url' => $this->getConfig('base_url'),
+            'index_id' => $this->getConfig('index_id'),
+            'derived_key' => $this->getConfig('derived_key'),
+        );
     }
 
     /**
