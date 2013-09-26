@@ -122,7 +122,7 @@ class AcquiaServiceManager extends \ArrayObject
      *
      * @return \Guzzle\Service\Builder\ServiceBuilder
      */
-    public function get($group)
+    public function getBuilder($group)
     {
         return $this[$group];
     }
@@ -133,7 +133,7 @@ class AcquiaServiceManager extends \ArrayObject
      *
      * @return \Acquia\Common\AcquiaServiceManager
      */
-    public function set($group, ServiceBuilder $builder)
+    public function setBuilder($group, ServiceBuilder $builder)
     {
         $this[$group] = $builder;
         return $this;

@@ -86,3 +86,40 @@ $results = $index->select($params);
 $results = $index->get('{+base_path}/admin/ping?wt=json')->send()->json();
 ```
 
+## The Acquia Service Manager
+
+The Acquia Service Manager simplifies credential management and client
+instantiation. The credential management system is built using
+[Guzzle's service builder](http://guzzlephp.org/webservice-client/using-the-service-builder.html)
+subsystem, so the documentation and techniques can also apply here.
+
+### Saving Credentials
+
+The following example saves the configurations in the two clients one service
+builder (for Acquia Search) to JSON files in the specified directory.
+
+```php
+use Acquia\Common\AcquiaServiceManager;
+
+$services = new AcquiaServiceManager(array(
+    'conf_dir' => '/path/to/conf/dir',
+));
+
+$services
+    ->setClient('cloudapi', 'mysite', $cloudapi)
+    ->setClient('network', 'XXXX-XXXXX', $network)
+    ->setBuilder('search', $search)
+;
+
+$services->save();
+```
+
+### Instantiating Service Clients
+
+```php
+
+$cloudapi = $services->getClient('cloudapi', 'mysite');
+$network = $services->getClient('network', 'XXXX-XXXXX');
+$index = $services->getClient('search', 'XXXX-XXXXX');
+
+```
