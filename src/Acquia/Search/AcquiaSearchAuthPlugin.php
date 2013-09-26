@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Search\Client;
+namespace Acquia\Search;
 
 use Acquia\Common\NoncerAbstract;
 use Guzzle\Common\Event;
@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Guzzle plugin that adds Acquia Search credentials.
  */
-class AcquiaSearchPlugin implements EventSubscriberInterface
+class AcquiaSearchAuthPlugin implements EventSubscriberInterface
 {
     /**
      * @var string
@@ -57,7 +57,7 @@ class AcquiaSearchPlugin implements EventSubscriberInterface
     /**
      * @param string $indexId
      *
-     * @return \Acquia\Search\Client\AcquiaSearchPligin
+     * @return \Acquia\Search\AcquiaSearchPligin
      */
     public function setIndexId($indexId)
     {
@@ -92,7 +92,7 @@ class AcquiaSearchPlugin implements EventSubscriberInterface
     /**
      * @param int $requestTime
      *
-     * @return \Acquia\Search\Client\AcquiaSearchPligin
+     * @return \Acquia\Search\AcquiaSearchPligin
      */
     public function setRequestTime($requestTime)
     {
@@ -101,7 +101,7 @@ class AcquiaSearchPlugin implements EventSubscriberInterface
     }
 
     /**
-     * @return \Acquia\Search\Client\AcquiaSearchPligin
+     * @return \Acquia\Search\AcquiaSearchPligin
      */
     public function unsetRequestTime()
     {

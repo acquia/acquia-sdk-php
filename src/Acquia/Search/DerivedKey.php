@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Search\Client;
+namespace Acquia\Search;
 
 /**
  * Generates a the derived key, which is the shared secret used to generate the

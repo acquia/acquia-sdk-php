@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Network\Client;
+namespace Acquia\Network;
 
 use Acquia\Common\NoncerAbstract;
 
@@ -64,7 +64,7 @@ class Signature
     /**
      * @param int $requestTime
      *
-     * @return \Acquia\Network\Client\Signature
+     * @return \Acquia\Network\Signature
      */
     public function setRequestTime($requestTime)
     {
@@ -73,7 +73,7 @@ class Signature
     }
 
     /**
-     * @return \Acquia\Network\Client\Signature
+     * @return \Acquia\Network\Signature
      */
     public function unsetRequestTime()
     {

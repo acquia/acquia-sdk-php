@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Network\Client;
+namespace Acquia\Network;
 
 final class XmlrpcError
 {

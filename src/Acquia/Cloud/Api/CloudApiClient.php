@@ -6,7 +6,7 @@ use Acquia\Common\AcquiaClient;
 use Acquia\Common\Json;
 use Guzzle\Common\Collection;
 
-class CloudApi extends AcquiaClient
+class CloudApiClient extends AcquiaClient
 {
     const BASE_PATH = '/v1';
 
@@ -36,7 +36,7 @@ class CloudApi extends AcquiaClient
         ));
 
         // Attach the Acquia Search plugin to the client.
-        $plugin = new CloudApiPlugin($config->get('username'), $config->get('password'));
+        $plugin = new CloudApiAuthPlugin($config->get('username'), $config->get('password'));
         $client->addSubscriber($plugin);
 
         return $client;

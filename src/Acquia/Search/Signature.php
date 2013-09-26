@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Search\Client;
+namespace Acquia\Search;
 
 use Acquia\Common\NoncerAbstract;
 

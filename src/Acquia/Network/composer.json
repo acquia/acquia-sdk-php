@@ -17,8 +17,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Acquia\\Common": ""
+            "Acquia\\Network": ""
         }
     },
-    "target-dir": "Acquia/Common"
+    "target-dir": "Acquia/Network"
 }

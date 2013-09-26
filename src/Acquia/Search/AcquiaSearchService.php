@@ -2,20 +2,15 @@
 
 namespace Acquia\Search;
 
-use Acquia\Common\AcquiaService;
 use Acquia\Network\Subscription;
+use Guzzle\Service\Builder\ServiceBuilder;
 
-class AcquiaSearchService extends AcquiaService
+class AcquiaSearchService extends ServiceBuilder
 {
-    /**
-     * @var boolean
-     */
-    protected static $https = true;
-
     /**
      * {@inheritdoc}
      *
-     * @return \Acquia\Search\AcquiaSearchService
+     * @return \Guzzle\Service\Builder\ServiceBuilder
      */
     public static function factory($config = null, array $globalParameters = array())
     {
@@ -32,19 +27,15 @@ class AcquiaSearchService extends AcquiaService
                 throw new \UnexpectedValueException('Index data not found in subscription');
             }
 
-            $derivedKey = new Client\DerivedKey($subscription['derived_key_salt'], $subscription->getKey());
+            $derivedKey = new DerivedKey($subscription['derived_key_salt'], $subscription->getKey());
 
-            $config = array(
-                'class' => __CLASS__,
-                'services' => array(),
-            );
-
+            $config = array('services' => array());
             foreach ($subscription['heartbeat_data']['search_cores'] as $indexInfo) {
 
                 $config['services'][$indexInfo['core_id']] = array(
-                    'class' => 'Acquia\Search\Client\AcquiaSearchClient',
+                    'class' => 'Acquia\Search\AcquiaSearchClient',
                     'params' => array(
-                        'base_url' => self::getProtocol() . $indexInfo['balancer'],
+                        'base_url' => 'https://' . $indexInfo['balancer'],
                         'index_id' => $indexInfo['core_id'],
                         'derived_key' => $derivedKey->generate($indexInfo['core_id']),
                     ),
@@ -53,29 +44,5 @@ class AcquiaSearchService extends AcquiaService
         }
 
         return parent::factory($config, $globalParameters);
-    }
-
-    /**
-     * @param boolean $https
-     */
-    public static function useHttps($https = true)
-    {
-        self::$https = (bool) $https;
-    }
-
-    /**
-     * @return string
-     */
-    public static function getProtocol()
-    {
-        return self::$https ? 'https://' : 'http://';
-    }
-
-    /**
-     * @return array
-     */
-    public function getIndexes()
-    {
-        return array_keys($this->builderConfig);
     }
 }

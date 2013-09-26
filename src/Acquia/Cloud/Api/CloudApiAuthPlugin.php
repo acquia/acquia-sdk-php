@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Adds HTTP authentication for the Cloud API.
  */
-class CloudApiPlugin implements EventSubscriberInterface
+class CloudApiAuthPlugin implements EventSubscriberInterface
 {
     /**
      * @var string

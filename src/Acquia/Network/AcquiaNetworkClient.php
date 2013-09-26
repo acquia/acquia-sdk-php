@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Network\Client;
+namespace Acquia\Network;
 
 use Acquia\Common\AcquiaClient;
 use Acquia\Network\Subscription;
@@ -8,8 +8,6 @@ use Guzzle\Common\Collection;
 
 class AcquiaNetworkClient extends AcquiaClient
 {
-    const NONCE_LENGTH = 55;
-
     /**
      * @var string
      */
@@ -21,14 +19,14 @@ class AcquiaNetworkClient extends AcquiaClient
     protected $networkKey;
 
     /**
-     * @var \Acquia\Common\NoncerAbstract
+     * {@inheritdoc}
      */
-    protected $noncer;
+    protected $noncerLength = 55;
 
     /**
      * {@inheritdoc}
      *
-     * @return \Acquia\Network\Client\AcquiaNetworkClient
+     * @return \Acquia\Network\AcquiaNetworkClient
      */
     public static function factory($config = array())
     {
@@ -62,17 +60,8 @@ class AcquiaNetworkClient extends AcquiaClient
     {
         $this->networkId = $networkId;
         $this->networkKey = $networkKey;
-        $this->noncer = self::noncerFactory(self::NONCE_LENGTH);
 
         parent::__construct($networkUri, $config);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBuilderClass()
-    {
-        return 'Acquia\Network\AcquiaNetworkService';
     }
 
     /**
@@ -103,19 +92,11 @@ class AcquiaNetworkClient extends AcquiaClient
     }
 
     /**
-     * @return \Acquia\Common\NoncerAbstract
-     */
-    public function getNoncer()
-    {
-        return $this->noncer;
-    }
-
-    /**
      * @return \Acquia\Network\Subscription
      */
     public function checkSubscription()
     {
-        $signature = new Signature($this->networkId, $this->networkKey, $this->noncer);
+        $signature = new Signature($this->networkId, $this->networkKey, $this->getNoncer());
 
         $serverAddress = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
         $httpHost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';

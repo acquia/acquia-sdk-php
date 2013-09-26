@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Search\Client;
+namespace Acquia\Search;
 
 use Acquia\Common\AcquiaClient;
 use Guzzle\Common\Collection;
@@ -35,14 +35,14 @@ class AcquiaSearchClient extends AcquiaClient
         $client = new static($config->get('base_url'), $config);
 
         // Attach the Acquia Search plugin to the client.
-        $client->addSubscriber(new AcquiaSearchPlugin(
+        $client->addSubscriber(new AcquiaSearchAuthPlugin(
             $config->get('index_id'),
             $config->get('derived_key'),
-            self::noncerFactory()
+            $client->getNoncer()
         ));
 
         // Set template that doesn't expand URI template expressions.
-        $client->setUriTemplate(new AcquiaSearchUriTemplate());
+        $client->setUriTemplate(new SolrUriTemplate());
 
         return $client;
     }
@@ -73,7 +73,7 @@ class AcquiaSearchClient extends AcquiaClient
      *
      * @param int $length
      *
-     * @return \Acquia\Search\Client\AcquiaSearchClient
+     * @return \Acquia\Search\AcquiaSearchClient
      */
     public function setMaxQueryLength($length)
     {

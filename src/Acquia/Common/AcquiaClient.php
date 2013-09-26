@@ -7,24 +7,52 @@ use Guzzle\Service\Client;
 class AcquiaClient extends Client
 {
     /**
+     * @var \Acquia\Common\NoncerAbstract
+     */
+    private $noncer;
+
+    /**
+     * @var int
+     */
+    protected $noncerLength = NoncerAbstract::DEFAULT_LENGTH;
+
+    /**
      * @var string
      */
-    protected static $noncerClass = 'Acquia\Common\RandomStringNoncer';
+    protected static $defaultNoncerClass = 'Acquia\Common\RandomStringNoncer';
 
     /**
      * @param string $class
      */
-    public static function setNoncerClass($class)
+    public static function setDefaultNoncerClass($class)
     {
-        self::$noncerClass = $class;
+        self::$defaultNoncerClass = $class;
     }
 
     /**
      * @return string
      */
-    public static function getNoncerClass()
+    public static function getDefaultNoncerClass()
     {
-        return self::$noncerClass;
+        return self::$defaultNoncerClass;
+    }
+
+    /**
+     * Returns a noncer, instantiates it if it doesn't exist.
+     *
+     * @return \Acquia\Common\NoncerAbstract
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function getNoncer()
+    {
+        if (!isset($this->noncer)) {
+            $this->noncer = new self::$defaultNoncerClass($this->noncerLength);
+            if (!$this->noncer instanceof NoncerAbstract) {
+                throw new \UnexpectedValueException('Noncer must be an instance of Acquia\Common\NoncerAbstract');
+            }
+        }
+        return $this->noncer;
     }
 
     /**
@@ -42,54 +70,10 @@ class AcquiaClient extends Client
     }
 
     /**
-     * @return string
-     */
-    public function getBuilderClass()
-    {
-        return 'Acquia\Common\AcquiaService';
-    }
-
-    /**
      * @return array
      */
     public function getBuilderParams()
     {
         return array();
-    }
-
-    /**
-     * @param string $filename
-     * @param string $name
-     *
-     * @todo Implement write locking
-     */
-    public function addToService($filename, $name)
-    {
-        $builderClass = $this->getBuilderClass();
-
-        /* @var \Acquia\Common\AcquiaService $builder */
-        if (file_exists($filename)) {
-
-            $builder = $builderClass::factory($filename);
-            $builder->set($name, array(
-                'class' => get_class($this),
-                'params' => $this->getBuilderParams(),
-            ));
-
-        } else {
-
-            $builder = $builderClass::factory(array(
-                'class' => $builderClass,
-                'services' => array(
-                    $name => array(
-                        'class' => get_class($this),
-                        'params' => $this->getBuilderParams(),
-                    ),
-                ),
-            ));
-
-        }
-
-        $builder->asJson($filename);
     }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Acquia\Search\Client;
+namespace Acquia\Search;
 
 use Guzzle\Parser\UriTemplate\UriTemplate;
 
-class AcquiaSearchUriTemplate extends UriTemplate
+class SolrUriTemplate extends UriTemplate
 {
     /**
      * {@inheritdoc}

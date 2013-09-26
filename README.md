@@ -32,47 +32,41 @@ Basic usage examples for the SDK.
 ### Acquia Network
 
 ```php
-use Acquia\Network\Client\AcquiaNetworkClient;
+use Acquia\Network\AcquiaNetworkClient;
 
-$acquiaNetwork = AcquiaNetworkClient::factory(array(
+$network = AcquiaNetworkClient::factory(array(
     'network_id' => 'XXXX-XXXXX',  // Acquia Network identifier
     'network_key' => 'xxxxxx...',  // Acquia Network key
 ));
-$subscription = $acquiaNetwork->checkSubscription();
 
+$subscription = $network->checkSubscription();
 print $subscription->getDashboardUrl();
+```
+
+### Cloud API
+
+```php
+use Acquia\Cloud\Api\CloudApiClient;
+
+$cloudapi = CloudApiClient::factory(array(
+    'username' => 'xxx...',
+    'password' => 'xxx...',
+));
+
+$sites = $cloudapi->sites();
 ```
 
 ### Acquia Search
 
-#### Simple Keyword Search
+#### Basic Usage
 
 ```php
 use Acquia\Search\AcquiaSearchService;
 
-$acquiaSearch = AcquiaSearchService::factory($subscription);
+$search = AcquiaSearchService::factory($subscription);
 
-$index = $acquiaSearch->get('XXXX-XXXXX');
+$index = $search->get('XXXX-XXXXX');
 $results = $index->select('my keywords');
-
-// The code below is the equivalent to the two line snippet above.
-$results = $acquiaSearch['XXXX-XXXXX']->select('my keywords');
-```
-
-#### Credential Management
-
-Save the Acquia Search credentials in a JSON file in order to avoid having to
-make excessive API calls to the Acquia Network.
-
-```php
-$acquiaSearch->asJson('/path/to/acquia_search.json');
-```
-
-Load the service builder from the JSON file and execute a simple keyword search.
-
-```php
-$acquiaSearch = AcquiaSearchService::factory('/path/to/acquia_search.json');
-$results = $acquiaSearch['XXXX-XXXXX']->select('my keywords');
 ```
 
 #### Advanced Solr Usage
@@ -89,3 +83,4 @@ $results = $index->select($params);
 // @see http://lucene.apache.org/solr/
 $results = $index->get('{+base_path}/admin/ping?wt=json')->send()->json();
 ```
+
