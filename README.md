@@ -29,6 +29,19 @@ require_once 'vendor/autoload.php';
 
 Basic usage examples for the SDK.
 
+### Cloud API
+
+```php
+use Acquia\Cloud\Api\CloudApiClient;
+
+$cloudapi = CloudApiClient::factory(array(
+    'username' => 'xxx...',
+    'password' => 'xxx...',
+));
+
+$sites = $cloudapi->sites();
+```
+
 ### Acquia Network
 
 ```php
@@ -43,19 +56,6 @@ $subscription = $network->checkSubscription();
 print $subscription->getDashboardUrl();
 ```
 
-### Cloud API
-
-```php
-use Acquia\Cloud\Api\CloudApiClient;
-
-$cloudapi = CloudApiClient::factory(array(
-    'username' => 'xxx...',
-    'password' => 'xxx...',
-));
-
-$sites = $cloudapi->sites();
-```
-
 ### Acquia Search
 
 #### Basic Usage
@@ -63,6 +63,8 @@ $sites = $cloudapi->sites();
 ```php
 use Acquia\Search\AcquiaSearchService;
 
+// A subscription can have multiple indexes. The Acquia Search service builder
+// generates credentials and clients for all of the subscription's indexes.
 $search = AcquiaSearchService::factory($subscription);
 
 $index = $search->get('XXXX-XXXXX');
