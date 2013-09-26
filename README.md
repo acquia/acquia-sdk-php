@@ -117,7 +117,9 @@ $services->save();
 ### Instantiating Service Clients
 
 Clients can now be instantiated from the service manager by passing the service
-group (e.g. "network", "search", etc.) and service name.
+group (e.g. "network", "search", etc.) and service name defined in the
+`setClient()` method. For Acquia Search, the service builder automatically
+names the client after their index identifiers.
 
 ```php
 
