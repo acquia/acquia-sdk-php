@@ -114,10 +114,10 @@ $services
 $services->save();
 ```
 
+### Instantiating Service Clients
+
 Clients can now be instantiated from the service manager by passing the service
 group (e.g. "network", "search", etc.) and service name.
-
-### Instantiating Service Clients
 
 ```php
 
