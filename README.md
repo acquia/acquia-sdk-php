@@ -114,9 +114,18 @@ $services
 $services->save();
 ```
 
+Clients can now be instantiated from the service manager by passing the service
+group (e.g. "network", "search", etc.) and service name.
+
 ### Instantiating Service Clients
 
 ```php
+
+use Acquia\Common\AcquiaServiceManager;
+
+$services = new AcquiaServiceManager(array(
+    'conf_dir' => '/path/to/conf/dir',
+));
 
 $cloudapi = $services->getClient('cloudapi', 'mysite');
 $network = $services->getClient('network', 'XXXX-XXXXX');
