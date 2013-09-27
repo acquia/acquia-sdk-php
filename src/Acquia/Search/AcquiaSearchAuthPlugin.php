@@ -2,7 +2,6 @@
 
 namespace Acquia\Search;
 
-use Acquia\Common\NoncerAbstract;
 use Guzzle\Common\Event;
 use Guzzle\Http\Message\Request;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -23,25 +22,13 @@ class AcquiaSearchAuthPlugin implements EventSubscriberInterface
     protected $derivedKey;
 
     /**
-     * @var \Acquia\Common\NoncerAbstract
-     */
-    protected $noncer;
-
-    /**
-     * @var int
-     */
-    protected $requestTime = 0;
-
-    /**
      * @param string $indexId
      * @param string $derivedKey
-     * @param \Acquia\Common\NoncerAbstract $noncer
      */
-    public function __construct($indexId, $derivedKey, NoncerAbstract $noncer)
+    public function __construct($indexId, $derivedKey)
     {
         $this->indexId = $indexId;
         $this->derivedKey = $derivedKey;
-        $this->noncer = $noncer;
     }
 
     /**
@@ -82,42 +69,6 @@ class AcquiaSearchAuthPlugin implements EventSubscriberInterface
     }
 
     /**
-     * @return \Acquia\Common\NoncerAbstract
-     */
-    public function getNoncer()
-    {
-        return $this->noncer;
-    }
-
-    /**
-     * @param int $requestTime
-     *
-     * @return \Acquia\Search\AcquiaSearchPligin
-     */
-    public function setRequestTime($requestTime)
-    {
-        $this->requestTime = $requestTime;
-        return $this;
-    }
-
-    /**
-     * @return \Acquia\Search\AcquiaSearchPligin
-     */
-    public function unsetRequestTime()
-    {
-        $this->requestTime = 0;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getRequestTime()
-    {
-        return $this->requestTime ?: time();
-    }
-
-    /**
      * Request before-send event handler.
      *
      * @param \Guzzle\Common\Event $event
@@ -134,19 +85,18 @@ class AcquiaSearchAuthPlugin implements EventSubscriberInterface
      */
     public function signRequest(Request $request)
     {
-        $requestTime = $this->getRequestTime();
-        $signature = new Signature($this->derivedKey, $this->noncer);
+        $signature = new Signature($this->derivedKey);
 
         $url = $request->getPath();
         if ('POST' == $request->getMethod()) {
             $body = (string) $request->getPostFields();
-            $hash = $signature->generate($body, $requestTime);
+            $hash = $signature->generate($body);
         } else {
             $url .= '?' . $request->getQuery();
-            $hash = $signature->generate($url, $requestTime);
+            $hash = $signature->generate($url);
         }
 
-        $request->addCookie('acquia_solr_time', $requestTime);
+        $request->addCookie('acquia_solr_time', $signature->getRequestTime());
         $request->addCookie('acquia_solr_nonce', $signature->getNonce());
         $request->addCookie('acquia_solr_hmac', $hash . ';');
     }

@@ -62,8 +62,6 @@ print $subscription->getDashboardUrl();
 
 ### Acquia Search
 
-#### Basic Usage
-
 ```php
 use Acquia\Search\AcquiaSearchService;
 
@@ -75,20 +73,8 @@ $index = $search->get('XXXX-XXXXX');
 $results = $index->select('my keywords');
 ```
 
-#### Advanced Solr Usage
-
-```php
-// Build the Solr parameters manually.
-// @see http://wiki.apache.org/solr/CommonQueryParameters
-$params = array('q' => 'my keywords', 'rows' => 20);
-$results = $index->select($params);
-
-// Issue arbitrary Solr requests to Acquia Search. The {+base_path} expression
-// is automatically expanded to "/solr/XXXX-XXXXX" for the index being queried.
-// @see http://guzzlephp.org/http-client/request.html#get-requests
-// @see http://lucene.apache.org/solr/
-$results = $index->get('{+base_path}/admin/ping?wt=json')->send()->json();
-```
+Refer to the [PSolr](https://github.com/cpliakas/psolr) project's documentation
+for more advanced usage examples.
 
 ## The Acquia Service Manager
 

@@ -4,6 +4,7 @@ namespace Acquia\Common;
 
 use Guzzle\Common\Collection;
 use Guzzle\Service\Builder\ServiceBuilder;
+use Guzzle\Service\Client;
 
 class AcquiaServiceManager extends \ArrayObject
 {
@@ -142,12 +143,17 @@ class AcquiaServiceManager extends \ArrayObject
     /**
      * @param string $group
      * @param string $name
-     * @param \Acquia\Common\AcquiaClient $client
+     * @param \Guzzle\Service\Client $client
      *
      * @return \Acquia\Common\AcquiaServiceManager
      */
-    public function setClient($group, $name, AcquiaClient $client)
+    public function setClient($group, $name, Client $client)
     {
+        // Must also be service manager aware.
+        if (!$client instanceof AcquiaServiceManagerAware) {
+            throw new \UnexpectedValueException('Client must implement Acquia\Common\AcquiaServiceManagerAware');
+        }
+
         $builder = $this[$group];
 
         // Set the client in the service builder.
@@ -172,7 +178,7 @@ class AcquiaServiceManager extends \ArrayObject
      * @param string $group
      * @param string $name
      *
-     * @return \Acquia\Common\AcquiaServiceManager
+     * @return \Guzzle\Service\Client
      */
     public function getClient($group, $name)
     {
@@ -183,7 +189,7 @@ class AcquiaServiceManager extends \ArrayObject
      * @param string $group
      * @param string $name
      *
-     * @return \Acquia\Common\AcquiaClient|null
+     * @return \Acquia\Common\AcquiaServiceManager
      */
     public function removeClient($group, $name)
     {

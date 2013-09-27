@@ -2,11 +2,12 @@
 
 namespace Acquia\Network;
 
-use Acquia\Common\AcquiaClient;
+use Acquia\Common\AcquiaServiceManagerAware;
 use Acquia\Network\Subscription;
 use Guzzle\Common\Collection;
+use Guzzle\Service\Client;
 
-class AcquiaNetworkClient extends AcquiaClient
+class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
 {
     /**
      * @var string
@@ -17,11 +18,6 @@ class AcquiaNetworkClient extends AcquiaClient
      * @var string
      */
     protected $networkKey;
-
-    /**
-     * {@inheritdoc}
-     */
-    protected $noncerLength = 55;
 
     /**
      * {@inheritdoc}
@@ -96,7 +92,7 @@ class AcquiaNetworkClient extends AcquiaClient
      */
     public function checkSubscription()
     {
-        $signature = new Signature($this->networkId, $this->networkKey, $this->getNoncer());
+        $signature = new Signature($this->networkKey);
 
         $serverAddress = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
         $httpHost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
