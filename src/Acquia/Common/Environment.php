@@ -30,7 +30,7 @@ class Environment
      */
     protected function init()
     {
-        // Extending classes should perform environment detection logic here.
+        return self::DEVELOPMENT;
     }
 
     /**
