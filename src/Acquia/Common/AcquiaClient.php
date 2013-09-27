@@ -56,20 +56,6 @@ class AcquiaClient extends Client
     }
 
     /**
-     * @param int $length
-     *
-     * @return Acquia\Common\NoncerAbstract
-     */
-    public static function noncerFactory($length = NoncerAbstract::DEFAULT_LENGTH)
-    {
-        $noncer = new self::$noncerClass($length);
-        if (!$noncer instanceof NoncerAbstract) {
-            throw new \UnexpectedValueException('Noncer must be an instance of Acquia\Common\NoncerAbstract');
-        }
-        return $noncer;
-    }
-
-    /**
      * @return array
      */
     public function getBuilderParams()
