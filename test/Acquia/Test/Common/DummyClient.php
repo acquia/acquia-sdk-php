@@ -2,6 +2,13 @@
 
 namespace Acquia\Test\Common;
 
-use Acquia\Common\AcquiaClient;
+use Acquia\Common\AcquiaServiceManagerAware;
+use Guzzle\Service\Client;
 
-class DummyClient extends AcquiaClient {}
+class DummyClient extends Client implements AcquiaServiceManagerAware
+{
+    function getBuilderParams()
+    {
+        return array();
+    }
+}

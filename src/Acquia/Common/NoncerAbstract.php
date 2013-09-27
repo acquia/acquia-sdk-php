@@ -25,6 +25,14 @@ abstract class NoncerAbstract
     }
 
     /**
+     * @param string $length
+     */
+    public function setLength($length)
+    {
+        $this->length = $length;
+    }
+
+    /**
      * @return string
      */
     public function getLength()

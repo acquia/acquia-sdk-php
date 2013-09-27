@@ -12,17 +12,15 @@ class AuthPluginTest extends \PHPUnit_Framework_TestCase
      */
     public function getAuthPlugin()
     {
-        return new AcquiaSearchAuthPlugin('testid', 'testkey', new RandomStringNoncer());
+        return new AcquiaSearchAuthPlugin('testid', 'testkey');
     }
 
     public function testGetters()
     {
-        $noncer = new RandomStringNoncer();
-        $plugin = new AcquiaSearchAuthPlugin('testid', 'testkey', $noncer);
+        $plugin = new AcquiaSearchAuthPlugin('testid', 'testkey');
 
         $this->assertEquals('testid', $plugin->getIndexId());
         $this->assertEquals('testkey', $plugin->getDerivedKey());
-        $this->assertEquals($noncer, $plugin->getNoncer());
     }
 
     public function testSetters()
@@ -31,8 +29,5 @@ class AuthPluginTest extends \PHPUnit_Framework_TestCase
 
         $plugin->setIndexId('anotherid');
         $this->assertEquals('anotherid', $plugin->getIndexId());
-
-        $plugin->setRequestTime(123);
-        $this->assertEquals(123, $plugin->getRequestTime());
     }
 }

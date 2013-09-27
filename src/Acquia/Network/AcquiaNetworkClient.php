@@ -9,6 +9,8 @@ use Guzzle\Service\Client;
 
 class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
 {
+    const NONCE_LENGTH = 55;
+
     /**
      * @var string
      */
@@ -93,6 +95,7 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
     public function checkSubscription()
     {
         $signature = new Signature($this->networkKey);
+        $signature->getNoncer()->setLength(self::NONCE_LENGTH);
 
         $serverAddress = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
         $httpHost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';

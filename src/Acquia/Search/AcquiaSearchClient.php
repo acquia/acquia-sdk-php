@@ -20,6 +20,9 @@ class AcquiaSearchClient extends SolrClient implements AcquiaServiceManagerAware
 
     /**
      * {@inheritdoc}
+     *
+     * Sets the HMAC authentication plugin, sets the base_path to point to the
+     * correct index.
      */
     public static function factory($config = array())
     {
