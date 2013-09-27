@@ -1,5 +1,8 @@
 # Acquia SDK PHP
 
+[![Build Status](https://travis-ci.org/cpliakas/acquia-sdk-php.png?branch=master)](https://travis-ci.org/cpliakas/acquia-sdk-php)
+[![Coverage Status](https://coveralls.io/repos/cpliakas/acquia-sdk-php/badge.png?branch=master)](https://coveralls.io/r/cpliakas/acquia-sdk-php?branch=master)
+
 An unoffical PHP SDK for Acquia services.
 
 NOTE: This project is **EXPERIMENTAL**
