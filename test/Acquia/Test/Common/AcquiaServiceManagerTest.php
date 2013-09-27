@@ -12,6 +12,10 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
+        if (!is_dir('build/test')) {
+            mkdir('build/test', 0755, true);
+        }
+
         file_put_contents('build/test/testgroup.json', Json::encode(array(
             'services' => array(
                 'testservice' => array(
