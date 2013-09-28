@@ -246,13 +246,12 @@ class AcquiaServiceManager extends \ArrayObject
 
         // Make sure the directory is available.
         if (!$hasConfigFile) {
-            $this->prepareConfigDirectory();
+            $this->prepareConfigDirectory($filename);
         }
 
         if (!@file_put_contents($filename, $json)) {
             throw new \RuntimeException('Error writing file: ' . $filename);
         }
-
     }
 
     /**
@@ -274,6 +273,14 @@ class AcquiaServiceManager extends \ArrayObject
         }
 
         chmod($filename, 0600);
+    }
+
+    /**
+     * @param string $group
+     */
+    public function deleteServiceGroup($group)
+    {
+        @unlink($this->getConfigFilename($group));
     }
 
     /**
