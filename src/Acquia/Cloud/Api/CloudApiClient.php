@@ -14,7 +14,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     /**
      * {@inheritdoc}
      *
-     * @return \Acquia\Cloud\Api\CloudApi
+     * @return \Acquia\Cloud\Api\CloudApiClient
      */
     public static function factory($config = array())
     {
@@ -49,6 +49,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     public function getBuilderParams()
     {
         return array(
+            'base_url' => $this->getConfig('base_url'),
             'username' => $this->getConfig('username'),
             'password' => $this->getConfig('password'),
         );

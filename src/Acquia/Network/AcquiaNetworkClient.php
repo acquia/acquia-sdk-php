@@ -68,6 +68,7 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
     public function getBuilderParams()
     {
         return array(
+            'base_url' => $this->getConfig('base_url'),
             'network_id' => $this->networkId,
             'network_key' => $this->networkKey,
         );

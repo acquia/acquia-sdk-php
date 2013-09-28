@@ -38,6 +38,14 @@ class AcquiaServiceManager extends \ArrayObject
     }
 
     /**
+     * @return \Guzzle\Common\Collection
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
      * @param string $group
      *
      * @return string
