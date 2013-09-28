@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/cpliakas/acquia-sdk-php.png?branch=master)](https://travis-ci.org/cpliakas/acquia-sdk-php)
 [![Coverage Status](https://coveralls.io/repos/cpliakas/acquia-sdk-php/badge.png?branch=master)](https://coveralls.io/r/cpliakas/acquia-sdk-php?branch=master)
 [![Dependency Status](http://www.versioneye.com/php/cpliakas:acquia-sdk-php/dev-master/badge.png)](http://www.versioneye.com/php/cpliakas:acquia-sdk-php/dev-master)
+[![Latest Stable Version](https://poser.pugx.org/cpliakas/acquia-sdk-php/v/stable.png)](https://packagist.org/packages/cpliakas/acquia-sdk-php)
 
 An unoffical PHP SDK for Acquia services.
 
