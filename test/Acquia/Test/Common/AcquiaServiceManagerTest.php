@@ -42,69 +42,75 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    public function testGetConfig()
+    {
+        $services = $this->getAcquiaServiceManager();
+        $this->assertEquals('build/test', $services->getConfig()->get('conf_dir'));
+    }
+
     public function testConfigDefaults()
     {
-        $service = new AcquiaServiceManager();
+        $services = new AcquiaServiceManager();
 
         $expected = 'conf/testgroup.json';
-        $filename = $service->getConfigFilename('testgroup');
+        $filename = $services->getConfigFilename('testgroup');
         $this->assertEquals($expected, $filename);
     }
 
     public function testConfigFilename()
     {
-        $service = new AcquiaServiceManager(array(
+        $services = new AcquiaServiceManager(array(
             'conf_dir' => 'test-dir',
         ));
 
         $expected = 'test-dir/testgroup.json';
-        $filename = $service->getConfigFilename('testgroup');
+        $filename = $services->getConfigFilename('testgroup');
 
         $this->assertEquals($expected, $filename);
     }
 
     public function testHasConfigFile()
     {
-        $service = $this->getAcquiaServiceManager();
+        $services = $this->getAcquiaServiceManager();
 
-        $this->assertTrue($service->hasConfigFile('testgroup'));
-        $this->assertFalse($service->hasConfigFile('missing'));
+        $this->assertTrue($services->hasConfigFile('testgroup'));
+        $this->assertFalse($services->hasConfigFile('missing'));
     }
 
     public function testLoad()
     {
-        $service = $this->getAcquiaServiceManager();
+        $services = $this->getAcquiaServiceManager();
 
-        $testBuilder = $service['testgroup'];
+        $testBuilder = $services['testgroup'];
         $this->assertTrue(isset($testBuilder['testservice']));
         $this->assertTrue($testBuilder['testservice'] instanceof DummyClient);
 
         // the getBuilder() method is the same as offsetGet().
-        $sameBuilder = $service->getBuilder('testgroup');
+        $sameBuilder = $services->getBuilder('testgroup');
         $this->assertEquals($sameBuilder, $testBuilder);
 
         // A non-existent service should return an empty builder.
-        $missingBuilder = $service['missing'];
+        $missingBuilder = $services['missing'];
         $this->assertFalse(isset($missingBuilder['testservice']));
     }
 
     public function testSetBuilder()
     {
-        $service = new AcquiaServiceManager();
+        $services = new AcquiaServiceManager();
 
         $builder = ServiceBuilder::factory(array());
-        $service->setBuilder('newbuilder', $builder);
+        $services->setBuilder('newbuilder', $builder);
 
-        $this->assertEquals($builder, $service->getBuilder('newbuilder'));
+        $this->assertEquals($builder, $services->getBuilder('newbuilder'));
     }
 
     public function testRemoveBuilder()
     {
-        $service = $this->getAcquiaServiceManager();
+        $services = $this->getAcquiaServiceManager();
 
-        $builder = $service['testgroup'];
-        unset($service['testgroup']);
-        $this->assertEmpty(isset($service['testgroup']));
+        $builder = $services['testgroup'];
+        unset($services['testgroup']);
+        $this->assertEmpty(isset($services['testgroup']));
     }
 
     /**
@@ -112,42 +118,77 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetInvalidBuilder()
     {
-        $service = new AcquiaServiceManager();
+        $services = new AcquiaServiceManager();
 
         $builder = 'Not a ServiceBuilder class';
-        $service['invalid'] = $builder;
+        $services['invalid'] = $builder;
     }
 
     public function testSetClient()
     {
-        $service = $this->getAcquiaServiceManager();
+        $services = $this->getAcquiaServiceManager();
 
         $client = new DummyClient();
-        $service->setClient('testgroup', 'newservice', $client);
-        $this->assertEquals($client, $service->getClient('testgroup', 'newservice'));
+        $services->setClient('testgroup', 'newservice', $client);
+        $this->assertEquals($client, $services->getClient('testgroup', 'newservice'));
+    }
+
+    /**
+     * @expectedException \UnexpectedValueException
+     */
+    public function testSetInvalidClient()
+    {
+        $services = $this->getAcquiaServiceManager();
+
+        $badClient = new DummyInvalidClient();
+        $services->setClient('testgroup', 'newservice', $badClient);
     }
 
     public function testGetClient()
     {
-        $service = $this->getAcquiaServiceManager();
+        $services = $this->getAcquiaServiceManager();
 
-        $testService = $service->getClient('testgroup', 'testservice');
+        $testService = $services->getClient('testgroup', 'testservice');
         $this->assertTrue($testService instanceof DummyClient);
 
-        $missingService = $service->getClient('testgroup', 'missing');
+        $missingService = $services->getClient('testgroup', 'missing');
         $this->assertNull($missingService);
     }
 
     public function testRemoveClient()
     {
-        $service = $this->getAcquiaServiceManager();
+        $services = $this->getAcquiaServiceManager();
 
-        $service->removeClient('testgroup', 'testservice');
-        $service->save();
+        $services->removeClient('testgroup', 'testservice');
+        $services->save();
 
         $json = file_get_contents('build/test/testgroup.json');
         $data = Json::decode($json);
 
         $this->assertEmpty($data['services']);
     }
+
+    public function testPrepareDirectory()
+    {
+        $filename = 'build/test/nested/dir/testfile.json';
+
+        $services = $this->getAcquiaServiceManager();
+        $services->prepareConfigDirectory($filename);
+
+        $this->assertFileExists($filename);
+
+        unlink($filename);
+        rmdir('build/test/nested/dir');
+        rmdir('build/test/nested');
+    }
+
+//    public function testPrepareDirectoryMkdirError()
+//    {
+//
+//    }
+//
+//    public function testPrepareDirectoryTouchError()
+//    {
+//
+//    }
 }
