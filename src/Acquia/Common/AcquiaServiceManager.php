@@ -210,13 +210,14 @@ class AcquiaServiceManager extends \ArrayObject
      * @param string $group
      * @param boolean $overwrite
      *
-     * @return int|false
+     * @throws \RuntimeException
      *
      * @see http://guzzlephp.org/webservice-client/using-the-service-builder.html#sourcing-from-a-json-document
      */
     public function saveServiceGroup($group, $overwrite = false)
     {
         $filename = $this->getConfigFilename($group);
+        $hasConfigFile = $this->hasConfigFile($group);
 
         // This sucks, but it is the only way to get the builder config.
         // @todo Create a Guzzle issue to add a getBuilderConfig() method.
@@ -224,7 +225,7 @@ class AcquiaServiceManager extends \ArrayObject
         $builderConfig = Json::decode($builder->serialize());
 
         // @todo Add validation.
-        if (!$overwrite && $this->hasConfigFile($group)) {
+        if (!$overwrite && $hasConfigFile) {
             $groupJson = file_get_contents($filename);
             $groupData = Json::decode($groupJson);
             $builderConfig = array_merge($groupData['services'], $builderConfig);
@@ -243,7 +244,36 @@ class AcquiaServiceManager extends \ArrayObject
             'services' => $builderConfig,
         ));
 
-        return file_put_contents($filename, $json);
+        // Make sure the directory is available.
+        if (!$hasConfigFile) {
+            $this->prepareConfigDirectory();
+        }
+
+        if (!@file_put_contents($filename, $json)) {
+            throw new \RuntimeException('Error writing file: ' . $filename);
+        }
+
+    }
+
+    /**
+     * @param string $filename
+     *
+     * @throws \RuntimeException
+     */
+    public function prepareConfigDirectory($filename)
+    {
+        $directory = dirname($filename);
+        if (!is_dir($directory)) {
+            if (!@mkdir($directory, 0755, true)) {
+                throw new \RuntimeException('Error creating directory: ' . $directory);
+            }
+        }
+
+        if (!@touch($filename)) {
+            throw new \RuntimeException('Error writing file: ' . $filename);
+        }
+
+        chmod($filename, 0600);
     }
 
     /**
