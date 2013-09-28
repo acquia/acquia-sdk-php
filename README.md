@@ -18,7 +18,7 @@ library as a dependency to your composer.json file.
 ```json
 {
     "require": {
-        "cpliakas/acquia-sdk-php": "dev-master"
+        "cpliakas/acquia-sdk-php": "*"
     }
 }
 ```
