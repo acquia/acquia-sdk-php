@@ -2,7 +2,6 @@
 
 namespace Acquia\Test\Search;
 
-use Acquia\Common\RandomStringNoncer;
 use Acquia\Search\AcquiaSearchAuthPlugin;
 
 class AuthPluginTest extends \PHPUnit_Framework_TestCase

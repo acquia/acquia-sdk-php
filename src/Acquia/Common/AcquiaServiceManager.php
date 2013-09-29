@@ -145,6 +145,7 @@ class AcquiaServiceManager extends \ArrayObject
     public function setBuilder($group, ServiceBuilder $builder)
     {
         $this[$group] = $builder;
+        $this->removed[$group] = array();
         return $this;
     }
 
@@ -204,6 +205,18 @@ class AcquiaServiceManager extends \ArrayObject
         unset($this[$group][$name]);
         $this->removed[$group][$name] = $name;
         return $this;
+    }
+
+    /**
+     * Writes all service group configurations to the backend.
+     *
+     * @param boolean $overwrite
+     */
+    public function save($overwrite = false)
+    {
+        foreach ($this as $group => $builder) {
+            $this->saveServiceGroup($group);
+        }
     }
 
     /**
@@ -281,17 +294,13 @@ class AcquiaServiceManager extends \ArrayObject
     public function deleteServiceGroup($group)
     {
         @unlink($this->getConfigFilename($group));
-    }
 
-    /**
-     * Writes all service group configurations to the backend.
-     *
-     * @param boolean $overwrite
-     */
-    public function save($overwrite = false)
-    {
-        foreach ($this as $group => $builder) {
-            $this->saveServiceGroup($group);
+        // Unlike normal arrays, unset() will throw errors here if the key
+        // doesn't exist.
+        if (isset($this[$group])) {
+            unset($this[$group]);
         }
+
+        unset($this->removed[$group]);
     }
 }

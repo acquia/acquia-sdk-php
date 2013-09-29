@@ -8,6 +8,18 @@ use Guzzle\Service\Builder\ServiceBuilder;
 
 class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
 {
+    protected $builderConfig = array(
+        'services' => array(
+            'testservice' => array(
+                'class' => 'Acquia\Test\Common\DummyClient',
+                'params' => array(
+                    'param1' => 'foo',
+                    'param2' => 'bar',
+                ),
+            ),
+        ),
+    );
+
     public function setUp()
     {
         parent::setUp();
@@ -16,23 +28,15 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
             mkdir('build/test', 0755, true);
         }
 
-        file_put_contents('build/test/testgroup.json', Json::encode(array(
-            'services' => array(
-                'testservice' => array(
-                    'class' => 'Acquia\Test\Common\DummyClient',
-                    'params' => array(
-                        'param1' => 'foo',
-                        'param2' => 'bar',
-                    ),
-                ),
-            ),
-        )));
+        file_put_contents('build/test/testgroup.json', Json::encode($this->builderConfig));
     }
 
     public function tearDown()
     {
         parent::tearDown();
-        unlink('build/test/testgroup.json');
+        if (file_exists('build/test/testgroup.json')) {
+            unlink('build/test/testgroup.json');
+        }
     }
 
     public function getAcquiaServiceManager()
@@ -168,6 +172,19 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($data['services']);
     }
 
+    public function testSaveNewServiceGroup()
+    {
+        $services = $this->getAcquiaServiceManager();
+        $builder = $services->getBuilder('testgroup');
+        $services->setBuilder('newgroup', clone $builder);
+
+        $services->save();
+        $this->assertFileExists('build/test/newgroup.json');
+
+        $services->deleteServiceGroup('newgroup');
+        $this->assertFileNotExists('build/test/newgroup.json');
+    }
+
     public function testPrepareDirectory()
     {
         $filename = 'build/test/nested/dir/testfile.json';
@@ -180,6 +197,16 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
         unlink($filename);
         rmdir('build/test/nested/dir');
         rmdir('build/test/nested');
+    }
+
+    public function testDeleteServiceGroup()
+    {
+        $services = $this->getAcquiaServiceManager();
+        $builder = $services->getBuilder('testgroup');
+        $services->deleteServiceGroup('testgroup');
+
+        $this->assertFileNotExists('build/test/testgroup.json');
+        $this->assertFalse(isset($services['testgroup']));
     }
 
 //    public function testPrepareDirectoryMkdirError()

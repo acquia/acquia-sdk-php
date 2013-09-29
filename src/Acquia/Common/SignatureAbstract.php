@@ -131,6 +131,7 @@ abstract class SignatureAbstract
      */
     public function getRequestTime()
     {
-        return $this->requestTime ?: time();
+        $this->requestTime = $this->requestTime ?: time();
+        return $this->requestTime;
     }
 }

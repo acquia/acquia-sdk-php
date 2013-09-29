@@ -21,6 +21,9 @@ class NoncerTest extends \PHPUnit_Framework_TestCase
     {
         $noncer = new RandomStringNoncer(123);
         $this->assertEquals(123, $noncer->getLength());
+
+        $noncer->setLength(456);
+        $this->assertEquals(456, $noncer->getLength());
     }
 
     public function testToString()
