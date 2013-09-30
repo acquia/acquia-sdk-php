@@ -3,21 +3,11 @@
 namespace Acquia\Search;
 
 use Acquia\Common\AcquiaServiceManagerAware;
+use Guzzle\Common\Collection;
 use PSolr\Client\SolrClient;
 
 class AcquiaSearchClient extends SolrClient implements AcquiaServiceManagerAware
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function getConfigRequired()
-    {
-        return parent::getConfigRequired() + array(
-            'index_id',
-            'derived_key',
-        );
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -26,6 +16,9 @@ class AcquiaSearchClient extends SolrClient implements AcquiaServiceManagerAware
      */
     public static function factory($config = array())
     {
+        // We just use this for validation. The configs are set in the parent's
+        // factory methid.
+        Collection::fromConfig($config, array(), array('index_id', 'derived_key'));
         $solr = parent::factory($config);
 
         // Get the configs relevant to Acquia Search.

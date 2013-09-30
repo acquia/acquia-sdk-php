@@ -5,7 +5,7 @@
 [![Dependency Status](http://www.versioneye.com/php/cpliakas:acquia-sdk-php/dev-master/badge.png)](http://www.versioneye.com/php/cpliakas:acquia-sdk-php/dev-master)
 [![Latest Stable Version](https://poser.pugx.org/cpliakas/acquia-sdk-php/v/stable.png)](https://packagist.org/packages/cpliakas/acquia-sdk-php)
 
-An unoffical PHP SDK for Acquia services.
+An unoffical PHP SDK for [Acquia](https://www.acquia.com/) services.
 
 NOTE: This project is **EXPERIMENTAL**
 
