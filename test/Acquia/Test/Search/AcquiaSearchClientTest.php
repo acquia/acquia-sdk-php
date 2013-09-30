@@ -4,9 +4,32 @@ namespace Acquia\Test\Search;
 
 use Acquia\Search\AcquiaSearchClient;
 use Acquia\Search\AcquiaSearchAuthPlugin;
+use Guzzle\Http\Message\Response;
+use Guzzle\Plugin\Mock\MockPlugin;
 
 class AcquiaSearchClientTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Helper function that returns the event listener.
+     *
+     * @param Acquia\Search\AcquiaSearchClient $solr
+     *
+     * @return \Acquia\Search\AcquiaSearchAuthPlugin
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function getRegisteredAuthPlugin(AcquiaSearchClient $solr)
+    {
+        $listeners = $solr->getEventDispatcher()->getListeners('request.before_send');
+        foreach ($listeners as $listener) {
+            if (isset($listener[0]) && $listener[0] instanceof AcquiaSearchAuthPlugin) {
+                return $listener[0];
+            }
+        }
+
+        throw new \UnexpectedValueException('Expecting subscriber Acquia\Search\AcquiaSearchAuthPlugin to be registered');
+    }
+
     /**
      * @return \Acquia\Search\AcquiaSearchClient
      */
@@ -68,13 +91,26 @@ class AcquiaSearchClientTest extends \PHPUnit_Framework_TestCase
         $solr = $this->getAcquiaSearchClient();
         $listeners = $solr->getEventDispatcher()->getListeners('request.before_send');
 
-        $hasPlugin = false;
-        foreach ($listeners as $listener) {
-            if (isset($listener[0]) && $listener[0] instanceof AcquiaSearchAuthPlugin) {
-                $hasPlugin = true;
-            }
-        }
-
+        $hasPlugin = (boolean) $this->getRegisteredAuthPlugin($solr);
         return $this->assertTrue($hasPlugin);
+    }
+
+    public function testMockSearch()
+    {
+        $solr = $this->getAcquiaSearchClient();
+
+        $mock = new MockPlugin();
+        $mock->addResponse(new Response(200));
+        $solr->addSubscriber($mock);
+
+        $request = $solr->get('select');
+        $request->send();
+
+        $headers = $request->getHeaders()->get('cookie')->toArray();
+        $string = join(';', $headers);
+
+        $this->assertRegExp('/acquia_solr_time=\d+;/', $string);
+        $this->assertRegExp('/acquia_solr_nonce=[a-zA-Z0-9+\/]+;/', $string);
+        $this->assertRegExp('/acquia_solr_hmac=[a-f0-9]+;/', $string);
     }
 }
