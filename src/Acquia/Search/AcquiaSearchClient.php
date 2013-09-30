@@ -3,7 +3,7 @@
 namespace Acquia\Search;
 
 use Acquia\Common\AcquiaServiceManagerAware;
-use PSolr\SolrClient;
+use PSolr\Client\SolrClient;
 
 class AcquiaSearchClient extends SolrClient implements AcquiaServiceManagerAware
 {
