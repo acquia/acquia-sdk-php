@@ -26,7 +26,8 @@
         "cpliakas/acquia-sdk-php-common": "self.version",
         "cpliakas/acquia-sdk-php-network": "self.version",
         "cpliakas/acquia-sdk-php-search": "self.version",
-        "cpliakas/acquia-sdk-php-cloud-env": "self.version"
+        "cpliakas/acquia-sdk-php-cloud-env": "self.version",
+        "cpliakas/acquia-sdk-php-cloud-api": "self.version"
     },
     "autoload": {
         "psr-0": {
