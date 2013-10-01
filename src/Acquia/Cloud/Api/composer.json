@@ -1,7 +1,7 @@
 {
-    "name": "cpliakas/acquia-sdk-php-cloud-env",
+    "name": "cpliakas/acquia-sdk-php-cloud-api",
     "type": "library",
-    "description": "Acquia Cloud environment component for the Acquia PHP SDK.",
+    "description": "Acquia Cloud API component for the Acquia PHP SDK.",
     "keywords": ["acquia"],
     "homepage": "https://github.com/cpliakas/acquia-sdk-php",
     "license": "GPL-3.0",
@@ -17,8 +17,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Acquia\\Cloud\\Environment": ""
+            "Acquia\\Cloud\\Api": ""
         }
     },
-    "target-dir": "Acquia/Cloud/Environment"
+    "target-dir": "Acquia/Cloud/Api"
 }

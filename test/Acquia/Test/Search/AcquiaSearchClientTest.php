@@ -89,8 +89,6 @@ class AcquiaSearchClientTest extends \PHPUnit_Framework_TestCase
     public function testHasAuthPlugin()
     {
         $solr = $this->getAcquiaSearchClient();
-        $listeners = $solr->getEventDispatcher()->getListeners('request.before_send');
-
         $hasPlugin = (boolean) $this->getRegisteredAuthPlugin($solr);
         return $this->assertTrue($hasPlugin);
     }

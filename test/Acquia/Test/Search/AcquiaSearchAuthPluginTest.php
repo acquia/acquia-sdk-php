@@ -4,7 +4,7 @@ namespace Acquia\Test\Search;
 
 use Acquia\Search\AcquiaSearchAuthPlugin;
 
-class AuthPluginTest extends \PHPUnit_Framework_TestCase
+class AcquiaSearchAuthPluginTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @return \Acquia\Search\AcquiaSearchAuthPlugin
@@ -16,8 +16,7 @@ class AuthPluginTest extends \PHPUnit_Framework_TestCase
 
     public function testGetters()
     {
-        $plugin = new AcquiaSearchAuthPlugin('testid', 'testkey');
-
+        $plugin = $this->getAuthPlugin();
         $this->assertEquals('testid', $plugin->getIndexId());
         $this->assertEquals('testkey', $plugin->getDerivedKey());
     }
@@ -25,7 +24,6 @@ class AuthPluginTest extends \PHPUnit_Framework_TestCase
     public function testSetters()
     {
         $plugin = $this->getAuthPlugin();
-
         $plugin->setIndexId('anotherid');
         $this->assertEquals('anotherid', $plugin->getIndexId());
     }

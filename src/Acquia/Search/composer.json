@@ -1,7 +1,7 @@
 {
     "name": "cpliakas/acquia-sdk-php-search",
     "type": "library",
-    "description": "Acquia Search components for the Acquia PHP SDK.",
+    "description": "Acquia Search component for the Acquia PHP SDK.",
     "keywords": ["acquia"],
     "homepage": "https://github.com/cpliakas/acquia-sdk-php",
     "license": "GPL-3.0",

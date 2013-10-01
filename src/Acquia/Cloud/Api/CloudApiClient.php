@@ -119,54 +119,72 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Sites
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function sites()
     {
-        return $this->sendGet('{+base_path}/sites.json');
+        $data = $this->sendGet('{+base_path}/sites.json');
+        return new Response\Sites($data);
     }
 
     /**
      * @param string $site
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Site
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function site($site)
     {
         $variables = array('site' => $site);
-        return $this->sendGet('{+base_path}/sites/{site}.json', $variables);
+        $data = $this->sendGet('{+base_path}/sites/{site}.json', $variables);
+        return new Response\Site($data);
+    }
+
+    /**
+     * @param string $site
+     *
+     * @return \Acquia\Cloud\Api\Response\Environments
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function environments($site)
+    {
+        $variables = array('site' => $site);
+        $data = $this->sendGet('{+base_path}/sites/{site}/envs.json', $variables);
+        return new Response\Environments($data);
     }
 
     /**
      * @param string $site
      * @param string $env
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Environment
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function environments($site, $env)
+    public function environment($site, $env)
     {
         $variables = array(
             'site' => $site,
             'env' => $env,
         );
-        return $this->sendGet('{+base_path}/sites/{site}/envs/{env}.json', $variables);
+        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}.json', $variables);
+        return new Response\Environment($data);
     }
 
     /**
      * @param string $site
      * @param string $env
+     * @param string $type
      *
      * @return array
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function environment($site, $env, $type)
+    public function installDistro($site, $env, $type)
     {
         $variables = array(
             'site' => $site,
@@ -178,26 +196,9 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
 
     /**
      * @param string $site
-     * @param string $environment
-     *
-     * @return array
-     *
-     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
-     */
-    public function installDistro($site, $environment)
-    {
-        $variables = array(
-            'site' => $site,
-            'environment' => $environment,
-        );
-        return $this->sendPost('{+base_path}/sites/{site}/envs.json', $variables);
-    }
-
-    /**
-     * @param string $site
      * @param string $env
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Servers
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -207,7 +208,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'env' => $env,
         );
-        return $this->sendGet('{+base_path}/sites/{site}/envs/{env}/servers.json', $variables);
+        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/servers.json', $variables);
+        return new Response\Servers($data);
     }
 
     /**
@@ -215,7 +217,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $env
      * @param string $server
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Server
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -226,7 +228,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'env' => $env,
             'server' => $server,
         );
-        return $this->sendGet('{+base_path}/sites/{site}/envs/{env}/servers/{server}.json', $variables);
+        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/servers/{server}.json', $variables);
+        return new Response\Server($data);
     }
 
     /**
@@ -387,21 +390,22 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     /**
      * @param string $site
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Databases
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function siteDatabases($site)
     {
         $variables = array('site' => $site);
-        return $this->sendGet('{+base_path}/sites/{site}/dbs.json', $variables);
+        $data = $this->sendGet('{+base_path}/sites/{site}/dbs.json', $variables);
+        return new Response\Databases($data);
     }
 
     /**
      * @param string $site
      * @param string $db
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Database
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -411,7 +415,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'db' => $db,
         );
-        return $this->sendGet('{+base_path}/sites/{site}/dbs/{db}.json', $variables);
+        $data = $this->sendGet('{+base_path}/sites/{site}/dbs/{db}.json', $variables);
+        return new Response\Database($data);
     }
 
     /**
