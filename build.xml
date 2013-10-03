@@ -4,11 +4,13 @@
   <target name="build" depends="composer,pdepend,phploc,phpunit"/>
 
   <target name="clean" description="Cleanup build artifacts">
+    <delete file="${basedir}/composer.lock"/>
     <delete file="${basedir}/build/composer.phar"/>
     <delete dir="${basedir}/build/coverage"/>
     <delete dir="${basedir}/build/logs"/>
     <delete dir="${basedir}/build/pdepend"/>
     <delete dir="${basedir}/build/test"/>
+    <delete file="${basedir}/vendor"/>
   </target>
 
   <target name="prepare">
