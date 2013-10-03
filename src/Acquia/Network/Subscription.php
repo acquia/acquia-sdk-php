@@ -7,13 +7,13 @@ class Subscription extends \ArrayObject
     /**
      * @param string $networkId
      * @param string $networkKey
-     * @param \Acquia\Network\XmlrpcResponse
+     * @param array $response
      *
      * @return \Acquia\Network\Subscription
      */
-    public static function loadFromResponse($networkId, $networkKey, XmlrpcResponse $xmlrpcResponse)
+    public static function loadFromResponse($networkId, $networkKey, array $response)
     {
-        $subscription = new static($xmlrpcResponse['body']);
+        $subscription = new static($response['body']);
         $subscription['id'] = $networkId;
         $subscription['key'] = $networkKey;
         return $subscription;

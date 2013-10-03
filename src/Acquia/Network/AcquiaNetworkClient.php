@@ -98,52 +98,38 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
         $signature = new Signature($this->networkKey);
         $signature->getNoncer()->setLength(self::NONCE_LENGTH);
 
-        $serverAddress = isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '';
-        $httpHost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
-        $https = isset($_SERVER['HTTPS']) ? 1 : 0;
+        $params = array(
+            'authenticator' => array(
+                'identifier' => $this->networkId,
+                'time' => $signature->getRequestTime(),
+                'hash' => $signature->generate(),
+                'nonce' => $signature->getNonce(),
+            ),
+            'ssl' => isset($_SERVER['HTTPS']) ? 1 : 0,
+            'ip' => isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '',
+            'host' => isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '',
+        );
 
-        $body = '<?xml version="1.0"?>
-          <methodCall>
-            <methodName>acquia.agent.subscription</methodName>
-            <params>
-              <param>
-                <value>
-                  <struct>
-                    <member><name>authenticator</name>
-                      <value>
-                        <struct>
-                          <member><name>identifier</name><value><string>' . $this->networkId . '</string></value></member>
-                          <member><name>time</name><value><int>' . $signature->getRequestTime() . '</int></value></member>
-                          <member><name>hash</name><value><string>' . $signature->generate() . '</string></value></member>
-                          <member><name>nonce</name><value><string>' . $signature->getNonce() . '</string></value></member>
-                        </struct>
-                      </value>
-                    </member>
-                    <member><name>ip</name><value><string>' . $serverAddress . '</string></value></member>
-                    <member><name>host</name><value><string>' . $httpHost . '</string></value></member>
-                    <member><name>ssl</name><value><boolean>' . $https . '</boolean></value></member>
-                    <member>
-                      <name>body</name>
-                      <value>
-                        <struct>
-                          <member><name>search_version</name>
-                            <value>
-                              <struct>
-                              </struct>
-                            </value>
-                          </member>
-                        </struct>
-                      </value>
-                    </member>
-                  </struct>
-                </value>
-              </param>
-            </params>
-          </methodCall>'
-        ;
+        $response = $this->call('acquia.agent.subscription', $params);
+        return Subscription::loadFromResponse($this->networkId, $this->networkKey, $response);
+    }
 
-        $xml = $this->post('xmlrpc.php', array(), $body)->send()->xml();
-        $xmlrpcResponse = new XmlrpcResponse($xml);
-        return Subscription::loadFromResponse($this->networkId, $this->networkKey, $xmlrpcResponse);
+    /**
+     * @param string $method
+     * @param array $params
+     *
+     * @return array
+     *
+     * @throws \fXmlRpc\Exception\ResponseException
+     */
+    public function call($method, array $params)
+    {
+        $uri = $this->getConfig('base_url') . '/xmlrpc.php';
+        $bridge = new \fXmlRpc\Transport\GuzzleBridge($this);
+        $client = new \fXmlRpc\Client($uri, $bridge);
+
+        // We have to nest the params in an array otherwise we get a "Wrong
+        // number of method parameters" error.
+        return $client->call($method, array($params));
     }
 }
