@@ -29,12 +29,12 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
 
     /**
      * @var string
-    */
+     */
     protected $httpHost;
 
     /**
      * @var bool
-    */
+     */
     protected $https;
 
     /**
