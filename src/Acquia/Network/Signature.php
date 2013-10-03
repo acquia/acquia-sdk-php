@@ -20,22 +20,22 @@ class Signature extends SignatureAbstract
 
          $time = $this->getRequestTime();
          $nonce = $this->generateNonce();
-         $networkKey = $this->getSecretKey();
+         $key = $this->getSecretKey();
 
          if (empty($params['rpc_version']) || $params['rpc_version'] < 2) {
               $encoded_params = serialize($params);
-              $string = $time . ':' . $nonce . ':' . $networkKey . ':' . serialize($params);
+              $string = $time . ':' . $nonce . ':' . $key . ':' . serialize($params);
 
               return base64_encode(
-                  pack("H*", sha1((str_pad($networkKey, 64, chr(0x00)) ^ (str_repeat(chr(0x5c), 64))) .
-                  pack("H*", sha1((str_pad($networkKey, 64, chr(0x00)) ^ (str_repeat(chr(0x36), 64))) .
+                  pack("H*", sha1((str_pad($key, 64, chr(0x00)) ^ (str_repeat(chr(0x5c), 64))) .
+                  pack("H*", sha1((str_pad($key, 64, chr(0x00)) ^ (str_repeat(chr(0x36), 64))) .
                   $string)))));
         } elseif ($params['rpc_version'] == 2) {
               $string = $time . ':' . $nonce . ':' . json_encode($params);
-              return sha1((str_pad($networkKey, 64, chr(0x00)) ^ (str_repeat(chr(0x5c), 64))) . pack("H*", sha1((str_pad($networkKey, 64, chr(0x00)) ^ (str_repeat(chr(0x36), 64))) . $string)));
+              return sha1((str_pad($key, 64, chr(0x00)) ^ (str_repeat(chr(0x5c), 64))) . pack("H*", sha1((str_pad($key, 64, chr(0x00)) ^ (str_repeat(chr(0x36), 64))) . $string)));
         } else {
               $string = $time . ':' . $nonce;
-              return sha1((str_pad($networkKey, 64, chr(0x00)) ^ (str_repeat(chr(0x5c), 64))) . pack("H*", sha1((str_pad($networkKey, 64, chr(0x00)) ^ (str_repeat(chr(0x36), 64))) . $string)));
+              return sha1((str_pad($key, 64, chr(0x00)) ^ (str_repeat(chr(0x5c), 64))) . pack("H*", sha1((str_pad($key, 64, chr(0x00)) ^ (str_repeat(chr(0x36), 64))) . $string)));
         }
     }
 }
