@@ -17,10 +17,10 @@
         "guzzle/service": "~3.0"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "dev-master",
         "pdepend/pdepend": "~1.0",
         "phploc/phploc": "~2.0",
-        "phpunit/phpunit": "~3.0"
+        "phpunit/phpunit": "~3.0",
+        "satooshi/php-coveralls": "dev-master"
     },
     "replace": {
         "cpliakas/acquia-sdk-php-common": "self.version",
@@ -31,8 +31,7 @@
     },
     "autoload": {
         "psr-0": {
-            "Acquia": "src/",
-            "Acquia\\Test": "test/"
+            "Acquia": "src/"
         }
     }
 }
