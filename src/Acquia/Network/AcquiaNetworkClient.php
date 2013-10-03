@@ -91,30 +91,6 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
-     * @return \Acquia\Network\Subscription
-     */
-    public function checkSubscription()
-    {
-        $signature = new Signature($this->networkKey);
-        $signature->getNoncer()->setLength(self::NONCE_LENGTH);
-
-        $params = array(
-            'authenticator' => array(
-                'identifier' => $this->networkId,
-                'time' => $signature->getRequestTime(),
-                'hash' => $signature->generate(),
-                'nonce' => $signature->getNonce(),
-            ),
-            'ssl' => isset($_SERVER['HTTPS']) ? 1 : 0,
-            'ip' => isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '',
-            'host' => isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '',
-        );
-
-        $response = $this->call('acquia.agent.subscription', $params);
-        return Subscription::loadFromResponse($this->networkId, $this->networkKey, $response);
-    }
-
-    /**
      * @param string $method
      * @param array $params
      *
@@ -128,8 +104,70 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
         $bridge = new \fXmlRpc\Transport\GuzzleBridge($this);
         $client = new \fXmlRpc\Client($uri, $bridge);
 
+        $signature = new Signature($this->networkKey);
+        $signature->getNoncer()->setLength(self::NONCE_LENGTH);
+
+        $data = array(
+            'body' => $params,
+            'authenticator' => array(
+                'identifier' => $this->networkId,
+                'time' => $signature->getRequestTime(),
+                'hash' => $signature->generate($params),
+                'nonce' => $signature->getNonce(),
+            ),
+            'ssl' => isset($_SERVER['HTTPS']) ? 1 : 0,
+            'ip' => isset($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : '',
+            'host' => isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '',
+        );
+
         // We have to nest the params in an array otherwise we get a "Wrong
         // number of method parameters" error.
-        return $client->call($method, array($params));
+        return $client->call($method, array($data));
+    }
+
+    /**
+     * @param array $options
+     *   - search_version: An array of search module versions keyed by name.
+     *   - no_heartbeat: Pass 1 to not send a heartbeat.
+     *
+     * @return \Acquia\Network\Subscription
+     */
+    public function getSubscription(array $params = array())
+    {
+        $response = $this->call('acquia.agent.subscription', $params);
+        return Subscription::loadFromResponse($this->networkId, $this->networkKey, $response);
+    }
+
+    /**
+     * @return \Acquia\Network\Subscription
+     */
+    public function checkSubscription()
+    {
+        return $this->getSubscription();
+    }
+
+    /**
+     * @return boolean
+     */
+    public function subscriptionActive()
+    {
+        $subscription = $this->getSubscription(array('no_heartbeat' => 1));
+        return $subscription->isActive();
+    }
+
+    /**
+     * @return boolean
+     *
+     * @todo Be smarter about the exception handling.
+     */
+    public function validateCredentials(&$errstr = null)
+    {
+        try {
+            $this->call('acquia.agent.validate', array());
+            return true;
+        } catch (\Exception $e) {
+            $errstr = $e->getMessage();
+            return false;
+        }
     }
 }
