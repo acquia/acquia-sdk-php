@@ -74,6 +74,27 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
+     * Helper method to send a GET request and save to a file.
+     *
+     * @param string $path
+     * @param array $variables
+     *   Variables used to expand the URI expressions.
+     * @param string $tofile
+     *   Path to save file
+     *
+     * @return array
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://guzzlephp.org/http-client/uri-templates.html
+     */
+    public function saveGet($path, $variables = array(), $tofile)
+    {
+        return $this->get(array($path, $variables))->setResponseBody($tofile)
+->send();
+    }
+
+    /**
      * Helper method to send a POST request and return parsed JSON.
      *
      * The variables passed in the second parameter are used to expand the URI
@@ -464,7 +485,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function dabaseBackups($site, $env, $db)
+    public function databaseBackups($site, $env, $db)
     {
         $variables = array(
             'site' => $site,
@@ -484,7 +505,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function dabaseBackup($site, $env, $db, $id)
+    public function databaseBackup($site, $env, $db, $id)
     {
         $variables = array(
             'site' => $site,
@@ -493,5 +514,62 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'id' => $id,
         );
         return $this->sendGet('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}.json', $variables);
+    }
+
+    /**
+     * @param string $site
+     * @param string $env
+     * @param string $db
+     * @param string $id
+     *
+     * @return array
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function downloadDatabaseBackup($site, $env, $db, $id, $outfile)
+    {
+        $variables = array(
+            'site' => $site,
+            'env' => $env,
+            'db' => $db,
+            'id' => $id,
+        );
+        return $this->saveGet('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}/download.json', $variables, $outfile);
+    }
+
+    /**
+     * @param string $site
+     * @param string $env
+     * @param string $db
+     *
+     * @return array
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function createDatabaseBackup($site, $env, $db)
+    {
+        $variables = array(
+            'site' => $site,
+            'env' => $env,
+            'db' => $db,
+        );
+        return $this->sendPost('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups.json', $variables);
+    }
+
+    /**
+     * @param string $site
+     * @param string $task
+     *
+     * @return array
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function taskInfo($site, $task)
+    {
+        $variables = array(
+            'site' => $site,
+            'task' => $task,
+        );
+        return $this->sendGet('{+base_path}/sites/{site}/tasks/{task}.json', $variables);
     }
 }
