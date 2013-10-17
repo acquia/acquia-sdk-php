@@ -88,10 +88,9 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @see http://guzzlephp.org/http-client/uri-templates.html
      */
-    public function saveGet($path, $variables = array(), $tofile)
+    public function saveGet($path, array $variables, $tofile)
     {
-        return $this->get(array($path, $variables))->setResponseBody($tofile)
-->send();
+        return $this->get(array($path, $variables))->setResponseBody($tofile)->send();
     }
 
     /**
