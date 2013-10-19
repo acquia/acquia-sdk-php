@@ -6,9 +6,6 @@
 
 An unoffical PHP SDK for [Acquia](https://www.acquia.com/) services.
 
-NOTE: This project is **EXPERIMENTAL**
-
-
 ## Installation
 
 The SDK can be installed with [Composer](http://getcomposer.org) by adding this
