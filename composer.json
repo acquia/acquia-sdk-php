@@ -14,14 +14,15 @@
     "require": {
         "php": ">=5.3.0",
         "cpliakas/psolr": "~0.3",
-        "guzzle/service": "~3.0",
+        "guzzle/guzzle": "~3.0",
         "lstrojny/fxmlrpc": "~0.8"
     },
     "require-dev": {
         "pdepend/pdepend": "~1.0",
+        "phpmd/phpmd": "~1.0",
         "phploc/phploc": "~2.0",
         "phpunit/phpunit": "~3.0",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "*"
     },
     "replace": {
         "cpliakas/acquia-sdk-php-common": "self.version",
