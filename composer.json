@@ -18,12 +18,12 @@
         "lstrojny/fxmlrpc": "~0.8"
     },
     "require-dev": {
-        "sebastian/phpcpd": "~2.0",
         "pdepend/pdepend": "~1.0",
-        "phpmd/phpmd": "~1.0",
         "phploc/phploc": "~2.0",
+        "phpmd/phpmd": "~1.0",
         "phpunit/phpunit": "~3.0",
-        "satooshi/php-coveralls": "*"
+        "satooshi/php-coveralls": "*",
+        "sebastian/phpcpd": "~2.0"
     },
     "replace": {
         "cpliakas/acquia-sdk-php-common": "self.version",
