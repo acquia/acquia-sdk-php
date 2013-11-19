@@ -18,6 +18,7 @@
         "lstrojny/fxmlrpc": "~0.8"
     },
     "require-dev": {
+        "sebastian/phpcpd": "~2.0",
         "pdepend/pdepend": "~1.0",
         "phpmd/phpmd": "~1.0",
         "phploc/phploc": "~2.0",
