@@ -121,3 +121,8 @@ $network = $services->getClient('network', 'XXXX-XXXXX');
 $index = $services->getClient('search', 'XXXX-XXXXX');
 
 ```
+
+## For Developers
+
+Refer to [PHP Project Starter's documentation](https://github.com/cpliakas/php-project-starter#using-apache-ant)
+for the Apache Ant targets supported by this project.
