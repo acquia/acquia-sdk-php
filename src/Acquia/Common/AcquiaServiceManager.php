@@ -215,7 +215,7 @@ class AcquiaServiceManager extends \ArrayObject
     public function save($overwrite = false)
     {
         foreach ($this as $group => $builder) {
-            $this->saveServiceGroup($group);
+            $this->saveServiceGroup($group, $overwrite);
         }
     }
 
