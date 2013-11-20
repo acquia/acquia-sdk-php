@@ -1,5 +1,4 @@
 build
-cache.properties
 conf/*
 !conf/.placeholder
 composer.lock
