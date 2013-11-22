@@ -11,6 +11,7 @@ use Guzzle\Service\Client;
 class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
 {
     const NONCE_LENGTH = 55;
+    const VERSION = '0.3';
 
     /**
      * @var string
@@ -269,7 +270,8 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
      */
     public function checkSubscription()
     {
-        return $this->getSubscription();
+        $options += array('cpliakas/acquia-search-sdk' => self::VERSION);
+        return $this->getSubscription($options);
     }
 
     /**
