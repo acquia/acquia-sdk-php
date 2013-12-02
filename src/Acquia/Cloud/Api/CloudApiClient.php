@@ -66,7 +66,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      *
-     * @see http://guzzlephp.org/http-client/uri-templates.html
+     * @see http://docs.guzzlephp.org/en/latest/http-client/uri-templates.html
      */
     public function sendGet($path, $variables = array())
     {
@@ -86,7 +86,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      *
-     * @see http://guzzlephp.org/http-client/uri-templates.html
+     * @see http://docs.guzzlephp.org/en/latest/http-client/uri-templates.html
      */
     public function saveGet($path, array $variables, $tofile)
     {
@@ -110,7 +110,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      *
-     * @see http://guzzlephp.org/http-client/uri-templates.html
+     * @see http://docs.guzzlephp.org/en/latest/http-client/uri-templates.html
      */
     public function sendPost($path, $variables = array(), $body = null)
     {
@@ -131,7 +131,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      *
-     * @see http://guzzlephp.org/http-client/uri-templates.html
+     * @see http://docs.guzzlephp.org/en/latest/http-client/uri-templates.html
      */
     public function sendDelete($path, $variables = array())
     {
