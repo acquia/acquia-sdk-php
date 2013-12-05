@@ -38,7 +38,6 @@ class JsonTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-
     public function testJsonEncode()
     {
        $this->assertEquals(Json::encode($this->getTestArray()),$this->getTestJson());
