@@ -37,7 +37,15 @@ class JsonTest extends \PHPUnit_Framework_TestCase
                     )
                 )
             ),
-            'test' => array('<foo>',"'bar'",'"baz"','&blong&', "\xc3\xa9")
+            'test' => array(
+                '<foo>',
+                "'bar'",
+                '"baz"',
+                '&blong&',
+                "\xc3\xa9",
+                '/path/to/api.json',
+                '\Acquia\Common\Json',
+            )
         );
     }
 
