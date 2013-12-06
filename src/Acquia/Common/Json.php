@@ -19,7 +19,7 @@ class Json
             $options = $options | JSON_UNESCAPED_SLASHES;
         }
 
-        return json_encode($data, $options);
+        return self::pretty_print(json_encode($data, $options));
     }
 
     /**
@@ -31,4 +31,69 @@ class Json
     {
         return json_decode($json, true);
     }
+
+    /**
+     * Indents a flat JSON string to make it more human-readable.
+     * JSON_PRETTY_PRINT option is not available until PHP 5.4
+     *
+     * @param string $json The original JSON string to process.
+     *
+     * @return string Indented version of the original JSON string.
+     */
+    public static function pretty_print($json) {
+
+        $result = '';
+        $pos = 0;
+        $string_length = strlen($json);
+        $indentation = '  ';
+        $newline = "\n";
+        $previous_char = '';
+        $out_of_quotes = true;
+
+        // If there are already newlines, assume formatted
+        if (strpos($json, $newline)) {
+            return $json;
+        }
+
+        for ($i=0; $i<=$string_length; $i++) {
+
+            // Grab the next character in the string.
+            $char = substr($json, $i, 1);
+
+            // Are we inside a quoted string?
+            if ($char == '"' && $previous_char != '\\') {
+                $out_of_quotes = !$out_of_quotes;
+
+                // If this character is the end of an element,
+                // output a new line and indent the next line.
+            } else if(($char == '}' || $char == ']') && $out_of_quotes) {
+                $result .= $newline;
+                $pos --;
+                for ($j=0; $j<$pos; $j++) {
+                    $result .= $indentation;
+                }
+            }
+
+            // Add the character to the result string.
+            $result .= $char;
+
+            // If the last character was the beginning of an element,
+            // output a new line and indent the next line.
+            if (($char == ',' || $char == '{' || $char == '[') && $out_of_quotes) {
+                $result .= $newline;
+                if ($char == '{' || $char == '[') {
+                    $pos ++;
+                }
+
+                for ($j = 0; $j < $pos; $j++) {
+                    $result .= $indentation;
+                }
+            }
+
+            $previous_char = $char;
+        }
+
+        return $result;
+    }
+
 }
