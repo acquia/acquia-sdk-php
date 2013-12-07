@@ -50,6 +50,11 @@ class Json
         $previous_char = '';
         $out_of_quotes = true;
 
+        // JSON_UNESCAPED_SLASHES is also not available until PHP 5.4
+        if (!defined('JSON_UNESCAPED_SLASHES') && strpos($json, '/')) {
+            $json = preg_replace('#\134{1}/#', '/', $json);
+        }
+
         // If there are already newlines, assume formatted
         if (strpos($json, $newline)) {
             return $json;

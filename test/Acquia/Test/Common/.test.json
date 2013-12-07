@@ -29,6 +29,7 @@
         "\u0026blong\u0026",
         "\u00e9",
         "/path/to/api.json",
+        "/another\\/path\\//to/api.json",
         "\\Acquia\\Common\\Json"
     ]
 }
