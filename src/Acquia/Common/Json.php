@@ -44,7 +44,6 @@ class Json
 
         $result = '';
         $pos = 0;
-        $string_length = strlen($json);
         $indentation = '    ';
         $newline = "\n";
         $previous_char = '';
@@ -59,6 +58,8 @@ class Json
         if (strpos($json, $newline)) {
             return $json;
         }
+
+        $string_length = strlen($json);
 
         for ($i=0; $i<=$string_length; $i++) {
 
