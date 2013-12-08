@@ -199,19 +199,21 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $site
      * @param string $env
      * @param string $type
+     * @param string $source
      *
      * @return array
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function installDistro($site, $env, $type)
+    public function installDistro($site, $env, $type, $source)
     {
         $variables = array(
             'site' => $site,
             'env' => $env,
             'type' => $type,
+            'source' => $source,
         );
-        return $this->sendPost('{+base_path}/sites/{site}/envs/{env}/install/{type}.json', $variables);
+        return $this->sendPost('{+base_path}/sites/{site}/envs/{env}/install/{type}.json?source={source}', $variables);
     }
 
     /**
