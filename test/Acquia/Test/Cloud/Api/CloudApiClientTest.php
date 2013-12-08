@@ -195,4 +195,38 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($value, $env[$key]);
         }
     }
+
+    public function testMockInstallDistroByNameCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $environment = 'dev';
+        $type = 'distro_name';
+        $source = 'acquia-drupal-7';
+
+        // Response is an Acquia Cloud Task
+        $responseData = array(
+            'recipient' => '',
+            'created' => time(),
+            // The values encoded in the body can come back in any order
+            'body' => sprintf('{"env":"%s","site":"%s","type":"%s","source":"%s"}', $environment, $siteName, $type, $source),
+            'id' => 12345,
+            'hidden' => 0,
+            'result' => '',
+            'queue' => 'site-install',
+            'percentage' => '',
+            'state' => 'waiting',
+            'started' => '',
+            'cookie' => '',
+            'sender' => 'cloud_api',
+            'description' => "Install {$source} to dev",
+            'completed' => '',
+        );
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+        $task = $cloudapi->installDistro($siteName, $environment, $type, $source);
+        foreach($responseData as $key => $value) {
+            $this->assertEquals($value, $task[$key]);
+        }
+    }
 }
