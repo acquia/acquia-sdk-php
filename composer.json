@@ -1,0 +1,40 @@
+{
+    "name": "cpliakas/acquia-sdk-php",
+    "type": "library",
+    "description": "The Acquia SDK for PHP allows developers to build applications on top of Acquia services.",
+    "keywords": ["acquia"],
+    "homepage": "https://github.com/cpliakas/acquia-sdk-php",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "See contributors",
+            "homepage": "https://github.com/cpliakas/acquia-sdk-php/graphs/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "cpliakas/psolr": "~0.3",
+        "guzzle/guzzle": "~3.0",
+        "lstrojny/fxmlrpc": "~0.8"
+    },
+    "require-dev": {
+        "pdepend/pdepend": "~1.0",
+        "phploc/phploc": "~2.0",
+        "phpmd/phpmd": "~1.0",
+        "phpunit/phpunit": "~3.0",
+        "satooshi/php-coveralls": "*",
+        "sebastian/phpcpd": "~2.0"
+    },
+    "replace": {
+        "cpliakas/acquia-sdk-php-common": "self.version",
+        "cpliakas/acquia-sdk-php-network": "self.version",
+        "cpliakas/acquia-sdk-php-search": "self.version",
+        "cpliakas/acquia-sdk-php-cloud-env": "self.version",
+        "cpliakas/acquia-sdk-php-cloud-api": "self.version"
+    },
+    "autoload": {
+        "psr-0": {
+            "Acquia": "src/"
+        }
+    }
+}
