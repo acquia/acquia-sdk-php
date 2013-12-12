@@ -1,7 +1,7 @@
 {
     "name": "cpliakas/acquia-sdk-php",
     "type": "library",
-    "description": "An experimental PHP SDK for Acquia.",
+    "description": "The Acquia SDK for PHP allows developers to build applications on top of Acquia services.",
     "keywords": ["acquia"],
     "homepage": "https://github.com/cpliakas/acquia-sdk-php",
     "license": "GPL-3.0",
