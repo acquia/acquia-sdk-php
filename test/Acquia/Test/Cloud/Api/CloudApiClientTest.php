@@ -24,6 +24,18 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    public function getEnvironmentData($stage = 'dev')
+    {
+        return array(
+            'livedev' => 'enabled',
+            'db_clusters' => array(1234),
+            'ssh_host' => 'server-1.myhostingstage.hosting.example.com',
+            'name' => $stage,
+            'vcs_path' => ($stage == 'dev') ? 'master' : 'tags/v1.0.1',
+            'default_domain' => "mysitegroup{$stage}.myhostingstage.example.com",
+        );
+    }
+
     /**
      * Helper function that returns the event listener.
      *
@@ -151,5 +163,70 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $site = $cloudapi->site($siteName);
         $this->assertEquals($site['hosting_stage'], 'myhostingstage');
         $this->assertEquals($site['site_group'], 'mysitegroup');
+    }
+
+    public function testMockEnvironmentsCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $responseData = array (
+            $this->getEnvironmentData('dev'),
+            $this->getEnvironmentData('test'),
+        );
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+
+        $environments = $cloudapi->environments($siteName);
+        $this->assertTrue($environments instanceof CloudResponse\Environments);
+        $this->assertTrue($environments['dev'] instanceof CloudResponse\Environment);
+        $this->assertTrue($environments['test'] instanceof CloudResponse\Environment);
+    }
+
+    public function testMockEnvironmentCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $responseData = $this->getEnvironmentData('dev');
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+
+        $env = $cloudapi->environment($siteName, 'dev');
+        foreach($responseData as $key => $value) {
+            $this->assertEquals($value, $env[$key]);
+        }
+    }
+
+    public function testMockInstallDistroByNameCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $environment = 'dev';
+        $type = 'distro_name';
+        $source = 'acquia-drupal-7';
+
+        // Response is an Acquia Cloud Task
+        $responseData = array(
+            'recipient' => '',
+            'created' => time(),
+            // The values encoded in the body can come back in any order
+            'body' => sprintf('{"env":"%s","site":"%s","type":"%s","source":"%s"}', $environment, $siteName, $type, $source),
+            'id' => 12345,
+            'hidden' => 0,
+            'result' => '',
+            'queue' => 'site-install',
+            'percentage' => '',
+            'state' => 'waiting',
+            'started' => '',
+            'cookie' => '',
+            'sender' => 'cloud_api',
+            'description' => "Install {$source} to dev",
+            'completed' => '',
+        );
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+        $task = $cloudapi->installDistro($siteName, $environment, $type, $source);
+        foreach($responseData as $key => $value) {
+            $this->assertEquals($value, $task[$key]);
+        }
     }
 }
