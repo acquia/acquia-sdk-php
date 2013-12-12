@@ -1,8 +1,8 @@
 # Acquia SDK for PHP
 
-[![Build Status](https://travis-ci.org/cpliakas/acquia-sdk-php.png?branch=master)](https://travis-ci.org/cpliakas/acquia-sdk-php)
-[![Coverage Status](https://coveralls.io/repos/cpliakas/acquia-sdk-php/badge.png?branch=master)](https://coveralls.io/r/cpliakas/acquia-sdk-php?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/cpliakas/acquia-sdk-php/v/stable.png)](https://packagist.org/packages/cpliakas/acquia-sdk-php)
+[![Build Status](https://travis-ci.org/acquia/acquia-sdk-php.png?branch=master)](https://travis-ci.org/acquia/acquia-sdk-php)
+[![Coverage Status](https://coveralls.io/repos/acquia/acquia-sdk-php/badge.png?branch=master)](https://coveralls.io/r/acquia/acquia-sdk-php?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/acquia/acquia-sdk-php/v/stable.png)](https://packagist.org/packages/acquia/acquia-sdk-php)
 
 The Acquia SDK for PHP allows developers to build applications on top of
 [Acquia](https://www.acquia.com/) services.
@@ -15,7 +15,7 @@ library as a dependency to your composer.json file.
 ```json
 {
     "require": {
-        "cpliakas/acquia-sdk-php": "*"
+        "acquia/acquia-sdk-php": "*"
     }
 }
 ```

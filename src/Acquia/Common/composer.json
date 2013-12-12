@@ -3,12 +3,12 @@
     "type": "library",
     "description": "Common components for the Acquia PHP SDK.",
     "keywords": ["acquia"],
-    "homepage": "https://github.com/cpliakas/acquia-sdk-php",
+    "homepage": "https://github.com/acquia/acquia-sdk-php",
     "license": "GPL-3.0",
     "authors": [
         {
             "name": "See contributors",
-            "homepage": "https://github.com/cpliakas/acquia-sdk-php/graphs/contributors"
+            "homepage": "https://github.com/acquia/acquia-sdk-php/graphs/contributors"
         }
     ],
     "require": {
