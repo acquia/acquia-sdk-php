@@ -19,7 +19,7 @@ class Json
             $options = $options | JSON_UNESCAPED_SLASHES;
         }
 
-        return self::pretty_print(json_encode($data, $options));
+        return self::prettyPrint(json_encode($data, $options));
     }
 
     /**
@@ -40,14 +40,15 @@ class Json
      *
      * @return string Indented version of the original JSON string.
      */
-    public static function pretty_print($json) {
+    public static function prettyPrint($json)
+    {
 
         $result = '';
         $pos = 0;
         $indentation = '    ';
         $newline = "\n";
-        $previous_char = '';
-        $out_of_quotes = true;
+        $previousChar = '';
+        $outOfQuotes = true;
 
         // JSON_UNESCAPED_SLASHES is also not available until PHP 5.4
         if (!defined('JSON_UNESCAPED_SLASHES') && strpos($json, '/')) {
@@ -59,27 +60,27 @@ class Json
             return $json;
         }
 
-        $string_length = strlen($json);
+        $stringLength = strlen($json);
 
-        for ($i=0; $i<=$string_length; $i++) {
+        for ($i = 0; $i <= $stringLength; $i++) {
 
             // Grab the next character in the string.
             $char = substr($json, $i, 1);
 
-            if ($previous_char == ':' && $out_of_quotes) {
+            if (':' == $previousChar && $outOfQuotes) {
                 $result .= ' ';
             }
 
             // Are we inside a quoted string?
-            if ($char == '"' && $previous_char != '\\') {
-                $out_of_quotes = !$out_of_quotes;
+            if ('"' == $char && $previousChar != '\\') {
+                $outOfQuotes = !$outOfQuotes;
 
                 // If this character is the end of an element,
                 // output a new line and indent the next line.
-            } else if(($char == '}' || $char == ']') && $out_of_quotes) {
+            } elseif (('}' == $char || ']' == $char) && $outOfQuotes) {
                 $result .= $newline;
                 $pos --;
-                for ($j=0; $j<$pos; $j++) {
+                for ($j = 0; $j < $pos; $j++) {
                     $result .= $indentation;
                 }
             }
@@ -89,9 +90,9 @@ class Json
 
             // If the last character was the beginning of an element,
             // output a new line and indent the next line.
-            if (($char == ',' || $char == '{' || $char == '[') && $out_of_quotes) {
+            if ((',' == $char || '{' == $char || '[' == $char) && $outOfQuotes) {
                 $result .= $newline;
-                if ($char == '{' || $char == '[') {
+                if ('{' == $char || '[' == $char) {
                     $pos ++;
                 }
 
@@ -100,7 +101,7 @@ class Json
                 }
             }
 
-            $previous_char = $char;
+            $previousChar = $char;
         }
 
         return $result;
