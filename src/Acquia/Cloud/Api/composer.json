@@ -4,7 +4,7 @@
     "description": "Acquia Cloud API component for the Acquia PHP SDK.",
     "keywords": ["acquia"],
     "homepage": "https://github.com/acquia/acquia-sdk-php",
-    "license": "GPL-3.0",
+    "license": "MIT",
     "authors": [
         {
             "name": "See contributors",
