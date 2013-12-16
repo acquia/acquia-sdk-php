@@ -455,7 +455,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'env' => $env,
         );
-        return $this->sendGet('{+base_path}/sites/{site}/envs/{env}/dbs.json', $variables);
+        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/dbs.json', $variables);
+        return new Response\Databases($data);
     }
 
     /**
@@ -474,7 +475,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'env' => $env,
             'db' => $db,
         );
-        return $this->sendGet('{+base_path}/sites/{site}/envs/{env}/dbs/{db}.json', $variables);
+        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/dbs/{db}.json', $variables);
+        return new Response\Database($data);
     }
 
     /**
