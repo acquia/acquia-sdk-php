@@ -382,7 +382,7 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         $cloudapi = $this->getCloudApiClient();
         $this->addMockResponse($cloudapi, $responseData);
 
-        $database = $cloudapi->databaseBackups($siteName, 'dev', 'one');
+        $database = $cloudapi->databaseBackup($siteName, 'dev', 'one', $responseData['id']);
         foreach($responseData as $key => $value) {
             $this->assertEquals($value, $database[$key]);
         }
