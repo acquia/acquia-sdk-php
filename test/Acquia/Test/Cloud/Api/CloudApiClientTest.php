@@ -36,6 +36,60 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function getServerData($type = 'web')
+    {
+        $number = rand(1000,9999);
+        $serverName = "{$type}-{$number}";
+        $serverIp = rand(1,254) . '.' . rand(1,254);
+
+        $serverData = array(
+            'services' => array(),
+            'ec2_region' => 'aq-south-1',
+            'ami_type' => 'c1.medium',
+            'fqdn' => '{$server_name}.myhostingstage.hosting.example.com',
+            'name'=> $serverName,
+            'ec2_availability_zone' => 'aq-east-1z',
+        );
+
+        switch($type) {
+            case 'bal':
+                $serverData['services']['varnish'] = array(
+                    'status' => 'active',
+                );
+                $serverData['services']['external_ip'] = "172.16.{$serverIp}";
+                break;
+            case 'web':
+                $serverData['services']['web'] = array(
+                    'php_max_procs' => '2',
+                    'env_status' => 'active',
+                    'status' => 'online',
+                );
+                break;
+            case 'db':
+                $serverData['services']['database'] = array();
+                break;
+            case 'free':
+            case 'staging':
+            case 'ded':
+                $serverData['services']['web'] = array(
+                    'php_max_procs' => '2',
+                    'env_status' => 'active',
+                    'status' => 'online',
+                );
+                $serverData['services']['database'] = array();
+                break;
+            case 'vcs':
+                $serverData['services']['vcs'] = array (
+                    'vcs_url' => 'mysite@vcs-1234.myhostingstage.hosting.example.com:mysite.git',
+                    'vcs_type' => 'git',
+                    'vcs_path' => 'master',
+                );
+                break;
+        }
+
+        return $serverData;
+    }
+
     /**
      * Helper function that returns the event listener.
      *
@@ -229,4 +283,41 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($value, $task[$key]);
         }
     }
+
+    public function testMockServersCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $responseData = array (
+            $this->getServerData('bal'),
+            $this->getServerData('bal'),
+            $this->getEnvironmentData('free'),
+            $this->getEnvironmentData('vcs'),
+        );
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+
+        $servers = $cloudapi->servers($siteName, 'dev');
+        $this->assertTrue($servers instanceof CloudResponse\Servers);
+        $this->assertTrue($servers[$responseData[0]['name']] instanceof CloudResponse\Server);
+        $this->assertTrue($servers[$responseData[1]['name']] instanceof CloudResponse\Server);
+        $this->assertTrue($servers[$responseData[2]['name']] instanceof CloudResponse\Server);
+        $this->assertTrue($servers[$responseData[3]['name']] instanceof CloudResponse\Server);
+    }
+
+    public function testMockServerCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $responseData = $this->getServerData('free');
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+
+        $server = $cloudapi->server($siteName, 'dev', 'free');
+        $this->assertTrue($server instanceof CloudResponse\Server);
+        foreach($responseData as $key => $value) {
+            $this->assertEquals($value, $server[$key]);
+        }
+    }
+
 }
