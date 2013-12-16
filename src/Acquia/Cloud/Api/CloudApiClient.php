@@ -304,9 +304,9 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
-     * @param type $site
-     * @param type $publicKey
-     * @param type $nickname
+     * @param string $site
+     * @param string $publicKey
+     * @param string $nickname
      *
      * @return array
      *
@@ -355,6 +355,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
 
     /**
      * @param string $site
+     * @param int $id
      *
      * @return array
      *
@@ -370,9 +371,9 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
-     * @param type $site
-     * @param type $publicKey
-     * @param type $nickname
+     * @param string $site
+     * @param string $username
+     * @param string $password
      *
      * @return array
      *
@@ -393,6 +394,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
 
     /**
      * @param string $site
+     * @param int $id
      *
      * @return array
      *
@@ -502,7 +504,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $site
      * @param string $env
      * @param string $db
-     * @param string $id
+     * @param int $id
      *
      * @return array
      *
@@ -523,7 +525,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $site
      * @param string $env
      * @param string $db
-     * @param string $id
+     * @param int $id
+     * @param string $outfile
      *
      * @return array
      *
@@ -561,7 +564,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
 
     /**
      * @param string $site
-     * @param string $task
+     * @param int $task
      *
      * @return array
      *
