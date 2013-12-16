@@ -548,7 +548,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $env
      * @param string $db
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -559,14 +559,31 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'env' => $env,
             'db' => $db,
         );
-        return $this->sendPost('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups.json', $variables);
+        $data = $this->sendPost('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups.json', $variables);
+        return new Response\Task($data);
+    }
+
+    /**
+     * @param string $site
+     *
+     * @return \Acquia\Cloud\Api\Response\Tasks
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function tasks($site)
+    {
+        $variables = array(
+            'site' => $site,
+        );
+        $data = $this->sendGet('{+base_path}/sites/{site}/tasks.json', $variables);
+        return new Response\Tasks($data);
     }
 
     /**
      * @param string $site
      * @param int $task
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -576,6 +593,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'task' => $task,
         );
-        return $this->sendGet('{+base_path}/sites/{site}/tasks/{task}.json', $variables);
+        $data = $this->sendGet('{+base_path}/sites/{site}/tasks/{task}.json', $variables);
+        return new Response\Task($data);
     }
 }

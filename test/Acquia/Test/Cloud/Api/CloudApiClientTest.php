@@ -149,6 +149,25 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         );
     }
 
+    public function getTaskInfo($id = 1) {
+        return array(
+            'recipient' => '',
+            'created' => time(),
+            'body' => "{}",
+            'id' => $id,
+            'hidden' => 0,
+            'result' => '',
+            'queue' => 'site-install',
+            'percentage' => '',
+            'state' => 'waiting',
+            'started' => '',
+            'cookie' => '',
+            'sender' => 'cloud_api',
+            'description' => "Test task",
+            'completed' => '',
+        );
+    }
+
     /**
      * Helper function that returns the event listener.
      *
@@ -587,10 +606,32 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'createDatabaseBackupCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
         $task = $cloudapi->createDatabaseBackup($siteName, 'dev', 'dbname');
+        $this->assertTrue($task instanceof CloudResponse\Task);
         $this->assertEquals($taskId, $task['id']);
         foreach($responseData as $key => $value) {
             $this->assertEquals($value, $task[$key]);
         }
+    }
+
+    public function tasksCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '/tasks.json', $e['request']->getUrl());
+    }
+
+    public function testMockTasksCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $taskId = 12345;
+
+        // Response is an Acquia Cloud Task
+        $responseData = array($this->getTaskInfo($taskId), $this->getTaskInfo($taskId + 1));
+
+        $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'tasksCallListener'));
+        $this->addMockResponse($cloudapi, $responseData);
+        $tasks = $cloudapi->tasks($siteName);
+
+        $this->assertTrue($tasks instanceof CloudResponse\Tasks);
+        $this->assertTrue($tasks[$taskId] instanceof CloudResponse\Task);
     }
 
     public function taskInfoCallListener(Event $e) {
@@ -600,34 +641,16 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
     public function testMockTaskInfoCall()
     {
         $siteName = 'myhostingstage:mysitegroup';
-        $environment = 'dev';
-        $type = 'distro_name';
-        $source = 'acquia-drupal-7';
         $taskId = 12345;
 
         // Response is an Acquia Cloud Task
-        $responseData = array(
-            'recipient' => '',
-            'created' => time(),
-            // The values encoded in the body can come back in any order
-            'body' => sprintf('{"env":"%s","site":"%s","type":"%s","source":"%s"}', $environment, $siteName, $type, $source),
-            'id' => $taskId,
-            'hidden' => 0,
-            'result' => '',
-            'queue' => 'site-install',
-            'percentage' => '',
-            'state' => 'waiting',
-            'started' => '',
-            'cookie' => '',
-            'sender' => 'cloud_api',
-            'description' => "Install {$source} to dev",
-            'completed' => '',
-        );
+        $responseData = $this->getTaskInfo($taskId);
 
         $cloudapi = $this->getCloudApiClient();
         $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'taskInfoCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
         $task = $cloudapi->taskInfo($siteName, $taskId);
+        $this->assertTrue($task instanceof CloudResponse\Task);
         $this->assertEquals($taskId, $task['id']);
         foreach($responseData as $key => $value) {
             $this->assertEquals($value, $task[$key]);
