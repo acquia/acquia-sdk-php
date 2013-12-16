@@ -105,6 +105,26 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Helper function that returns a database data array
+     *
+     * @param string $name
+     *
+     * @return array
+     */
+    public function getDatabaseData($name = "zero")
+    {
+        $instance_name = 'db' . rand();
+        return array(
+            "username" => "test-username",
+            "password" => "test-password",
+            "instance_name" => $instance_name,
+            "name" => $name,
+            "db_cluster" => "1234",
+            "host" => 'server-1.myhostingstage.hosting.example.com'
+        );
+    }
+
+    /**
      * Helper function that returns a database backup task
      *
      * @param string $date
@@ -353,6 +373,38 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         $this->assertTrue($server instanceof CloudResponse\Server);
         foreach($responseData as $key => $value) {
             $this->assertEquals($value, $server[$key]);
+        }
+    }
+
+    public function testMockEnvironmentDatabasesCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $responseData = array (
+            $this->getDatabaseData('one'),
+            $this->getDatabaseData('two'),
+        );
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+
+        $databases = $cloudapi->environmentDatabases($siteName, 'dev');
+        $this->assertTrue($databases instanceof CloudResponse\Databases);
+        $this->assertTrue($databases['one'] instanceof CloudResponse\Database);
+        $this->assertTrue($databases['two'] instanceof CloudResponse\Database);
+    }
+
+    public function testMockEnvironmentDatabaseCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $responseData = $this->getDatabaseData('one');
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+
+        $database = $cloudapi->environmentDatabase($siteName, 'dev', 'one');
+        $this->assertTrue($database instanceof CloudResponse\Database);
+        foreach($responseData as $key => $value) {
+            $this->assertEquals($value, $database[$key]);
         }
     }
 
