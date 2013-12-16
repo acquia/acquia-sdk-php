@@ -9,9 +9,12 @@ use Acquia\Common\Json;
 use Guzzle\Http\Message\Header;
 use Guzzle\Http\Message\Response;
 use Guzzle\Plugin\Mock\MockPlugin;
+use Guzzle\Common\Event;
 
 class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 {
+    const REQUEST_PATH = 'https://cloudapi.example.com/v1/sites/myhostingstage%3Amysitegroup';
+
     /**
      * @return \Acquia\Cloud\Api\CloudApiClient
      */
@@ -242,17 +245,26 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         $this->assertTrue($header instanceof Header);
     }
 
+    public function sitesCallListener(Event $e) {
+        $this->assertEquals('https://cloudapi.example.com/v1/sites.json', $e['request']->getUrl());
+    }
+
     public function testMockSitesCall()
     {
         $siteName = 'myhostingstage:mysitegroup';
         $responseData = array($siteName);
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'sitesCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
 
         $sites = $cloudapi->sites();
         $this->assertTrue($sites instanceof CloudResponse\Sites);
         $this->assertTrue($sites[$siteName] instanceof CloudResponse\Site);
+    }
+
+    public function siteCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '.json', $e['request']->getUrl());
     }
 
     public function testMockSiteCall()
@@ -268,11 +280,16 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         );
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'siteCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
 
         $site = $cloudapi->site($siteName);
         $this->assertEquals($site['hosting_stage'], 'myhostingstage');
         $this->assertEquals($site['site_group'], 'mysitegroup');
+    }
+
+    public function environmentsCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '/envs.json', $e['request']->getUrl());
     }
 
     public function testMockEnvironmentsCall()
@@ -284,6 +301,7 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         );
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'environmentsCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
 
         $environments = $cloudapi->environments($siteName);
@@ -292,18 +310,27 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         $this->assertTrue($environments['test'] instanceof CloudResponse\Environment);
     }
 
+    public function environmentCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '/envs/dev.json', $e['request']->getUrl());
+    }
+
     public function testMockEnvironmentCall()
     {
         $siteName = 'myhostingstage:mysitegroup';
         $responseData = $this->getEnvironmentData('dev');
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'environmentCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
 
         $env = $cloudapi->environment($siteName, 'dev');
         foreach($responseData as $key => $value) {
             $this->assertEquals($value, $env[$key]);
         }
+    }
+
+    public function installDistroByNameCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '/envs/dev/install/distro_name.json?source=acquia-drupal-7', $e['request']->getUrl());
     }
 
     public function testMockInstallDistroByNameCall()
@@ -333,11 +360,16 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         );
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'installDistroByNameCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
         $task = $cloudapi->installDistro($siteName, $environment, $type, $source);
         foreach($responseData as $key => $value) {
             $this->assertEquals($value, $task[$key]);
         }
+    }
+
+    public function serversCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '/envs/dev/servers.json', $e['request']->getUrl());
     }
 
     public function testMockServersCall()
@@ -351,6 +383,7 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         );
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'serversCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
 
         $servers = $cloudapi->servers($siteName, 'dev');
@@ -361,12 +394,17 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         $this->assertTrue($servers[$responseData[3]['name']] instanceof CloudResponse\Server);
     }
 
+    public function serverCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '/envs/dev/servers/free.json', $e['request']->getUrl());
+    }
+
     public function testMockServerCall()
     {
         $siteName = 'myhostingstage:mysitegroup';
         $responseData = $this->getServerData('free');
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'serverCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
 
         $server = $cloudapi->server($siteName, 'dev', 'free');
@@ -386,6 +424,10 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
     // TODO: add public function testMockAddSvnUserCall() {}
     // TODO: add public function testMockDeleteSvnUserCall() {}
 
+    public function siteDatabasesCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '/dbs.json', $e['request']->getUrl());
+    }
+
     public function testMockSiteDatabasesCall()
     {
         $siteName = 'myhostingstage:mysitegroup';
@@ -395,6 +437,7 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         );
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'siteDatabasesCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
 
         $databases = $cloudapi->siteDatabases($siteName);
@@ -403,12 +446,17 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         $this->assertTrue($databases['two'] instanceof CloudResponse\Database);
     }
 
+    public function siteDatabaseCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '/dbs/one.json', $e['request']->getUrl());
+    }
+
     public function testMockSiteDatabaseCall()
     {
         $siteName = 'myhostingstage:mysitegroup';
         $responseData = $this->getDatabaseData('one');
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'siteDatabaseCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
 
         $database = $cloudapi->siteDatabase($siteName, 'one');
@@ -416,6 +464,10 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         foreach($responseData as $key => $value) {
             $this->assertEquals($value, $database[$key]);
         }
+    }
+
+    public function environmentDatabasesCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '/envs/dev/dbs.json', $e['request']->getUrl());
     }
 
     public function testMockEnvironmentDatabasesCall()
@@ -427,6 +479,7 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         );
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'environmentDatabasesCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
 
         $databases = $cloudapi->environmentDatabases($siteName, 'dev');
@@ -435,12 +488,17 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         $this->assertTrue($databases['two'] instanceof CloudResponse\Database);
     }
 
+    public function environmentDatabaseCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '/envs/dev/dbs/one.json', $e['request']->getUrl());
+    }
+
     public function testMockEnvironmentDatabaseCall()
     {
         $siteName = 'myhostingstage:mysitegroup';
         $responseData = $this->getDatabaseData('one');
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'environmentDatabaseCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
 
         $database = $cloudapi->environmentDatabase($siteName, 'dev', 'one');
@@ -448,6 +506,10 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         foreach($responseData as $key => $value) {
             $this->assertEquals($value, $database[$key]);
         }
+    }
+
+    public function databaseBackupsCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '/envs/dev/dbs/one/backups.json', $e['request']->getUrl());
     }
 
     public function testMockDatabaseBackupsCall()
@@ -460,6 +522,7 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         );
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'databaseBackupsCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
 
         $database = $cloudapi->databaseBackups($siteName, 'dev', 'one');
@@ -468,12 +531,17 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         }
     }
 
+    public function databaseBackupCallListener(Event $e) {
+        $this->assertTrue(preg_match('#^' . self::REQUEST_PATH . '/envs/dev/dbs/one/backups/[0-9]+\.json$#', $e['request']->getUrl()) > 0);
+    }
+
     public function testMockDatabaseBackupCall()
     {
         $siteName = 'myhostingstage:mysitegroup';
         $responseData = $this->getBackupData('2013-12-11');
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'databaseBackupCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
 
         $database = $cloudapi->databaseBackup($siteName, 'dev', 'one', $responseData['id']);
@@ -483,6 +551,10 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
     }
 
     // TODO: add public function testMockDownloadDatabaseBackupCall() {}
+
+    public function createDatabaseBackupCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '/envs/dev/dbs/dbname/backups.json', $e['request']->getUrl());
+    }
 
     public function testMockCreateDatabaseBackupCall()
     {
@@ -512,12 +584,17 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         );
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'createDatabaseBackupCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
         $task = $cloudapi->createDatabaseBackup($siteName, 'dev', 'dbname');
         $this->assertEquals($taskId, $task['id']);
         foreach($responseData as $key => $value) {
             $this->assertEquals($value, $task[$key]);
         }
+    }
+
+    public function taskInfoCallListener(Event $e) {
+        $this->assertEquals(self::REQUEST_PATH . '/tasks/12345.json', $e['request']->getUrl());
     }
 
     public function testMockTaskInfoCall()
@@ -548,6 +625,7 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         );
 
         $cloudapi = $this->getCloudApiClient();
+        $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'taskInfoCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
         $task = $cloudapi->taskInfo($siteName, $taskId);
         $this->assertEquals($taskId, $task['id']);
