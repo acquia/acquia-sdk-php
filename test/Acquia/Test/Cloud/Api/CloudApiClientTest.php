@@ -376,6 +376,48 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         }
     }
 
+    // TODO: add public function testMockMaxPhpProcsCall() {}
+    // TODO: add public function testMockSshKeysCall() {}
+    // TODO: add public function testMockSshKeyCall() {}
+    // TODO: add public function testMockAddSshKeyCall() {}
+    // TODO: add public function testMockDeleteSshKeyCall() {}
+    // TODO: add public function testMockSvnUsersCall() {}
+    // TODO: add public function testMockSvnUserCall() {}
+    // TODO: add public function testMockAddSvnUserCall() {}
+    // TODO: add public function testMockDeleteSvnUserCall() {}
+
+    public function testMockSiteDatabasesCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $responseData = array (
+            array('name' => 'one'),
+            array('name' => 'two'),
+        );
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+
+        $databases = $cloudapi->siteDatabases($siteName);
+        $this->assertTrue($databases instanceof CloudResponse\Databases);
+        $this->assertTrue($databases['one'] instanceof CloudResponse\Database);
+        $this->assertTrue($databases['two'] instanceof CloudResponse\Database);
+    }
+
+    public function testMockSiteDatabaseCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $responseData = $this->getDatabaseData('one');
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+
+        $database = $cloudapi->siteDatabase($siteName, 'one');
+        $this->assertTrue($database instanceof CloudResponse\Database);
+        foreach($responseData as $key => $value) {
+            $this->assertEquals($value, $database[$key]);
+        }
+    }
+
     public function testMockEnvironmentDatabasesCall()
     {
         $siteName = 'myhostingstage:mysitegroup';
