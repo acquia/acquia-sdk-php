@@ -105,6 +105,28 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Helper function that returns a database backup task
+     *
+     * @param string $date
+     *
+     * @return array
+     */
+    public function getBackupData($date = '1978-11-29') {
+        return array(
+            'link' => "http://mysitedev.myhostingstage.hosting.example.com/AH_DOWNLOAD?dev=123456789dea
+dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777107",
+            'deleted' => 0,
+            'completed' => 1386657182,
+            'path' => "backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777107",
+            'type' => 'daily',
+            'checksum' => '123456789deadbeef',
+            'name' => 'dbname',
+            'id' => rand(10000,99999),
+            'started' => 1386657182
+        );
+    }
+
+    /**
      * Helper function that returns the event listener.
      *
      * @param \Acquia\Cloud\Api\CloudApiClient $cloudapi
@@ -331,6 +353,76 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($server instanceof CloudResponse\Server);
         foreach($responseData as $key => $value) {
             $this->assertEquals($value, $server[$key]);
+        }
+    }
+
+    public function testMockDatabaseBackupsCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $responseData = array(
+            $this->getBackupData('2013-12-11'),
+            $this->getBackupData('2013-12-10'),
+            $this->getBackupData('2013-12-09')
+        );
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+
+        $database = $cloudapi->databaseBackups($siteName, 'dev', 'one');
+        foreach($responseData as $key => $value) {
+            $this->assertEquals($value, $database[$key]);
+        }
+    }
+
+    public function testMockDatabaseBackupCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $responseData = $this->getBackupData('2013-12-11');
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+
+        $database = $cloudapi->databaseBackups($siteName, 'dev', 'one');
+        foreach($responseData as $key => $value) {
+            $this->assertEquals($value, $database[$key]);
+        }
+    }
+
+    // TODO: add public function testMockDownloadDatabaseBackupCall() {}
+
+    public function testMockCreateDatabaseBackupCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $environment = 'dev';
+        $type = 'distro_name';
+        $source = 'acquia-drupal-7';
+        $taskId = 12345;
+
+        // Response is an Acquia Cloud Task
+        $responseData = array(
+            'recipient' => '',
+            'created' => time(),
+            // The values encoded in the body can come back in any order
+            'body' => sprintf('["%s","%s","%s"]', $siteName, $environment, $siteName),
+            'id' => $taskId,
+            'hidden' => 0,
+            'result' => '',
+            'queue' => 'create-db-backup-ondemand',
+            'percentage' => '',
+            'state' => 'waiting',
+            'started' => '',
+            'cookie' => '',
+            'sender' => 'cloud_api',
+            'description' => "Backup database dbname in dev environment.",
+            'completed' => '',
+        );
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+        $task = $cloudapi->createDatabaseBackup($siteName, 'dev', 'dbname');
+        $this->assertEquals($taskId, $task['id']);
+        foreach($responseData as $key => $value) {
+            $this->assertEquals($value, $task[$key]);
         }
     }
 
