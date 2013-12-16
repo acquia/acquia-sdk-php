@@ -24,6 +24,13 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
+    /**
+     * Helper function that returns an environment data array
+     *
+     * @param string $stage dev|test|prod
+     *
+     * @return array
+     */
     public function getEnvironmentData($stage = 'dev')
     {
         return array(
@@ -36,6 +43,13 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * Helper function that returns a server data array
+     *
+     * @param string $type bal|web|db|free|staging|ded|vcs
+     *
+     * @return array
+     */
     public function getServerData($type = 'web')
     {
         $number = rand(1000,9999);
@@ -317,6 +331,42 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($server instanceof CloudResponse\Server);
         foreach($responseData as $key => $value) {
             $this->assertEquals($value, $server[$key]);
+        }
+    }
+
+    public function testMockTaskInfoCall()
+    {
+        $siteName = 'myhostingstage:mysitegroup';
+        $environment = 'dev';
+        $type = 'distro_name';
+        $source = 'acquia-drupal-7';
+        $taskId = 12345;
+
+        // Response is an Acquia Cloud Task
+        $responseData = array(
+            'recipient' => '',
+            'created' => time(),
+            // The values encoded in the body can come back in any order
+            'body' => sprintf('{"env":"%s","site":"%s","type":"%s","source":"%s"}', $environment, $siteName, $type, $source),
+            'id' => $taskId,
+            'hidden' => 0,
+            'result' => '',
+            'queue' => 'site-install',
+            'percentage' => '',
+            'state' => 'waiting',
+            'started' => '',
+            'cookie' => '',
+            'sender' => 'cloud_api',
+            'description' => "Install {$source} to dev",
+            'completed' => '',
+        );
+
+        $cloudapi = $this->getCloudApiClient();
+        $this->addMockResponse($cloudapi, $responseData);
+        $task = $cloudapi->taskInfo($siteName, $taskId);
+        $this->assertEquals($taskId, $task['id']);
+        foreach($responseData as $key => $value) {
+            $this->assertEquals($value, $task[$key]);
         }
     }
 
