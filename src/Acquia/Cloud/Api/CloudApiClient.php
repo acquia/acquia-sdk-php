@@ -304,9 +304,9 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
-     * @param type $site
-     * @param type $publicKey
-     * @param type $nickname
+     * @param string $site
+     * @param string $publicKey
+     * @param string $nickname
      *
      * @return array
      *
@@ -355,6 +355,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
 
     /**
      * @param string $site
+     * @param int $id
      *
      * @return array
      *
@@ -370,9 +371,9 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
-     * @param type $site
-     * @param type $publicKey
-     * @param type $nickname
+     * @param string $site
+     * @param string $username
+     * @param string $password
      *
      * @return array
      *
@@ -393,6 +394,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
 
     /**
      * @param string $site
+     * @param int $id
      *
      * @return array
      *
@@ -455,7 +457,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'env' => $env,
         );
-        return $this->sendGet('{+base_path}/sites/{site}/envs/{env}/dbs.json', $variables);
+        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/dbs.json', $variables);
+        return new Response\Databases($data);
     }
 
     /**
@@ -474,7 +477,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'env' => $env,
             'db' => $db,
         );
-        return $this->sendGet('{+base_path}/sites/{site}/envs/{env}/dbs/{db}.json', $variables);
+        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/dbs/{db}.json', $variables);
+        return new Response\Database($data);
     }
 
     /**
@@ -500,7 +504,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $site
      * @param string $env
      * @param string $db
-     * @param string $id
+     * @param int $id
      *
      * @return array
      *
@@ -521,7 +525,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $site
      * @param string $env
      * @param string $db
-     * @param string $id
+     * @param int $id
+     * @param string $outfile
      *
      * @return array
      *
@@ -559,7 +564,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
 
     /**
      * @param string $site
-     * @param string $task
+     * @param int $task
      *
      * @return array
      *
