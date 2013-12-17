@@ -201,7 +201,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $type
      * @param string $source
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -309,7 +309,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $publicKey
      * @param string $nickname
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -329,7 +329,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $site
      * @param int $id
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -378,7 +378,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $username
      * @param string $password
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      *
@@ -400,7 +400,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $site
      * @param int $id
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      *
@@ -639,5 +639,25 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         );
         $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/domains/{domain}.json', $variables);
         return new Response\Domain($data);
+    }
+
+    /**
+     * @param string $site
+     * @param string $env
+     * @param string $domain
+     *
+     * @return \Acquia\Cloud\Api\Response\Task
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function purgeVarnishCache($site, $env, $domain)
+    {
+        $variables = array(
+            'site' => $site,
+            'env' => $env,
+            'domain' => $domain,
+        );
+        $data = $this->sendDelete('{+base_path}/sites/{site}/envs/{env}/domains/{domain}/cache.json', $variables);
+        return new Response\Task($data);
     }
 }
