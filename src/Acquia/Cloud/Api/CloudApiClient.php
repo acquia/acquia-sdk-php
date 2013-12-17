@@ -602,4 +602,42 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         $data = $this->sendGet('{+base_path}/sites/{site}/tasks/{task}.json', $variables);
         return new Response\Task($data);
     }
+
+    /**
+     * @param string $site
+     * @param string $env
+     *
+     * @return \Acquia\Cloud\Api\Response\Domains
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function domains($site, $env)
+    {
+        $variables = array(
+            'site' => $site,
+            'env' => $env,
+        );
+        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/domains.json', $variables);
+        return new Response\Domains($data);
+    }
+
+    /**
+     * @param string $site
+     * @param string $env
+     * @param string $domain
+     *
+     * @return \Acquia\Cloud\Api\Response\Domain
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function domain($site, $env, $domain)
+    {
+        $variables = array(
+            'site' => $site,
+            'env' => $env,
+            'domain' => $domain,
+        );
+        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/domains/{domain}.json', $variables);
+        return new Response\Domain($data);
+    }
 }
