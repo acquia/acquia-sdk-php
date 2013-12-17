@@ -1,5 +1,5 @@
 {
-    "name": "cpliakas/acquia-php-sdk-common",
+    "name": "acquia/acquia-php-sdk-common",
     "type": "library",
     "description": "Common components for the Acquia PHP SDK.",
     "keywords": ["acquia"],
