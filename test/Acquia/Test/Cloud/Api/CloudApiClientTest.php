@@ -382,6 +382,7 @@ dbeef&d=/mnt/files/dbname.dev/backups/dev-mysite-dbname-{$date}.sql.gz&t=1386777
         $cloudapi->getEventDispatcher()->addListener('client.create_request', array($this, 'installDistroByNameCallListener'));
         $this->addMockResponse($cloudapi, $responseData);
         $task = $cloudapi->installDistro($siteName, $environment, $type, $source);
+        $this->assertTrue($task instanceof CloudResponse\Task);
         foreach($responseData as $key => $value) {
             $this->assertEquals($value, $task[$key]);
         }
