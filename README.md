@@ -78,7 +78,7 @@ for more advanced usage examples.
 
 The Acquia Service Manager simplifies credential management and client
 instantiation. The credential management system is built using
-[Guzzle's service builder](http://guzzlephp.org/webservice-client/using-the-service-builder.html)
+[Guzzle's service builder](http://docs.guzzlephp.org/en/latest/webservice-client/using-the-service-builder.html)
 subsystem, so the documentation and techniques can also apply here.
 
 ### Saving Credentials
