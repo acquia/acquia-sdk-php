@@ -83,8 +83,9 @@ subsystem, so the documentation and techniques can also apply here.
 
 ### Saving Credentials
 
-The following example saves the configurations in the two clients and one
-service builder (for Acquia Search) to JSON files in the specified directory.
+The following example saves the configurations for the client to JSON files in
+the specified directory. Note that the Acquia Search client is a service
+builder which is why we use the `setBuilder` method for it.
 
 ```php
 use Acquia\Common\AcquiaServiceManager;
