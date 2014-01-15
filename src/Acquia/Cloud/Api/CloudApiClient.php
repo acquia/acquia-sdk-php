@@ -660,4 +660,83 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         $data = $this->sendDelete('{+base_path}/sites/{site}/envs/{env}/domains/{domain}/cache.json', $variables);
         return new Response\Task($data);
     }
+    
+    /**
+     * @param string $site
+     * @param string $db
+     * @param string $source
+     * @param string $target
+     *
+     * @return array
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function copyDatabase($site, $db, $source, $target)
+    {
+        $variables = array(
+            'site' => $site,
+            'db' => $db,
+            'source' => $source,
+            'target' => $target,
+        );
+        return $this->sendPost('{+base_path}/sites/{site}/dbs/{db}/db-copy/{source}/{target}.json', $variables);
+    }
+  
+    /**
+     * @param string $site
+     * @param string $source
+     * @param string $target
+     *
+     * @return array
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function copyFiles($site, $source, $target)
+    {
+        $variables = array(
+            'site' => $site,
+            'source' => $source,
+            'target' => $target,
+        );
+        return $this->sendPost('{+base_path}/sites/{site}/files-copy/{source}/{target}.json', $variables);
+    }
+  
+    /**
+     * @param string $site
+     * @param string $env
+     * @param string $action
+     *   Allowed values: enable, disable
+     *
+     * @return array
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function liveDev($site, $env, $action)
+    {
+        $variables = array(
+            'site' => $site,
+            'env' => $env,
+            'action' => $action,
+        );
+        return $this->sendPost('{+base_path}/sites/{site}/envs/{env}/livedev/{action}.json', $variables);
+    }
+
+    /**
+     * @param string $site
+     * @param string $source
+     * @param string $target
+     *
+     * @return array
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function codeDeploy($site, $source, $target)
+    {
+        $variables = array(
+            'site' => $site,
+            'source' => $source,
+            'target' => $target,
+        );
+        return $this->sendPost('{+base_path}/sites/{site}/code-deploy/{source}/{target}.json', $variables);
+    }
 }
