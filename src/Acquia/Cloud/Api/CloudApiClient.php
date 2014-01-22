@@ -646,6 +646,46 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $env
      * @param string $domain
      *
+     * @return \Acquia\Cloud\Api\Response\Domain
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function addDomain($site, $env, $domain)
+    {
+      $variables = array(
+        'site' => $site,
+        'env' => $env,
+        'domain' => $domain,
+      );
+      $data = $this->sendPost('{+base_path}/sites/{site}/envs/{env}/domains/{domain}.json', $variables);
+      return new Response\Domain($data);
+    }
+
+    /**
+     * @param string $site
+     * @param string $env
+     * @param string $domain
+     *
+     * @return \Acquia\Cloud\Api\Response\Domain
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function deleteDomain($site, $env, $domain)
+    {
+      $variables = array(
+        'site' => $site,
+        'env' => $env,
+        'domain' => $domain,
+      );
+      $data = $this->sendDelete('{+base_path}/sites/{site}/envs/{env}/domains/{domain}.json', $variables);
+      return new Response\Domain($data);
+    }
+
+    /**
+     * @param string $site
+     * @param string $env
+     * @param string $domain
+     *
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
