@@ -532,6 +532,28 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $env
      * @param string $db
      * @param int $id
+     *
+     * @return \Acquia\Cloud\Api\Response\Tasks
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function deleteBackup($site, $env, $db, $id)
+    {
+      $variables = array(
+        'site' => $site,
+        'env' => $env,
+        'db' => $db,
+        'id' => $id,
+      );
+      $data = $this->sendDelete('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}.json', $variables);
+      return new Response\Task($data);
+    }
+
+    /**
+     * @param string $site
+     * @param string $env
+     * @param string $db
+     * @param int $id
      * @param string $outfile
      *
      * @return array
