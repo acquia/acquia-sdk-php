@@ -1,0 +1,1 @@
+{"ec2_region":"us-east-1","services":{"varnish":{"status":"active"},"external_ip":"50.19.98.136"},"ami_type":"m1.large","ec2_availability_zone":"us-east-1c","name":"bal-751","fqdn":"bal-751.prod.hosting.acquia.com"}

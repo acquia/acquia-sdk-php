@@ -2,24 +2,53 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Database extends \ArrayObject
+class Database extends Object
 {
     /**
-     * @param array|string $data
+     * @return string
      */
-    public function __construct($data)
+    public function name()
     {
-        if (is_string($data)) {
-            $data = array('name' => $data);
-        }
-        parent::__construct($data);
+        return $this['name'];
     }
 
     /**
      * @return string
      */
-    public function __toString()
+    public function username()
     {
-        return $this['name'];
+        return $this['username'];
+    }
+
+    /**
+     * @return string
+     */
+    public function instanceName()
+    {
+        return $this['instance_name'];
+    }
+
+    /**
+     * @return string
+     */
+    public function password()
+    {
+        return $this['password'];
+    }
+
+    /**
+     * @return string
+     */
+    public function dbCluster()
+    {
+        return $this['db_cluster'];
+    }
+
+    /**
+     * @return string
+     */
+    public function host()
+    {
+        return $this['host'];
     }
 }

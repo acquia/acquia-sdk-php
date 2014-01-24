@@ -9,9 +9,10 @@ use Guzzle\Service\Client;
 
 class CloudApiClient extends Client implements AcquiaServiceManagerAware
 {
+    const BASE_URL  = 'https://cloudapi.acquia.com';
     const BASE_PATH = '/v1';
 
-    /**
+     /**
      * {@inheritdoc}
      *
      * @return \Acquia\Cloud\Api\CloudApiClient
@@ -25,7 +26,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         );
 
         $defaults = array(
-            'base_url' => 'https://cloudapi.acquia.com',
+            'base_url' => self::BASE_URL,
             'base_path' => self::BASE_PATH,
         );
 
@@ -56,97 +57,14 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
-     * Helper method to send a GET request and return parsed JSON.
-     *
-     * @param string $path
-     * @param array $variables
-     *   Variables used to expand the URI expressions.
-     *
-     * @return array
-     *
-     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
-     *
-     * @see http://docs.guzzlephp.org/en/latest/http-client/uri-templates.html
-     */
-    public function sendGet($path, $variables = array())
-    {
-        return $this->get(array($path, $variables))->send()->json();
-    }
-
-    /**
-     * Helper method to send a GET request and save to a file.
-     *
-     * @param string $path
-     * @param array $variables
-     *   Variables used to expand the URI expressions.
-     * @param string $tofile
-     *   Path to save file
-     *
-     * @return array
-     *
-     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
-     *
-     * @see http://docs.guzzlephp.org/en/latest/http-client/uri-templates.html
-     */
-    public function saveGet($path, array $variables, $tofile)
-    {
-        return $this->get(array($path, $variables))->setResponseBody($tofile)->send();
-    }
-
-    /**
-     * Helper method to send a POST request and return parsed JSON.
-     *
-     * The variables passed in the second parameter are used to expand the URI
-     * expressions, which are usually the resource identifiers being requested.
-     *
-     * @param string $path
-     * @param array $variables
-     *   Variables used to expand the URI expressions.
-     * @param mixed $body
-     *   Defaults to null. If a non-string is passed then the data is converted
-     *   to JSON.
-     *
-     * @return array
-     *
-     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
-     *
-     * @see http://docs.guzzlephp.org/en/latest/http-client/uri-templates.html
-     */
-    public function sendPost($path, $variables = array(), $body = null)
-    {
-        if (!is_string($body)) {
-            $body = Json::encode($body);
-        }
-        return $this->post(array($path, $variables), null, $body)->send()->json();
-    }
-
-    /**
-     * Helper method to send a DELETE request and return parsed JSON.
-     *
-     * @param string $path
-     * @param array $variables
-     *   Variables used to expand the URI expressions.
-     *
-     * @return array
-     *
-     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
-     *
-     * @see http://docs.guzzlephp.org/en/latest/http-client/uri-templates.html
-     */
-    public function sendDelete($path, $variables = array())
-    {
-        return $this->delete(array($path, $variables))->send()->json();
-    }
-
-    /**
      * @return \Acquia\Cloud\Api\Response\Sites
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function sites()
     {
-        $data = $this->sendGet('{+base_path}/sites.json');
-        return new Response\Sites($data);
+        $request = $this->get('{+base_path}/sites.json');
+        return new Response\Sites($request);
     }
 
     /**
@@ -159,8 +77,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     public function site($site)
     {
         $variables = array('site' => $site);
-        $data = $this->sendGet('{+base_path}/sites/{site}.json', $variables);
-        return new Response\Site($data);
+        $request = $this->get(array('{+base_path}/sites/{site}.json', $variables));
+        return new Response\Site($request);
     }
 
     /**
@@ -173,8 +91,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     public function environments($site)
     {
         $variables = array('site' => $site);
-        $data = $this->sendGet('{+base_path}/sites/{site}/envs.json', $variables);
-        return new Response\Environments($data);
+        $request = $this->get(array('{+base_path}/sites/{site}/envs.json', $variables));
+        return new Response\Environments($request);
     }
 
     /**
@@ -191,8 +109,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'env' => $env,
         );
-        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}.json', $variables);
-        return new Response\Environment($data);
+        $request = $this->get(array('{+base_path}/sites/{site}/envs/{env}.json', $variables));
+        return new Response\Environment($request);
     }
 
     /**
@@ -213,8 +131,58 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'type' => $type,
             'source' => $source,
         );
-        $data = $this->sendPost('{+base_path}/sites/{site}/envs/{env}/install/{type}.json?source={source}', $variables);
+        $data = $this->post(array('{+base_path}/sites/{site}/envs/{env}/install/{type}.json?source={source}', $variables));
         return new Response\Task($data);
+    }
+
+    /**
+     * Install one of Acquia Cloud’s built-in supported distros.
+     *
+     * @param string $site
+     * @param string $env
+     * @param string $distro See the \Acquia\Cloud\Api\Distro constants.
+     *
+     * @return \Acquia\Cloud\Api\Response\Task
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function installDistroByName($site, $env, $distro)
+    {
+        return $this->installDistro($site, $env, 'distro_name', $distro);
+    }
+
+    /**
+     * Install any publicly accessible, standard Drupal distribution.
+     *
+     * @param string $site
+     * @param string $env
+     * @param string $projectName
+     * @param string $version
+     *
+     * @return \Acquia\Cloud\Api\Response\Task
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function installDistroByProject($site, $env, $projectName, $version)
+    {
+        $source = 'http://ftp.drupal.org/files/projects/' . $projectName . '-' . $version . 'tar.gz';
+        return $this->installDistro($site, $env, 'distro_url', $source);
+    }
+
+    /**
+     * Install a distro by passing a URL to a Drush makefile.
+     *
+     * @param string $site
+     * @param string $env
+     * @param string $makefileUrl
+     *
+     * @return \Acquia\Cloud\Api\Response\Task
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function installDistroByMakefile($site, $env, $makefileUrl)
+    {
+        return $this->installDistro($site, $env, 'make_url', $makefileUrl);
     }
 
     /**
@@ -231,8 +199,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'env' => $env,
         );
-        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/servers.json', $variables);
-        return new Response\Servers($data);
+        $request = $this->get(array('{+base_path}/sites/{site}/envs/{env}/servers.json', $variables));
+        return new Response\Servers($request);
     }
 
     /**
@@ -251,47 +219,29 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'env' => $env,
             'server' => $server,
         );
-        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/servers/{server}.json', $variables);
-        return new Response\Server($data);
-    }
-
-    /**
-     * @param string $site
-     * @param string $env
-     * @param string $server
-     *
-     * @return array
-     *
-     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
-     */
-    public function maxPhpProcs($site, $env, $server)
-    {
-        $variables = array(
-            'site' => $site,
-            'env' => $env,
-            'server' => $server,
-        );
-        return $this->sendGet('{+base_path}/sites/{site}/envs/{env}/servers/{server}/php-procs.json', $variables);
+        $request = $this->get(array('{+base_path}/sites/{site}/envs/{env}/servers/{server}.json', $variables));
+        return new Response\Server($request);
     }
 
     /**
      * @param string $site
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\SshKeys
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function sshKeys($site)
     {
         $variables = array('site' => $site);
-        return $this->sendGet('{+base_path}/sites/{site}/sshkeys.json', $variables);
+        $request = $this->get(array('{+base_path}/sites/{site}/sshkeys.json', $variables));
+        return new Response\SshKeys($request);
     }
 
     /**
      * @param string $site
      * @param int $id
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\SshKey
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -301,7 +251,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'id' => $id,
         );
-        return $this->sendGet('{+base_path}/sites/{site}/sshkeys/{id}.json', $variables);
+        $request = $this->get(array('{+base_path}/sites/{site}/sshkeys/{id}.json', $variables));
+        return new Response\SshKey($request);
     }
 
     /**
@@ -320,9 +271,9 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'nickname' => $nickname,
         );
-        $body = array('ssh_pub_key' => $publicKey);
-        $data = $this->sendPost($path, $variables, $body);
-        return new Response\Task($data);
+        $body = Json::encode(array('ssh_pub_key' => $publicKey));
+        $request = $this->post(array($path, $variables), null, $body);
+        return new Response\Task($request);
     }
 
     /**
@@ -339,28 +290,29 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'id' => $id,
         );
-        $data = $this->sendDelete('{+base_path}/sites/{site}/sshkeys/{id}.json', $variables);
-        return new Response\Task($data);
+        $request = $this->delete(array('{+base_path}/sites/{site}/sshkeys/{id}.json', $variables));
+        return new Response\Task($request);
     }
 
     /**
      * @param string $site
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\SvnUsers
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function svnUsers($site)
     {
         $variables = array('site' => $site);
-        return $this->sendGet('{+base_path}/sites/{site}/svnusers.json', $variables);
+        $request = $this->get(array('{+base_path}/sites/{site}/svnusers.json', $variables));
+        return Response\SvnUsers($request);
     }
 
     /**
      * @param string $site
      * @param int $id
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\SvnUser
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -370,7 +322,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'id' => $id,
         );
-        return $this->sendGet('{+base_path}/sites/{site}/svnusers/{id}.json', $variables);
+        $request = $this->get(array('{+base_path}/sites/{site}/svnusers/{id}.json', $variables));
+        return Response\SvnUser($request);
     }
 
     /**
@@ -391,8 +344,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'username' => $username,
         );
-        $body = array('password' => $password);
-        $data = $this->sendPost($path, $variables, $body);
+        $body = Json::encode(array('password' => $password));
+        $data = $this->post(array($path, $variables), null, $body);
         return new Response\Task($data);
     }
 
@@ -412,29 +365,29 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'id' => $id,
         );
-        $data = $this->sendDelete('{+base_path}/sites/{site}/svnusers/{id}.json', $variables);
-        return new Response\Task($data);
+        $request = $this->delete(array('{+base_path}/sites/{site}/svnusers/{id}.json', $variables));
+        return new Response\Task($request);
     }
 
     /**
      * @param string $site
      *
-     * @return \Acquia\Cloud\Api\Response\Databases
+     * @return \Acquia\Cloud\Api\Response\DatabaseNames
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
     public function siteDatabases($site)
     {
         $variables = array('site' => $site);
-        $data = $this->sendGet('{+base_path}/sites/{site}/dbs.json', $variables);
-        return new Response\Databases($data);
+        $request = $this->get(array('{+base_path}/sites/{site}/dbs.json', $variables));
+        return new Response\DatabaseNames($request);
     }
 
     /**
      * @param string $site
      * @param string $db
      *
-     * @return \Acquia\Cloud\Api\Response\Database
+     * @return \Acquia\Cloud\Api\Response\DatabaseName
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -444,15 +397,15 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'db' => $db,
         );
-        $data = $this->sendGet('{+base_path}/sites/{site}/dbs/{db}.json', $variables);
-        return new Response\Database($data);
+        $request = $this->get(array('{+base_path}/sites/{site}/dbs/{db}.json', $variables));
+        return new Response\DatabaseName($request);
     }
 
     /**
      * @param string $site
      * @param string $env
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Databases
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -462,8 +415,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'site' => $site,
             'env' => $env,
         );
-        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/dbs.json', $variables);
-        return new Response\Databases($data);
+        $request = $this->get(array('{+base_path}/sites/{site}/envs/{env}/dbs.json', $variables));
+        return new Response\Databases($request);
     }
 
     /**
@@ -471,7 +424,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $env
      * @param string $db
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\Database
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -482,8 +435,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'env' => $env,
             'db' => $db,
         );
-        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/dbs/{db}.json', $variables);
-        return new Response\Database($data);
+        $request = $this->get(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}.json', $variables));
+        return new Response\Database($request);
     }
 
     /**
@@ -491,7 +444,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $env
      * @param string $db
      *
-     * @return array
+     * @return \Acquia\Cloud\Api\Response\DatabaseBackups
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -502,7 +455,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'env' => $env,
             'db' => $db,
         );
-        return $this->sendGet('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups.json', $variables);
+        $request = $this->get(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups.json', $variables));
+        return new Response\DatabaseBackups($request);
     }
 
     /**
@@ -523,8 +477,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'db' => $db,
             'id' => $id,
         );
-        $data = $this->sendGet('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}.json', $variables);
-        return new Response\Task($data);
+        $data = $this->get(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}.json', $variables));
+        return new Response\DatabaseBackup($data);
     }
 
     /**
@@ -537,7 +491,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function deleteBackup($site, $env, $db, $id)
+    public function deleteDatabaseBackup($site, $env, $db, $id)
     {
       $variables = array(
         'site' => $site,
@@ -545,7 +499,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         'db' => $db,
         'id' => $id,
       );
-      $data = $this->sendDelete('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}.json', $variables);
+      $data = $this->delete(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}.json', $variables));
       return new Response\Task($data);
     }
 
@@ -556,7 +510,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param int $id
      * @param string $outfile
      *
-     * @return array
+     * @return \Guzzle\Http\Message\Response
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
@@ -568,7 +522,11 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'db' => $db,
             'id' => $id,
         );
-        return $this->saveGet('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}/download.json', $variables, $outfile);
+        return $this
+            ->get(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}/download.json', $variables))
+            ->setResponseBody($outfile)
+            ->send()
+        ;
     }
 
     /**
@@ -587,7 +545,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'env' => $env,
             'db' => $db,
         );
-        $data = $this->sendPost('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups.json', $variables);
+        $data = $this->post(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups.json', $variables));
         return new Response\Task($data);
     }
 
@@ -603,26 +561,41 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         $variables = array(
             'site' => $site,
         );
-        $data = $this->sendGet('{+base_path}/sites/{site}/tasks.json', $variables);
-        return new Response\Tasks($data);
+        $request = $this->get(array('{+base_path}/sites/{site}/tasks.json', $variables));
+        return new Response\Tasks($request);
     }
 
     /**
      * @param string $site
-     * @param int $task
+     * @param int $taskId
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function taskInfo($site, $task)
+    public function task($site, $taskId)
     {
         $variables = array(
             'site' => $site,
-            'task' => $task,
+            'task' => $taskId,
         );
-        $data = $this->sendGet('{+base_path}/sites/{site}/tasks/{task}.json', $variables);
-        return new Response\Task($data);
+        $request = $this->get(array('{+base_path}/sites/{site}/tasks/{task}.json', $variables));
+        return new Response\Task($request);
+    }
+
+    /**
+     * @param string $site
+     * @param int $taskId
+     *
+     * @return \Acquia\Cloud\Api\Response\Task
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @deprecated since version 0.5.0
+     */
+    public function taskInfo($site, $taskId)
+    {
+        return $this->task($site, $taskId);
     }
 
     /**
@@ -722,7 +695,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         $data = $this->sendDelete('{+base_path}/sites/{site}/envs/{env}/domains/{domain}/cache.json', $variables);
         return new Response\Task($data);
     }
-    
+
     /**
      * @param string $site
      * @param string $db
@@ -743,7 +716,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         );
         return $this->sendPost('{+base_path}/sites/{site}/dbs/{db}/db-copy/{source}/{target}.json', $variables);
     }
-  
+
     /**
      * @param string $site
      * @param string $source
@@ -762,7 +735,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         );
         return $this->sendPost('{+base_path}/sites/{site}/files-copy/{source}/{target}.json', $variables);
     }
-  
+
     /**
      * @param string $site
      * @param string $env

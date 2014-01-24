@@ -1,0 +1,1 @@
+[{"recipient":"backup-123.stage-one.hosting.acquia.com","queue":"delete-db-backup","result":null,"completed":null,"started":null,"description":"Delete backup 12345 of database mysite in prod environment.","state":"received","id":"12345","sender":"cloud_api","percentage":null,"created":"1390535078","body":"[\"12345\"]","cookie":null,"hidden":"0"}]

@@ -2,25 +2,61 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Site extends \ArrayObject
+class Site extends Object
 {
     /**
-     * @param array|string $data
+     * @return string
      */
-    public function __construct($data)
+    public function name()
     {
-        if (is_string($data)) {
-            $data = array('name' => $data);
-        }
-        parent::__construct($data);
-        list($this['hosting_stage'], $this['site_group']) = explode(':', $data['name']);
+        return $this['name'];
     }
 
     /**
      * @return string
      */
-    public function __toString()
+    public function vcsUrl()
     {
-        return $this['name'];
+        return $this['vcs_url'];
+    }
+
+    /**
+     * @return string
+     */
+    public function uuid()
+    {
+        return $this['uuid'];
+    }
+
+    /**
+     * @return string
+     */
+    public function unixUsername()
+    {
+        return $this['unix_username'];
+    }
+
+    /**
+     * @return string
+     */
+    public function title()
+    {
+        return $this['title'];
+    }
+
+    /**
+     * @return string
+     */
+    public function vcsType()
+    {
+        return $this['vcs_type'];
+    }
+
+    /**
+     * @return boolean
+     */
+    public function productionMode()
+    {
+        return !empty($this['production_mode']);
     }
 }

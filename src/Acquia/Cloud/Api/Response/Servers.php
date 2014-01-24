@@ -2,15 +2,10 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Servers extends \ArrayObject
+class Servers extends Response
 {
     /**
-     * @param array $servers
+     * @var string
      */
-    public function __construct($servers)
-    {
-        foreach ($servers as $server) {
-            $this[$server['name']] = new Server($server);
-        }
-    }
+    protected $objectClass = '\Acquia\Cloud\Api\Response\Server';
 }

@@ -2,15 +2,10 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Domains extends \ArrayObject
+class Domains extends Response
 {
     /**
-     * @param array $dbs
+     * @var string
      */
-    public function __construct($domains)
-    {
-        foreach ($domains as $domain) {
-            $this[$domain['name']] = new Domain($domain);
-        }
-    }
+    protected $objectClass = '\Acquia\Cloud\Api\Response\Domain';
 }

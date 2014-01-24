@@ -2,15 +2,10 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Databases extends \ArrayObject
+class Databases extends Response
 {
     /**
-     * @param array $dbs
+     * @var string
      */
-    public function __construct($dbs)
-    {
-        foreach ($dbs as $db) {
-            $this[$db['name']] = new Database($db);
-        }
-    }
+    protected $objectClass = '\Acquia\Cloud\Api\Response\Database';
 }

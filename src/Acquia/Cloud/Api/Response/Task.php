@@ -2,24 +2,125 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Task extends \ArrayObject
+use Acquia\Common\Json;
+
+class Task extends Object
 {
     /**
-     * @param array|string $data
+     * @var string
      */
-    public function __construct($data)
+    protected $idColumn = 'id';
+
+    /**
+     * @return string
+     */
+    public function id()
     {
-        if (is_string($data)) {
-            $data = array('id' => $data);
-        }
-        parent::__construct($data);
+        return $this['id'];
     }
 
     /**
      * @return string
      */
-    public function __toString()
+    public function state()
     {
-        return "{$this['id']}";
+        return $this['state'];
+    }
+
+    /**
+     * @return boolean
+     */
+    public function started()
+    {
+        return !empty($this['started']);
+    }
+
+    /**
+     * @return array
+     */
+    public function body()
+    {
+        return Json::decode($this['body']);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function hidden()
+    {
+        return !empty($this['hidden']);
+    }
+
+    /**
+     * @return string
+     */
+    public function description()
+    {
+        return $this['description'];
+    }
+
+    /**
+     * @return string
+     */
+    public function result()
+    {
+        return $this['result'];
+    }
+
+    /**
+     * @return boolean
+     */
+    public function completed()
+    {
+        return !empty($this['completed']);
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function created()
+    {
+        $created = new \DateTime();
+        return $created->setTimestamp($this['created']);
+    }
+
+    /**
+     * @return string
+     */
+    public function queue()
+    {
+        return $this['queue'];
+    }
+
+    /**
+     * @return array
+     */
+    public function cookie()
+    {
+        return Json::decode($this['cookie']);
+    }
+
+    /**
+     * @return string
+     */
+    public function recipient()
+    {
+        return $this['recipient'];
+    }
+
+    /**
+     * @return string
+     */
+    public function sender()
+    {
+        return $this['sender'];
+    }
+
+    /**
+     * @return percentage
+     */
+    public function percentage()
+    {
+        return $this['percentage'];
     }
 }

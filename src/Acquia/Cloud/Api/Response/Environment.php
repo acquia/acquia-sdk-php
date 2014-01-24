@@ -2,23 +2,52 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Environment extends \ArrayObject
+class Environment extends Object
 {
     /**
-     * @param array|string $data
+     * @return array
      */
-    public function __construct($data)
+    public function dbClusters()
     {
-        if (is_string($data)) {
-            $data = array('name' => $data);
-        }
-        parent::__construct($data);
+        return $this['db_clusters'];
     }
 
     /**
      * @return string
      */
-    public function __toString()
+    public function defaultDomain()
+    {
+        return $this['default_domain'];
+    }
+
+    /**
+     * @return string
+     */
+    public function sshHost()
+    {
+        return $this['ssh_host'];
+    }
+
+    /**
+     * @return string
+     */
+    public function vcsPath()
+    {
+        return $this['vcs_path'];
+    }
+
+    /**
+     * @return boolean
+     */
+    public function liveDev()
+    {
+        return ('enabled' === $this['livedev']);
+    }
+
+    /**
+     * @return string
+     */
+    public function name()
     {
         return $this['name'];
     }

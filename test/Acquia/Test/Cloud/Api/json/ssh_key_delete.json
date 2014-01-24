@@ -1,0 +1,1 @@
+{"state":"waiting","started":null,"body":"{\"sitegroup\":\"mysite\",\"types\":[\"svn_server\",\"web_servers\"]}","id":"12345","hidden":"0","description":"Remove SSH key AAAAA==","result":null,"completed":null,"created":"1390501160","queue":"site-update","cookie":"{\"action\":\"ssh-key-delete\"}","recipient":null,"sender":"SiteUpdateFactory","percentage":null}

@@ -2,15 +2,10 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Environments extends \ArrayObject
+class Environments extends Response
 {
     /**
-     * @param array $envs
+     * @var string
      */
-    public function __construct($envs)
-    {
-        foreach ($envs as $env) {
-            $this[$env['name']] = new Environment($env);
-        }
-    }
+    protected $objectClass = '\Acquia\Cloud\Api\Response\Environment';
 }

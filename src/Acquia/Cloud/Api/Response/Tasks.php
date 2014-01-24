@@ -2,15 +2,10 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Tasks extends \ArrayObject
+class Tasks extends Response
 {
     /**
-     * @param array $tasks
+     * @var string
      */
-    public function __construct($tasks)
-    {
-        foreach ($tasks as $task) {
-            $this[$task['id']] = new Task($task);
-        }
-    }
+    protected $objectClass = '\Acquia\Cloud\Api\Response\Task';
 }
