@@ -1,0 +1,1 @@
+{"hidden":"0","result":null,"cookie":null,"created":"1390595234","description":"Add database testdb.","queue":"database-action","body":"{\"action\":\"add\",\"role\":\"testdb\",\"sitegroup\":\"devdemo\"}","percentage":null,"state":"waiting","id":"12345","sender":"cloud_api","recipient":null,"completed":null,"started":null}

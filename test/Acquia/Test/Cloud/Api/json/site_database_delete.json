@@ -1,0 +1,1 @@
+{"started":null,"description":"Delete database testdb.","body":"{\"role\":\"testdb\",\"action\":\"delete\",\"sitegroup\":\"devdemo\",\"backup\":1}","result":null,"state":"waiting","id":"12345","sender":"cloud_api","percentage":null,"queue":"database-action","cookie":null,"completed":null,"created":"1390595734","recipient":null,"hidden":"0"}

@@ -383,7 +383,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function siteDatabases($site)
+    public function databases($site)
     {
         $variables = array('site' => $site);
         $request = $this->get(array('{+base_path}/sites/{site}/dbs.json', $variables));
@@ -398,7 +398,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function siteDatabase($site, $db)
+    public function database($site, $db)
     {
         $variables = array(
             'site' => $site,
@@ -406,6 +406,40 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         );
         $request = $this->get(array('{+base_path}/sites/{site}/dbs/{db}.json', $variables));
         return new Response\DatabaseName($request);
+    }
+
+    /**
+     * @param string $site
+     * @param string $db
+     *
+     * @return \Acquia\Cloud\Api\Response\Task
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function addDatabase($site, $db)
+    {
+        $variables = array('site' => $site);
+        $body = Json::encode(array('db' => $db));
+        $request = $this->post(array('{+base_path}/sites/{site}/dbs.json', $variables), null, $body);
+        return new Response\Task($request);
+    }
+
+    /**
+     * @param string $site
+     * @param string $db
+     *
+     * @return \Acquia\Cloud\Api\Response\Task
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function deleteDatabase($site, $db)
+    {
+        $variables = array(
+            'site' => $site,
+            'db' => $db,
+        );
+        $request = $this->delete(array('{+base_path}/sites/{site}/dbs/{db}.json', $variables));
+        return new Response\Task($request);
     }
 
     /**
@@ -588,14 +622,6 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         );
         $request = $this->get(array('{+base_path}/sites/{site}/tasks/{task}.json', $variables));
         return new Response\Task($request);
-    }
-
-    /**
-     * @deprecated since version 0.5.0
-     */
-    public function taskInfo($site, $taskId)
-    {
-        return $this->task($site, $taskId);
     }
 
     /**
@@ -802,6 +828,30 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         );
         $request = $this->post(array('{+base_path}/sites/{site}/code-deploy/{source}/{target}.json', $variables));
         return new Response\Task($request);
+    }
+
+    /**
+     * @deprecated since version 0.5.0
+     */
+    public function taskInfo($site, $taskId)
+    {
+        return $this->task($site, $taskId);
+    }
+
+    /**
+     * @deprecated since version 0.5.0
+     */
+    public function siteDatabases($site)
+    {
+        return $this->databases($site);
+    }
+
+    /**
+     * @deprecated since version 0.5.0
+     */
+    public function siteDatabase($site, $db)
+    {
+        return $this->database($site, $db);
     }
 
     /**

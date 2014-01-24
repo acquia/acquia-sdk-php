@@ -375,10 +375,10 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($response->percentage());
     }
 
-    public function testCallSiteDatabases()
+    public function testCallDatabases()
     {
         $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/site_databases.json');
-        $response = $cloudapi->siteDatabases('stage-one:mysite');
+        $response = $cloudapi->databases('stage-one:mysite');
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/dbs.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\DatabaseNames', $response);
@@ -387,16 +387,86 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testCallSiteDatabase()
+    public function testCallSiteDatabases()
+    {
+        // @deprecated since version 0.5.0
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/site_databases.json');
+        $response = $cloudapi->siteDatabases('stage-one:mysite');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/dbs.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\DatabaseNames', $response);
+    }
+
+    public function testCallDatabase()
     {
         $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/site_database.json');
-        $response = $cloudapi->siteDatabase('stage-one:mysite', 'mysite');
+        $response = $cloudapi->database('stage-one:mysite', 'mysite');
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/dbs/mysite.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\DatabaseName', $response);
         $this->assertEquals('mysite', (string) $response);
 
         $this->assertEquals('mysite', $response->name());
+    }
+
+    public function testCallSiteDatabase()
+    {
+        // @deprecated since version 0.5.0
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/site_database.json');
+        $response = $cloudapi->siteDatabase('stage-one:mysite', 'mysite');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/dbs/mysite.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\DatabaseName', $response);
+    }
+
+    public function testCallAddDatabase()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/site_database_add.json');
+        $response = $cloudapi->addDatabase('stage-one:mysite', 'testdb');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/dbs.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('waiting', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertArrayHasKey('action', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Add database testdb.', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('database-action', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertNull($response->recipient());
+        $this->assertEquals('cloud_api', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
+    public function testCallDeleteDatabase()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/site_database_delete.json');
+        $response = $cloudapi->deleteDatabase('stage-one:mysite', 'testdb');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/dbs/testdb.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('waiting', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertArrayHasKey('action', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Delete database testdb.', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('database-action', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertNull($response->recipient());
+        $this->assertEquals('cloud_api', $response->sender());
+        $this->assertNull($response->percentage());
     }
 
     public function testCallEnvironmentDatabases()
