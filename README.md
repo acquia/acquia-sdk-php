@@ -37,8 +37,8 @@ Basic usage examples for the SDK.
 use Acquia\Cloud\Api\CloudApiClient;
 
 $cloudapi = CloudApiClient::factory(array(
-    'username' => 'xxx...',
-    'password' => 'xxx...',
+    'username' => 'xxx...',  // Email address used to log into the Acquia Network
+    'password' => 'xxx...',  // Acquia Network password
 ));
 
 $sites = $cloudapi->sites();
