@@ -1,0 +1,1 @@
+{"started":null,"description":"Restore backup 12345 of database mysite in prod environment.","body":"[\"12345\"]","result":null,"state":"waiting","id":"12345","sender":"cloud_api","percentage":null,"queue":"restore-db-backup","cookie":null,"completed":null,"created":"1390596237","recipient":null,"hidden":"0"}

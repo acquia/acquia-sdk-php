@@ -555,6 +555,31 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($response->percentage());
     }
 
+    public function testCallRestoreDatabaseBackup()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/database_backup_restore.json');
+        $response = $cloudapi->restoreDatabaseBackup('stage-one:mysite', 'prod', 'mysite', '12345');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/prod/dbs/mysite/backups/12345/restore.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('waiting', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertEquals(array('12345'), $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Restore backup 12345 of database mysite in prod environment.', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('restore-db-backup', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertNull($response->recipient());
+        $this->assertEquals('cloud_api', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
     public function testCallDownloadDatabaseBackup()
     {
         $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/database_backup_download.txt');

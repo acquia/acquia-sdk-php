@@ -138,8 +138,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'type' => $type,
             'source' => $source,
         );
-        $data = $this->post(array('{+base_path}/sites/{site}/envs/{env}/install/{type}.json?source={source}', $variables));
-        return new Response\Task($data);
+        $request = $this->post(array('{+base_path}/sites/{site}/envs/{env}/install/{type}.json?source={source}', $variables));
+        return new Response\Task($request);
     }
 
     /**
@@ -246,17 +246,17 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
 
     /**
      * @param string $site
-     * @param int $id
+     * @param int $keyId
      *
      * @return \Acquia\Cloud\Api\Response\SshKey
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function sshKey($site, $id)
+    public function sshKey($site, $keyId)
     {
         $variables = array(
             'site' => $site,
-            'id' => $id,
+            'id' => $keyId,
         );
         $request = $this->get(array('{+base_path}/sites/{site}/sshkeys/{id}.json', $variables));
         return new Response\SshKey($request);
@@ -285,17 +285,17 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
 
     /**
      * @param string $site
-     * @param int $id
+     * @param int $keyId
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function deleteSshKey($site, $id)
+    public function deleteSshKey($site, $keyId)
     {
         $variables = array(
             'site' => $site,
-            'id' => $id,
+            'id' => $keyId,
         );
         $request = $this->delete(array('{+base_path}/sites/{site}/sshkeys/{id}.json', $variables));
         return new Response\Task($request);
@@ -317,17 +317,17 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
 
     /**
      * @param string $site
-     * @param int $id
+     * @param int $userId
      *
      * @return \Acquia\Cloud\Api\Response\SvnUser
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function svnUser($site, $id)
+    public function svnUser($site, $userId)
     {
         $variables = array(
             'site' => $site,
-            'id' => $id,
+            'id' => $userId,
         );
         $request = $this->get(array('{+base_path}/sites/{site}/svnusers/{id}.json', $variables));
         return new Response\SvnUser($request);
@@ -352,13 +352,13 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'username' => $username,
         );
         $body = Json::encode(array('password' => $password));
-        $data = $this->post(array($path, $variables), null, $body);
-        return new Response\Task($data);
+        $request = $this->post(array($path, $variables), null, $body);
+        return new Response\Task($request);
     }
 
     /**
      * @param string $site
-     * @param int $id
+     * @param int $userId
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *
@@ -366,11 +366,11 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @todo Testing returned a 400 response.
      */
-    public function deleteSvnUser($site, $id)
+    public function deleteSvnUser($site, $userId)
     {
         $variables = array(
             'site' => $site,
-            'id' => $id,
+            'id' => $userId,
         );
         $request = $this->delete(array('{+base_path}/sites/{site}/svnusers/{id}.json', $variables));
         return new Response\Task($request);
@@ -504,64 +504,64 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @param string $site
      * @param string $env
      * @param string $db
-     * @param int $id
+     * @param int $backupId
      *
      * @return \Acquia\Cloud\Api\Response\Tasks
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function databaseBackup($site, $env, $db, $id)
+    public function databaseBackup($site, $env, $db, $backupId)
     {
         $variables = array(
             'site' => $site,
             'env' => $env,
             'db' => $db,
-            'id' => $id,
+            'id' => $backupId,
         );
-        $data = $this->get(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}.json', $variables));
-        return new Response\DatabaseBackup($data);
+        $request = $this->get(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}.json', $variables));
+        return new Response\DatabaseBackup($request);
     }
 
     /**
      * @param string $site
      * @param string $env
      * @param string $db
-     * @param int $id
+     * @param int $backupId
      *
      * @return \Acquia\Cloud\Api\Response\Tasks
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function deleteDatabaseBackup($site, $env, $db, $id)
+    public function deleteDatabaseBackup($site, $env, $db, $backupId)
     {
       $variables = array(
         'site' => $site,
         'env' => $env,
         'db' => $db,
-        'id' => $id,
+        'id' => $backupId,
       );
-      $data = $this->delete(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}.json', $variables));
-      return new Response\Task($data);
+      $request = $this->delete(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}.json', $variables));
+      return new Response\Task($request);
     }
 
     /**
      * @param string $site
      * @param string $env
      * @param string $db
-     * @param int $id
+     * @param int $backupId
      * @param string $outfile
      *
      * @return \Guzzle\Http\Message\Response
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function downloadDatabaseBackup($site, $env, $db, $id, $outfile)
+    public function downloadDatabaseBackup($site, $env, $db, $backupId, $outfile)
     {
         $variables = array(
             'site' => $site,
             'env' => $env,
             'db' => $db,
-            'id' => $id,
+            'id' => $backupId,
         );
         return $this
             ->get(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}/download.json', $variables))
@@ -586,8 +586,30 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
             'env' => $env,
             'db' => $db,
         );
-        $data = $this->post(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups.json', $variables));
-        return new Response\Task($data);
+        $request = $this->post(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups.json', $variables));
+        return new Response\Task($request);
+    }
+
+    /**
+     * @param string $site
+     * @param string $env
+     * @param string $db
+     * @param string $backupId
+     *
+     * @return \Acquia\Cloud\Api\Response\Task
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function restoreDatabaseBackup($site, $env, $db, $backupId)
+    {
+        $variables = array(
+            'site' => $site,
+            'env' => $env,
+            'db' => $db,
+            'id' => $backupId,
+        );
+        $request = $this->post(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}/restore.json', $variables));
+        return new Response\Task($request);
     }
 
     /**
