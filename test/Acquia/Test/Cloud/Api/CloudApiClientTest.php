@@ -703,6 +703,31 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($response->percentage());
     }
 
+    public function testCallMoveDomain()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/domain_move.json');
+        $response = $cloudapi->moveDomain('stage-one:mysite', 'test.example.com', 'test', 'prod');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/domain-move/test/prod.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('received', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertArrayHasKey('sitegroup', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Move domains from test to prod.', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('site-update', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertEquals('backup-123.stage-one.hosting.acquia.com', $response->recipient());
+        $this->assertEquals('cloud_api', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
     public function testCallDeleteDomain()
     {
         $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/domain_delete.json');

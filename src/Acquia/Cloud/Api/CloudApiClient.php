@@ -706,6 +706,29 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
 
     /**
      * @param string $site
+     * @param string|array $domains
+     * @param string $sourceEnv
+     * @param string $targetEnv
+     *
+     * @return \Acquia\Cloud\Api\Response\Task
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function moveDomain($site, $domains, $sourceEnv, $targetEnv)
+    {
+        $paths = '{+base_path}/sites/{site}/domain-move/{source}/{target}.json';
+        $variables = array(
+          'site' => $site,
+          'source' => $sourceEnv,
+          'target' => $targetEnv,
+        );
+        $body = Json::encode(array('domains' => (array) $domains));
+        $request = $this->post(array($paths, $variables), null, $body);
+        return new Response\Task($request);
+    }
+
+    /**
+     * @param string $site
      * @param string $env
      * @param string $domain
      *

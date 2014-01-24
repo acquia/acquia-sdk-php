@@ -24,7 +24,6 @@ class Response extends \ArrayObject
     public function __construct(Request $request)
     {
         $this->response = $request->send();
-        file_put_contents(time() . '.json', $this->response->getBody(true));
         parent::__construct($this->response->json());
     }
 

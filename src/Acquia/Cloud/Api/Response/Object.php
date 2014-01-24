@@ -17,9 +17,7 @@ class Object extends \ArrayObject
     public function __construct($array)
     {
         if ($array instanceof Request) {
-            $response = $array->send();
-            file_put_contents(time() . '.json', $response->getBody(true));
-            $array = $response->json();
+            $array = $array->send()->json();
         } elseif (is_string($array)) {
             $array = array($this->idColumn => $array);
         }
