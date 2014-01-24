@@ -1,0 +1,1 @@
+{"cookie":null,"description":"Clear web cache for domain mysite.stage-one.acquia-sites.com","recipient":null,"created":"1390588157","sender":"cloud_api","queue":"purge-domain","percentage":null,"started":null,"id":"12345","hidden":"0","completed":null,"result":null,"body":"mysite mysite.stage-one.acquia-sites.com","state":"waiting"}

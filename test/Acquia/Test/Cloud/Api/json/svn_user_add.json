@@ -1,0 +1,1 @@
+{"created":"1390592432","id":"12345","cookie":null,"hidden":"0","recipient":null,"sender":"SiteUpdateFactory","state":"waiting","started":null,"description":"Update SVN user testuser","queue":"site-update","body":"{\"sitegroup\":\"mysite\",\"types\":[\"svn_server\",\"web_servers\"],\"result\":{\"svnuserid\":\"27846\"}}","result":null,"completed":null,"percentage":null}

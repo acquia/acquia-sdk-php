@@ -1,0 +1,1 @@
+{"cookie":null,"created":"1390590075","id":"12345","queue":"site-update","body":"{\"sitegroup\":\"mysite\",\"types\":[\"web_servers\"]}","percentage":null,"result":null,"completed":null,"state":"received","recipient":"backup-123.stage-one.hosting.acquia.com","site_id":"1234","hidden":"0","started":null,"description":"Enable Live Development on dev","sender":"cloud_api"}

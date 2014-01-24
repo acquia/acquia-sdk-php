@@ -12,7 +12,7 @@ class SvnUser extends Object
     /**
      * @return string
      */
-    protected function id()
+    public function id()
     {
         return $this['id'];
     }
@@ -20,8 +20,8 @@ class SvnUser extends Object
     /**
      * @return string
      */
-    protected function name()
+    public function username()
     {
-        return $this['name'];
+        return $this['username'];
     }
 }

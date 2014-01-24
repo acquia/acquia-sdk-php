@@ -1,0 +1,1 @@
+{"cookie":null,"description":"Add domain test.example.com to prod","recipient":null,"created":"1390587294","sender":"cloud_api","queue":"site-update","percentage":null,"started":null,"id":"12345","hidden":"0","completed":null,"result":null,"body":"{\"types\":[\"web_servers\",\"balancers\"],\"sitegroup\":\"mysite\",\"result\":{\"domain\":\"test.example.com\"}}","state":"waiting"}

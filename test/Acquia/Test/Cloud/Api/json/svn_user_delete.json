@@ -1,0 +1,1 @@
+{"sender":"SiteUpdateFactory","description":"Remove SVN user testuser","queue":"site-update","completed":null,"id":"12345","state":"waiting","hidden":"0","body":"{\"sitegroup\":\"mysite\",\"types\":[\"svn_server\",\"web_servers\"]}","cookie":null,"started":null,"result":null,"recipient":null,"created":"1390592043","percentage":null}

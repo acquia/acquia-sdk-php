@@ -300,6 +300,81 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($response->percentage());
     }
 
+    public function testCallSvnUsers()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/svn_users.json');
+        $response = $cloudapi->svnUsers('stage-one:mysite');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/svnusers.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\SvnUsers', $response);
+        foreach ($response as $object) {
+            $this->assertInstanceOf('\Acquia\Cloud\Api\Response\SvnUser', $object);
+        }
+    }
+
+    public function testCallSvnUser()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/svn_user.json');
+        $response = $cloudapi->svnUser('stage-one:mysite', 12345);
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/svnusers/12345.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\SvnUser', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('testuser', $response->username());
+    }
+
+    public function testCallAddSvnUser()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/svn_user_add.json');
+        $response = $cloudapi->addSvnUser('stage-one:mysite', 'testuser', 'testpassword');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/svnusers/testuser.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('waiting', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertArrayHasKey('sitegroup', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Update SVN user testuser', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('site-update', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertNull($response->recipient());
+        $this->assertEquals('SiteUpdateFactory', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
+    public function testCallDeleteSvnUser()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/svn_user_delete.json');
+        $response = $cloudapi->deleteSvnUser('stage-one:mysite', 'testuser');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/svnusers/testuser.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('waiting', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertArrayHasKey('sitegroup', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Remove SVN user testuser', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('site-update', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertNull($response->recipient());
+        $this->assertEquals('SiteUpdateFactory', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
     public function testCallSiteDatabases()
     {
         $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/site_databases.json');
@@ -471,15 +546,252 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         // anything else here.
     }
 
-    /**
-     * @deprecated since version 0.5.0
-     */
     public function testCallTaskInfo()
     {
+        // @deprecated since version 0.5.0
         $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/task.json');
         $response = $cloudapi->taskInfo('stage-one:mysite', '12345');
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/tasks/12345.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+    }
+
+    public function testCallDomains()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/domains.json');
+        $response = $cloudapi->domains('stage-one:mysite', 'prod');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/prod/domains.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Domains', $response);
+
+        foreach ($response as $object) {
+            $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Domain', $object);
+        }
+    }
+
+    public function testCallDomain()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/domain.json');
+        $response = $cloudapi->domain('stage-one:mysite', 'prod', 'mysite.stage-one.acquia-sites.com');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/prod/domains/mysite.stage-one.acquia-sites.com.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Domain', $response);
+        $this->assertEquals('mysite.stage-one.acquia-sites.com', (string) $response);
+
+        $this->assertEquals('mysite.stage-one.acquia-sites.com', $response->name());
+    }
+
+    public function testCallAddDomain()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/domain_add.json');
+        $response = $cloudapi->addDomain('stage-one:mysite', 'prod', 'test.example.com');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/prod/domains/test.example.com.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('waiting', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertArrayHasKey('types', $response->body());
+        $this->assertArrayHasKey('sitegroup', $response->body());
+        $this->assertArrayHasKey('result', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Add domain test.example.com to prod', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('site-update', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertNull($response->recipient());
+        $this->assertEquals('cloud_api', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
+    public function testCallDeleteDomain()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/domain_delete.json');
+        $response = $cloudapi->deleteDomain('stage-one:mysite', 'prod', 'test.example.com');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/prod/domains/test.example.com.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('waiting', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertArrayHasKey('types', $response->body());
+        $this->assertArrayHasKey('sitegroup', $response->body());
+        $this->assertArrayHasKey('result', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Remove domain test.example.com from prod', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('site-update', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertNull($response->recipient());
+        $this->assertEquals('cloud_api', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
+    public function testCallPurgeVarnishCache()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/purge_varnish_cache.json');
+        $response = $cloudapi->purgeVarnishCache('stage-one:mysite', 'prod', 'mysite.stage-one.acquia-search.com');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/prod/domains/mysite.stage-one.acquia-search.com/cache.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('waiting', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertEquals('mysite mysite.stage-one.acquia-sites.com', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Clear web cache for domain mysite.stage-one.acquia-sites.com', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('purge-domain', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertNull($response->recipient());
+        $this->assertEquals('cloud_api', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
+    public function testCallCopyDatabase()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/copy_database.json');
+        $response = $cloudapi->copyDatabase('stage-one:mysite', 'mysite', 'prod', 'test');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/dbs/mysite/db-copy/prod/test.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('waiting', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertEquals('mysite:mysitetest:mysite:stage-one:mysitetest', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Copy database mysite from prod to test', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('db-migrate', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertNull($response->recipient());
+        $this->assertEquals('cloud_api', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
+    public function testCallCopyFiles()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/copy_files.json');
+        $response = $cloudapi->copyFiles('stage-one:mysite', 'prod', 'test');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/files-copy/prod/test.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('received', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertArrayHasKey('dst_srv', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Copy files from prod to test', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('files-migrate', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertEquals('backup-123.stage-one.hosting.acquia.com', $response->recipient());
+        $this->assertEquals('cloud_api', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
+    public function testCallEnableLiveDev()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/livedev_enable.json');
+        $response = $cloudapi->enableLiveDev('stage-one:mysite', 'dev');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/dev/livedev/enable.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('received', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertArrayHasKey('sitegroup', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Enable Live Development on dev', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('site-update', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertEquals('backup-123.stage-one.hosting.acquia.com', $response->recipient());
+        $this->assertEquals('cloud_api', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
+    public function testCallDisableLiveDev()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/livedev_disable.json');
+        $response = $cloudapi->disableLiveDev('stage-one:mysite', 'dev');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/dev/livedev/disable.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('waiting', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertArrayHasKey('sitegroup', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Disable Live Development on dev', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('site-update', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertNull($response->recipient());
+        $this->assertEquals('cloud_api', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
+    public function testCallDeployCode()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/code_deploy.json');
+        $response = $cloudapi->deployCode('stage-one:mysite', 'dev', 'test');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/code-deploy/dev/test.json', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('waiting', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertArrayHasKey('to_stage', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Deploy code to test', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('code-push', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertNull($response->recipient());
+        $this->assertEquals('cloud_api', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
+    public function testCallCodeDeploy()
+    {
+        // @deprecated since version 0.5.0
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/code_deploy.json');
+        $response = $cloudapi->codeDeploy('stage-one:mysite', 'dev', 'test');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/code-deploy/dev/test.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
     }
 }

@@ -1,0 +1,1 @@
+{"percentage":null,"description":"Disable Live Development on dev","queue":"site-update","sender":"cloud_api","created":"1390590360","completed":null,"cookie":null,"id":"12345","recipient":null,"result":null,"started":null,"state":"waiting","hidden":"0","body":"{\"types\":[\"web_servers\"],\"sitegroup\":\"mysite\"}","site_id":"1234"}

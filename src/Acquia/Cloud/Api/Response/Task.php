@@ -36,11 +36,16 @@ class Task extends Object
     }
 
     /**
-     * @return array
+     * @return string|array
      */
     public function body()
     {
-        return Json::decode($this['body']);
+        if (preg_match('/^[\[{]/', $this['body'])) {
+            return Json::decode($this['body']);
+        } else {
+            return $this['body'];
+        }
+
     }
 
     /**
