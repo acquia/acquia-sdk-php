@@ -64,14 +64,16 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
-     * @return \Acquia\Cloud\Api\Response\Sites
+     * @return \Acquia\Cloud\Api\Response\SiteNames
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET___sites_-instance_route
      */
     public function sites()
     {
         $request = $this->get('{+base_path}/sites.json');
-        return new Response\Sites($request);
+        return new Response\SiteNames($request);
     }
 
     /**
@@ -80,6 +82,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Site
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site-instance_route
      */
     public function site($site)
     {
@@ -94,6 +98,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Environments
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_envs-instance_route
      */
     public function environments($site)
     {
@@ -109,6 +115,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Environment
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_envs__env-instance_route
      */
     public function environment($site, $env)
     {
@@ -129,6 +137,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#POST__sites__site_envs__env_install__type-instance_route
      */
     public function installDistro($site, $env, $type, $source)
     {
@@ -199,6 +209,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Servers
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_envs__env_servers-instance_route
      */
     public function servers($site, $env)
     {
@@ -218,6 +230,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Server
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_envs__env_servers__server-instance_route
      */
     public function server($site, $env, $server)
     {
@@ -236,6 +250,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\SshKeys
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_sshkeys-instance_route
      */
     public function sshKeys($site)
     {
@@ -251,6 +267,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\SshKey
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_sshkeys__sshkeyid-instance_route
      */
     public function sshKey($site, $keyId)
     {
@@ -270,6 +288,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#POST__sites__site_sshkeys-instance_route
      */
     public function addSshKey($site, $publicKey, $nickname)
     {
@@ -290,6 +310,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#DELETE__sites__site_sshkeys__sshkeyid-instance_route
      */
     public function deleteSshKey($site, $keyId)
     {
@@ -307,6 +329,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\SvnUsers
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_svnusers-instance_route
      */
     public function svnUsers($site)
     {
@@ -322,6 +346,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\SvnUser
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_svnusers__svnuserid-instance_route
      */
     public function svnUser($site, $userId)
     {
@@ -341,6 +367,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#POST__sites__site_svnusers__username-instance_route
      *
      * @todo Testing returned a 400 response.
      */
@@ -364,6 +392,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      *
+     * @see http://cloudapi.acquia.com/#DELETE__sites__site_svnusers__svnuserid-instance_route
+     *
      * @todo Testing returned a 400 response.
      */
     public function deleteSvnUser($site, $userId)
@@ -382,6 +412,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\DatabaseNames
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_dbs-instance_route
      */
     public function databases($site)
     {
@@ -397,6 +429,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\DatabaseName
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_dbs__db-instance_route
      */
     public function database($site, $db)
     {
@@ -415,6 +449,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#POST__sites__site_dbs-instance_route
      */
     public function addDatabase($site, $db)
     {
@@ -431,6 +467,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#DELETE__sites__site_dbs__db-instance_route
      */
     public function deleteDatabase($site, $db)
     {
@@ -449,6 +487,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Databases
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_envs__env_dbs-instance_route
      */
     public function environmentDatabases($site, $env)
     {
@@ -468,6 +508,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Database
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_envs__env_dbs__db-instance_route
      */
     public function environmentDatabase($site, $env, $db)
     {
@@ -488,6 +530,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\DatabaseBackups
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_envs__env_dbs__db_backups-instance_route
      */
     public function databaseBackups($site, $env, $db)
     {
@@ -509,6 +553,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Tasks
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_envs__env_dbs__db_backups__backup-instance_route
      */
     public function databaseBackup($site, $env, $db, $backupId)
     {
@@ -531,6 +577,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Tasks
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#DELETE__sites__site_envs__env_dbs__db_backups__backup-instance_route
      */
     public function deleteDatabaseBackup($site, $env, $db, $backupId)
     {
@@ -538,9 +586,9 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         'site' => $site,
         'env' => $env,
         'db' => $db,
-        'id' => $backupId,
+        'backup' => $backupId,
       );
-      $request = $this->delete(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{id}.json', $variables));
+      $request = $this->delete(array('{+base_path}/sites/{site}/envs/{env}/dbs/{db}/backups/{backup}.json', $variables));
       return new Response\Task($request);
     }
 
@@ -554,6 +602,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Guzzle\Http\Message\Response
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_envs__env_dbs__db_backups__backup_download-instance_route
      */
     public function downloadDatabaseBackup($site, $env, $db, $backupId, $outfile)
     {
@@ -578,6 +628,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#POST__sites__site_envs__env_dbs__db_backups-instance_route
      */
     public function createDatabaseBackup($site, $env, $db)
     {
@@ -599,6 +651,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#POST__sites__site_envs__env_dbs__db_backups__backup_restore-instance_route
      */
     public function restoreDatabaseBackup($site, $env, $db, $backupId)
     {
@@ -618,6 +672,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Tasks
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_tasks-instance_route
      */
     public function tasks($site)
     {
@@ -635,6 +691,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_tasks__task-instance_route
      */
     public function task($site, $taskId)
     {
@@ -653,6 +711,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Domains
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_envs__env_domains-instance_route
      */
     public function domains($site, $env)
     {
@@ -672,6 +732,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Domain
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#GET__sites__site_envs__env_domains__domain-instance_route
      */
     public function domain($site, $env, $domain)
     {
@@ -692,6 +754,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#POST__sites__site_envs__env_domains__domain-instance_route
      */
     public function addDomain($site, $env, $domain)
     {
@@ -713,6 +777,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#POST__sites__site_domain_move__source__target-instance_route
      */
     public function moveDomain($site, $domains, $sourceEnv, $targetEnv)
     {
@@ -735,6 +801,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#DELETE__sites__site_envs__env_domains__domain-instance_route
      */
     public function deleteDomain($site, $env, $domain)
     {
@@ -755,6 +823,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#DELETE__sites__site_envs__env_domains__domain_cache-instance_route
      */
     public function purgeVarnishCache($site, $env, $domain)
     {
@@ -776,6 +846,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#POST__sites__site_dbs__db_db_copy__source__target-instance_route
      */
     public function copyDatabase($site, $db, $sourceEnv, $targetEnv)
     {
@@ -797,6 +869,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#POST__sites__site_files_copy__source__target-instance_route
      */
     public function copyFiles($site, $sourceEnv, $targetEnv)
     {
@@ -817,6 +891,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#POST__sites__site_envs__env_livedev__action-instance_route
      */
     public function liveDev($site, $env, $action)
     {
@@ -865,6 +941,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#POST__sites__site_code_deploy__source__target-instance_route
      */
     public function deployCode($site, $sourceEnv, $targetEnv)
     {
@@ -887,6 +965,8 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     *
+     * @see http://cloudapi.acquia.com/#POST__sites__site_envs__env_code_deploy-instance_route
      */
     public function pushCode($site, $env, $vcsPath)
     {

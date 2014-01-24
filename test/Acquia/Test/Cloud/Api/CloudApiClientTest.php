@@ -132,12 +132,16 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 
         $expectedResponse = array(
             'stage-one:mysite',
-            'stage-two:anothersite',
         );
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites.json', $this->requestListener->getUrl());
-        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Sites', $response);
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\SiteNames', $response);
         $this->assertEquals($expectedResponse, (array) $response);
+
+        foreach ($response as $object) {
+            $this->assertInstanceOf('\Acquia\Cloud\Api\Response\SiteName', $object);
+            $this->assertEquals('stage-one:mysite', $object->name());
+        }
     }
 
     public function testCallSite()
