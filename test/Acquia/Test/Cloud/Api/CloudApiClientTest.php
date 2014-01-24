@@ -880,6 +880,31 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($response->percentage());
     }
 
+    public function testCallPushCode()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/code_deploy_push.json');
+        $response = $cloudapi->pushCode('stage-one:mysite', 'dev', 'tags/WELCOME');
+
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/dev/code-deploy.json?path=tags%2FWELCOME', $this->requestListener->getUrl());
+        $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('12345', (string) $response);
+
+        $this->assertEquals('12345', $response->id());
+        $this->assertEquals('waiting', $response->state());
+        $this->assertFalse($response->started());
+        $this->assertArrayHasKey('to_stage', $response->body());
+        $this->assertFalse($response->hidden());
+        $this->assertEquals('Deploy code to prod', $response->description());
+        $this->assertNull($response->result());
+        $this->assertFalse($response->completed());
+        $this->assertInstanceOf('\DateTime', $response->created());
+        $this->assertEquals('code-push', $response->queue());
+        $this->assertNull($response->cookie());
+        $this->assertNull($response->recipient());
+        $this->assertEquals('cloud_api', $response->sender());
+        $this->assertNull($response->percentage());
+    }
+
     public function testCallCodeDeploy()
     {
         // @deprecated since version 0.5.0

@@ -833,22 +833,46 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
+     * Deploy code from on environment to another.
+     *
      * @param string $site
-     * @param string $source
-     * @param string $target
+     * @param string $sourceEnv
+     * @param string $targetEnv
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function deployCode($site, $source, $target)
+    public function deployCode($site, $sourceEnv, $targetEnv)
     {
         $variables = array(
             'site' => $site,
-            'source' => $source,
-            'target' => $target,
+            'source' => $sourceEnv,
+            'target' => $targetEnv,
         );
         $request = $this->post(array('{+base_path}/sites/{site}/code-deploy/{source}/{target}.json', $variables));
+        return new Response\Task($request);
+    }
+
+    /**
+     * Deploy a tag or branch to an environment.
+     *
+     * @param string $site
+     * @param string $env
+     * @param string $vcsPath
+     *
+     * @return \Acquia\Cloud\Api\Response\Task
+     *
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     */
+    public function pushCode($site, $env, $vcsPath)
+    {
+        $variables = array(
+            'site' => $site,
+            'env' => $env,
+            'path' => $vcsPath,
+        );
+        $request = $this->post(array('{+base_path}/sites/{site}/envs/{env}/code-deploy.json?path={path}', $variables));
         return new Response\Task($request);
     }
 
