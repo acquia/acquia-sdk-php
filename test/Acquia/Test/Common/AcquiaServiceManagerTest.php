@@ -52,6 +52,21 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('build/test', $services->getConfig()->get('conf_dir'));
     }
 
+    public function testSetFilesystem()
+    {
+        $filesystem = new MockFilesystem();
+        $services = $this->getAcquiaServiceManager();
+        $services->setFilesystem($filesystem);
+
+        $this->assertEquals($filesystem, $services->getFilesystem());
+    }
+
+    public function testGetDefaultFilesystem()
+    {
+        $services = $this->getAcquiaServiceManager();
+        $this->assertInstanceOf('\Symfony\Component\Filesystem\Filesystem', $services->getFilesystem());
+    }
+
     public function testConfigDefaults()
     {
         $services = new AcquiaServiceManager();
@@ -183,20 +198,6 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
 
         $services->deleteServiceGroup('newgroup');
         $this->assertFileNotExists('build/test/newgroup.json');
-    }
-
-    public function testPrepareDirectory()
-    {
-        $filename = 'build/test/nested/dir/testfile.json';
-
-        $services = $this->getAcquiaServiceManager();
-        $services->prepareConfigDirectory($filename);
-
-        $this->assertFileExists($filename);
-
-        unlink($filename);
-        rmdir('build/test/nested/dir');
-        rmdir('build/test/nested');
     }
 
     public function testDeleteServiceGroup()

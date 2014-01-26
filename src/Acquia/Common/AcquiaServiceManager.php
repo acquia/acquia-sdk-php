@@ -5,6 +5,7 @@ namespace Acquia\Common;
 use Guzzle\Common\Collection;
 use Guzzle\Service\Builder\ServiceBuilder;
 use Guzzle\Service\Client;
+use Symfony\Component\Filesystem\Filesystem;
 
 class AcquiaServiceManager extends \ArrayObject
 {
@@ -17,6 +18,11 @@ class AcquiaServiceManager extends \ArrayObject
      * @var array
      */
     protected $removed = array();
+
+    /**
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
+    protected $filesystem;
 
     /**
      * @param array $config
@@ -43,6 +49,28 @@ class AcquiaServiceManager extends \ArrayObject
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * @param \Symfony\Component\Filesystem\Filesystem $filesystem
+     *
+     * @return \Acquia\Common\AcquiaServiceManager
+     */
+    public function setFilesystem(Filesystem $filesystem)
+    {
+        $this->filesystem = $filesystem;
+        return $this;
+    }
+
+    /**
+     * @return \Symfony\Component\Filesystem\Filesystem
+     */
+    public function getFilesystem()
+    {
+        if (!isset($this->filesystem)) {
+            $this->filesystem = new Filesystem();
+        }
+        return $this->filesystem;
     }
 
     /**
@@ -223,7 +251,7 @@ class AcquiaServiceManager extends \ArrayObject
      * @param string $group
      * @param boolean $overwrite
      *
-     * @throws \RuntimeException
+     * @throws \Symfony\Component\Filesystem\Exception\IOException
      *
      * @see http://guzzlephp.org/webservice-client/using-the-service-builder.html#sourcing-from-a-json-document
      */
@@ -251,49 +279,29 @@ class AcquiaServiceManager extends \ArrayObject
         }
         $this->removed[$group] = array();
 
-        // Encode the service builder JSON.
         $json = Json::encode(array(
             'class' => get_class($builder),
             'services' => $builderConfig,
         ));
 
-        // Make sure the directory is available.
+        $filesystem = $this->getFilesystem();
+
         if (!$hasConfigFile) {
-            $this->prepareConfigDirectory($filename);
+            $filesystem->mkdir(dirname($filename), 0755);
         }
 
-        if (!@file_put_contents($filename, $json)) {
-            throw new \RuntimeException('Error writing file: ' . $filename);
-        }
-    }
-
-    /**
-     * @param string $filename
-     *
-     * @throws \RuntimeException
-     */
-    public function prepareConfigDirectory($filename)
-    {
-        $directory = dirname($filename);
-        if (!is_dir($directory)) {
-            if (!@mkdir($directory, 0755, true)) {
-                throw new \RuntimeException('Error creating directory: ' . $directory);
-            }
-        }
-
-        if (!@touch($filename)) {
-            throw new \RuntimeException('Error writing file: ' . $filename);
-        }
-
-        chmod($filename, 0600);
+        $filesystem->dumpFile($filename, $json, 0600);
     }
 
     /**
      * @param string $group
+     *
+     * @throws \Symfony\Component\Filesystem\Exception\IOException
      */
     public function deleteServiceGroup($group)
     {
-        @unlink($this->getConfigFilename($group));
+        $filename = $this->getConfigFilename($group);
+        $this->getFilesystem()->remove($filename);
 
         // Unlike normal arrays, unset() will throw errors here if the key
         // doesn't exist.
