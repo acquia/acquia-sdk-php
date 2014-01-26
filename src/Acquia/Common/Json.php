@@ -5,6 +5,22 @@ namespace Acquia\Common;
 class Json
 {
     /**
+     * @var boolean
+     */
+    static protected $useNativePrettyPrint = true;
+
+    /**
+     * Use the native PHP pretty print options. Set to false to use the local
+     * pretty print method in this class (not recommended).
+     *
+     * @param boolean $useNative
+     */
+    static public function useNativePrettyPrint($useNative = true)
+    {
+        self::$useNativePrettyPrint = $useNative;
+    }
+
+    /**
      * @param mixed $data
      *
      * @return string
@@ -12,14 +28,18 @@ class Json
     public static function encode($data)
     {
         $options = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
-        if (defined('JSON_PRETTY_PRINT')) {
-            $options = $options | JSON_PRETTY_PRINT;
-        }
-        if (defined('JSON_UNESCAPED_SLASHES')) {
-            $options = $options | JSON_UNESCAPED_SLASHES;
+
+        $useNative = self::$useNativePrettyPrint && defined('JSON_PRETTY_PRINT') && defined('JSON_UNESCAPED_SLASHES');
+        if ($useNative) {
+            $options = $options | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES;
         }
 
-        return self::prettyPrint(json_encode($data, $options));
+        $json = json_encode($data, $options);
+        if (!$useNative) {
+            $json = self::prettyPrint($json);
+        }
+
+        return $json;
     }
 
     /**
@@ -34,15 +54,16 @@ class Json
 
     /**
      * Indents a flat JSON string to make it more human-readable.
-     * JSON_PRETTY_PRINT option is not available until PHP 5.4
      *
-     * @param string $json The original JSON string to process.
+     * The JSON_PRETTY_PRINT and JSON_UNESCAPED_SLASHES options are not
+     * available until PHP 5.4.
      *
-     * @return string Indented version of the original JSON string.
+     * @param string $json
+     *
+     * @return string
      */
-    public static function prettyPrint($json)
+    protected static function prettyPrint($json)
     {
-
         $result = '';
         $pos = 0;
         $indentation = '    ';
@@ -50,14 +71,9 @@ class Json
         $previousChar = '';
         $outOfQuotes = true;
 
-        // JSON_UNESCAPED_SLASHES is also not available until PHP 5.4
-        if (!defined('JSON_UNESCAPED_SLASHES') && strpos($json, '/')) {
+        // Unescape slashes.
+        if (strpos($json, '/')) {
             $json = preg_replace('#\134{1}/#', '/', $json);
-        }
-
-        // If there are already newlines, assume formatted
-        if (strpos($json, $newline)) {
-            return $json;
         }
 
         $stringLength = strlen($json);

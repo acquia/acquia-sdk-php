@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<methodResponse>
+    <params>
+        <param>
+            <value>
+                <struct>
+                    <member>
+                        <name>is_error</name>
+                        <value>
+                            <boolean>0</boolean>
+                        </value>
+                    </member>
+                    <member>
+                        <name>body</name>
+                        <value>
+                            <struct>
+                                <member>
+                                    <name>subscription</name>
+                                    <value>
+                                        <struct>
+                                            <member>
+                                                <name>site_name</name>
+                                                <value>
+                                                    <string>test subcription</string>
+                                                </value>
+                                            </member>
+                                        </struct>
+                                    </value>
+                                </member>
+                            </struct>
+                        </value>
+                    </member>
+                </struct>
+            </value>
+        </param>
+    </params>
+</methodResponse>

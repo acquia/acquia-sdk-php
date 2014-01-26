@@ -4,7 +4,6 @@ namespace Acquia\Network;
 
 use Acquia\Common\AcquiaServiceManagerAware;
 use Acquia\Network\Subscription;
-use fXmlRpc\Exception\ResponseException;
 use Guzzle\Common\Collection;
 use Guzzle\Service\Client;
 
@@ -83,18 +82,6 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getBuilderParams()
-    {
-        return array(
-            'base_url' => $this->getConfig('base_url'),
-            'network_id' => $this->networkId,
-            'network_key' => $this->networkKey,
-        );
-    }
-
-    /**
      * @return string
      */
     public function getNetworkId()
@@ -111,11 +98,58 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getBuilderParams()
+    {
+        return array(
+            'base_url'    => $this->getConfig('base_url'),
+            'network_id'  => $this->networkId,
+            'network_key' => $this->networkKey,
+        );
+    }
+
+    /**
+     * Returns default paramaters for request. Not every call requires these.
+     *
+     * @return array
+     */
+    protected function defaultRequestParams() {
+        $params = array(
+            'authenticator' => $this->buildAuthenticator(),
+            'ssl'           => $this->https === true ? 1 : 0,
+            'ip'            => $this->serverAddress,
+            'host'          => $this->httpHost,
+        );
+        return $params;
+    }
+
+    /**
+     * @param string $method
+     * @param array $params
+     *
+     * @return array
+     *
+     * @throws \fXmlRpc\Exception\ResponseException
+     */
+    protected function call($method, array $params)
+    {
+        $uri = $this->getConfig('base_url') . '/xmlrpc.php';
+        $bridge = new \fXmlRpc\Transport\GuzzleBridge($this);
+        $client = new \fXmlRpc\Client($uri, $bridge);
+
+        // We have to nest the params in an array otherwise we get a "Wrong
+        // number of method parameters" error.
+        return $client->call($method, array($params));
+    }
+
+    /**
      * @return bool
+     *
+     * @todo Test various responses
      */
     public function validateCredentials()
     {
-        // @todo throw exception if no key/id
         try {
             $params = $this->defaultRequestParams();
             $this->call('acquia.agent.validate', $params);
@@ -142,25 +176,6 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
         if (is_array($response)) {
             return $response['body']['subscription']['site_name'];
         }
-    }
-
-    /**
-     * @param string $method
-     * @param array $params
-     *
-     * @return array
-     *
-     * @throws \fXmlRpc\Exception\ResponseException
-     */
-    protected function call($method, array $params)
-    {
-        $uri = $this->getConfig('base_url') . '/xmlrpc.php';
-        $bridge = new \fXmlRpc\Transport\GuzzleBridge($this);
-        $client = new \fXmlRpc\Client($uri, $bridge);
-
-        // We have to nest the params in an array otherwise we get a "Wrong
-        // number of method parameters" error.
-        return $client->call($method, array($params));
     }
 
     /**
@@ -232,21 +247,6 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
         );
 
         return $authenticator;
-    }
-
-    /**
-     * Returns default paramaters for request. Not every call requires these.
-     *
-     * @return array
-     */
-    protected function defaultRequestParams() {
-        $params = array(
-            'authenticator' => $this->buildAuthenticator(),
-            'ssl'           => $this->https === true ? 1 : 0,
-            'ip'            => $this->serverAddress,
-            'host'          => $this->httpHost,
-        );
-        return $params;
     }
 
     /**

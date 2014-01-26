@@ -14,10 +14,11 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param string|null $responseFile
+     * @param int $responseCode
      *
      * @return \Acquia\Cloud\Api\CloudApiClient
      */
-    public function getCloudApiClient($responseFile = null)
+    public function getCloudApiClient($responseFile = null, $responseCode = 200)
     {
         $cloudapi = CloudApiClient::factory(array(
             'base_url' => 'https://cloudapi.example.com',
@@ -29,7 +30,7 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $cloudapi->getEventDispatcher()->addSubscriber($this->requestListener);
 
         if ($responseFile !== null) {
-            $this->addMockResponse($cloudapi, $responseFile);
+            $this->addMockResponse($cloudapi, $responseFile, $responseCode);
         }
 
         return $cloudapi;
@@ -39,11 +40,11 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
      * @param \Acquia\Cloud\Api\CloudApiClient $cloudapi
      * @param string $responseFile
      */
-    public function addMockResponse(CloudApiClient $cloudapi, $responseFile)
+    public function addMockResponse(CloudApiClient $cloudapi, $responseFile, $responseCode)
     {
         $mock = new \Guzzle\Plugin\Mock\MockPlugin();
 
-        $response = new \Guzzle\Http\Message\Response(200);
+        $response = new \Guzzle\Http\Message\Response($responseCode);
         if (is_string($responseFile)) {
             $response->setBody(file_get_contents($responseFile));
         }
