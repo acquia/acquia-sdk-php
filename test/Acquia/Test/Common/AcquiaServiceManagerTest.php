@@ -209,14 +209,4 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertFileNotExists('build/test/testgroup.json');
         $this->assertFalse(isset($services['testgroup']));
     }
-
-//    public function testPrepareDirectoryMkdirError()
-//    {
-//
-//    }
-//
-//    public function testPrepareDirectoryTouchError()
-//    {
-//
-//    }
 }

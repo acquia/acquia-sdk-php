@@ -48,13 +48,17 @@ $sites = $cloudapi->sites();
 
 ```php
 use Acquia\Network\AcquiaNetworkClient;
+use Acquia\Network\AcquiaServices;
 
 $network = AcquiaNetworkClient::factory(array(
     'network_id' => 'XXXX-XXXXX',  // Acquia Network identifier
     'network_key' => 'xxxxxx...',  // Acquia Network key
 ));
 
-$subscription = $network->checkSubscription();
+// Enable Acquia Search and return index information.
+$acquiaServices = AcquiaServices::ACQUIA_SEARCH;
+
+$subscription = $network->checkSubscription($acquiaServices);
 print $subscription->getDashboardUrl();
 ```
 

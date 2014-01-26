@@ -4,6 +4,7 @@ namespace Acquia\Network;
 
 use Acquia\Common\AcquiaServiceManagerAware;
 use Acquia\Network\Subscription;
+use fXmlRpc\Exception\ResponseException;
 use Guzzle\Common\Collection;
 use Guzzle\Service\Client;
 
@@ -144,17 +145,18 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
-     * @return bool
+     * @param string &$errstr
      *
-     * @todo Test various responses
+     * @return bool
      */
-    public function validateCredentials()
+    public function validateCredentials(&$errstr = null)
     {
         try {
+            $errstr = '';
             $params = $this->defaultRequestParams();
             $this->call('acquia.agent.validate', $params);
             return true;
-        } catch (\Exception $e) {
+        } catch (ResponseException $e) {
             $errstr = $e->getMessage();
             return false;
         }
@@ -162,26 +164,35 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
 
     /**
      * @return string
+     *
+     * @throws \UnexpectedValueException
+     * @throws \OutOfBoundsException
      */
     public function getSubscriptionName()
     {
-        // @todo throw exception if no key/id
+        if (empty($this->networkId)) {
+            throw new \UnexpectedValueException('Acquia Network identifier required');
+        }
+
         $params = $this->defaultRequestParams();
         $params['body'] = array(
             'identifier' => $this->networkId,
         );
 
         $response = $this->call('acquia.agent.subscription.name', $params);
-        // @todo catch error and/or check response is_error
-        if (is_array($response)) {
-            return $response['body']['subscription']['site_name'];
+        if (!isset($response['body']['subscription']['site_name'])) {
+            throw new \OutOfBoundsException('Invalid response returned from server.');
         }
+
+        return $response['body']['subscription']['site_name'];
     }
 
     /**
      * @param string $email
      *
      * @return array
+     *
+     * @throws \fXmlRpc\Exception\ResponseException
      */
     public function getCommunicationSettings($email)
     {
@@ -198,14 +209,14 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
             'body' => array('email' => $email),
         );
 
-        $response = $this->call('acquia.agent.communication.settings', $params);
-        // @todo catch error and/or check response is_error
-        return $response;
+        return $this->call('acquia.agent.communication.settings', $params);
     }
 
     /**
      * @param $email
      * @param $password
+     *
+     * @throws \fXmlRpc\Exception\ResponseException
      */
     public function getSubscriptionCredentials($email, $password)
     {
@@ -266,11 +277,20 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
     }
 
     /**
+     * @param int $services
+     *
      * @return \Acquia\Network\Subscription
      */
-    public function checkSubscription()
+    public function checkSubscription($services = 0)
     {
-        $options += array('acquia/acquia-search-sdk' => self::VERSION);
+        $options = array();
+
+        if ($services & AcquiaServices::ACQUIA_SEARCH) {
+            $options = array(
+                'search_version' => array('acquia/acquia-search-sdk' => self::VERSION)
+            );
+        }
+
         return $this->getSubscription($options);
     }
 

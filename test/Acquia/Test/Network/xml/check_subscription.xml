@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+
+<methodResponse>
+  <params>
+  <param>
+    <value><struct>
+  <member><name>is_error</name><value><boolean>0</boolean></value></member>
+  <member><name>body</name><value><struct>
+  <member><name>active</name><value><string>1</string></value></member>
+  <member><name>href</name><value><string>https://insight.acquia.com/node/uuid/xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx/dashboard</string></value></member>
+  <member><name>uuid</name><value><string>xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx</string></value></member>
+  <member><name>expiration_date</name><value><struct>
+  <member><name>value</name><value><string>2017-04-06T00:00:00</string></value></member>
+</struct></value></member>
+  <member><name>product</name><value><struct>
+  <member><name>view</name><value><string>Acquia Network</string></value></member>
+</struct></value></member>
+  <member><name>derived_key_salt</name><value><string>abcdefg</string></value></member>
+  <member><name>update_service</name><value><string>0</string></value></member>
+  <member><name>search_service_enabled</name><value><int>1</int></value></member>
+  <member><name>update</name><value><array><data>
+</data></array></value></member>
+  <member><name>heartbeat_data</name><value><struct>
+  <member><name>search_service_enabled</name><value><int>1</int></value></member>
+  <member><name>search_cores</name><value><array><data>
+  <value><struct>
+  <member><name>balancer</name><value><string>useast1-c1.acquia-search.com</string></value></member>
+  <member><name>core_id</name><value><string>ABCD-12345_mysitetest</string></value></member>
+</struct></value>
+  <value><struct>
+  <member><name>balancer</name><value><string>useast1-c1.acquia-search.com</string></value></member>
+  <member><name>core_id</name><value><string>ABCD-12345</string></value></member>
+</struct></value>
+  <value><struct>
+  <member><name>balancer</name><value><string>useast1-c1.acquia-search.com</string></value></member>
+  <member><name>core_id</name><value><string>ABCD-12345_devdemodev</string></value></member>
+</struct></value>
+</data></array></value></member>
+  <member><name>search_service_colony</name><value><string>useast1-c1.acquia-search.com</string></value></member>
+</struct></value></member>
+</struct></value></member>
+  <member><name>authenticator</name><value><struct>
+  <member><name>identifier</name><value><string>ABCD-12345</string></value></member>
+  <member><name>time</name><value><int>1390767841</int></value></member>
+  <member><name>hash</name><value><string>abcdefg=</string></value></member>
+  <member><name>nonce</name><value><string>abcdefg</string></value></member>
+</struct></value></member>
+</struct></value>
+  </param>
+  </params>
+</methodResponse>
+
