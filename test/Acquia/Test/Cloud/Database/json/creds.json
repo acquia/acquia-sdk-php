@@ -1,0 +1,1 @@
+{"databases":{"mysite":{"id":"1234","role":"mysite","name":"mysiteprod","user":"mysiteprod","pass":"abcdefg","db_url_ha":{"staging-123":"mysqli:\/\/mysiteprod:abcdefg@staging-123:3306\/mysiteprod"},"db_cluster_id":"1234","port":3306}}}

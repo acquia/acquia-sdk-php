@@ -75,6 +75,18 @@ $index = $search->get('XXXX-XXXXX');
 $results = $index->select('my keywords');
 ```
 
+### Acquia Cloud Database
+
+```php
+use Acquia\Cloud\Database\Database;
+
+$database = new Database('mysite');
+$creds = $database->credentials('mydatabase');
+
+$dbh = new PDO($creds, $creds->username(), $creds->password());
+
+```
+
 Refer to the [PSolr](https://github.com/cpliakas/psolr) project's documentation
 for more advanced usage examples.
 
