@@ -75,6 +75,9 @@ $index = $search->get('XXXX-XXXXX');
 $results = $index->select('my keywords');
 ```
 
+Refer to the [PSolr](https://github.com/cpliakas/psolr) project's documentation
+for more advanced usage examples.
+
 ### Acquia Cloud Database
 
 ```php
@@ -86,9 +89,6 @@ $creds = $database->credentials('mydatabase');
 $dbh = new PDO($creds, $creds->username(), $creds->password());
 
 ```
-
-Refer to the [PSolr](https://github.com/cpliakas/psolr) project's documentation
-for more advanced usage examples.
 
 ## The Acquia Service Manager
 
