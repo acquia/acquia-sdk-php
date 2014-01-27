@@ -3,6 +3,7 @@
 namespace Acquia\Network;
 
 use Acquia\Common\AcquiaServiceManagerAware;
+use Acquia\Common\Services;
 use Acquia\Network\Subscription;
 use fXmlRpc\Exception\ResponseException;
 use Guzzle\Common\Collection;
@@ -285,7 +286,7 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
     {
         $options = array();
 
-        if ($services & AcquiaServices::ACQUIA_SEARCH) {
+        if ($services & Services::ACQUIA_SEARCH) {
             $options = array(
                 'search_version' => array('acquia/acquia-search-sdk' => self::VERSION)
             );

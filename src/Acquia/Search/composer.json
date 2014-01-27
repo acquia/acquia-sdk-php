@@ -1,7 +1,7 @@
 {
     "name": "acquia/acquia-sdk-php-search",
     "type": "library",
-    "description": "Acquia Search component for the Acquia PHP SDK.",
+    "description": "Acquia Search component for the Acquia SDK for PHP.",
     "keywords": ["acquia"],
     "homepage": "https://github.com/acquia/acquia-sdk-php",
     "license": "MIT",

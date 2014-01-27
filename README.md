@@ -37,6 +37,10 @@ Basic usage examples for the SDK.
 
 ### Cloud API
 
+The [Cloud API](https://docs.acquia.com/cloud/api) is web service that that
+developers can use to extend, enhance, and customize
+[Acquia Cloud](https://www.acquia.com/products-services/acquia-cloud).
+
 ```php
 use Acquia\Cloud\Api\CloudApiClient;
 
@@ -48,11 +52,30 @@ $cloudapi = CloudApiClient::factory(array(
 $sites = $cloudapi->sites();
 ```
 
+### Acquia Cloud Database
+
+This component allows developers to connect to the active database when running
+application on [Acquia Cloud](https://www.acquia.com/products-services/acquia-cloud).
+
+```php
+use Acquia\Cloud\Database\Database;
+
+$database = new Database('mysite');
+$creds = $database->credentials('mydatabase');
+
+$dbh = new PDO($creds, $creds->username(), $creds->password());
+
+```
+
 ### Acquia Network
+
+The [Acquia Network](https://www.acquia.com/products-services/drupal-support-and-cloud-services)
+is a comprehensive suite of tools to help you create and manage killer web
+sites, backed by the best Drupal support team in the world.
 
 ```php
 use Acquia\Network\AcquiaNetworkClient;
-use Acquia\Network\AcquiaServices;
+use Acquia\Common\Services;
 
 $network = AcquiaNetworkClient::factory(array(
     'network_id' => 'XXXX-XXXXX',  // Acquia Network identifier
@@ -60,13 +83,17 @@ $network = AcquiaNetworkClient::factory(array(
 ));
 
 // Enable Acquia Search and return index information.
-$acquiaServices = AcquiaServices::ACQUIA_SEARCH;
+$acquiaServices = Services::ACQUIA_SEARCH;
 
 $subscription = $network->checkSubscription($acquiaServices);
 print $subscription->getDashboardUrl();
 ```
 
 ### Acquia Search
+
+[Acquia Search](https://www.acquia.com/products-services/acquia-network/cloud-services/acquia-search)
+is a fully managed enterprise site search solution built on Apache Solr and
+other open source technologies.
 
 ```php
 use Acquia\Search\AcquiaSearchService;
@@ -81,18 +108,6 @@ $results = $index->select('my keywords');
 
 Refer to the [PSolr](https://github.com/cpliakas/psolr) project's documentation
 for more advanced usage examples.
-
-### Acquia Cloud Database
-
-```php
-use Acquia\Cloud\Database\Database;
-
-$database = new Database('mysite');
-$creds = $database->credentials('mydatabase');
-
-$dbh = new PDO($creds, $creds->username(), $creds->password());
-
-```
 
 ## The Acquia Service Manager
 

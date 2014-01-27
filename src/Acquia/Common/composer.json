@@ -1,7 +1,7 @@
 {
     "name": "acquia/acquia-php-sdk-common",
     "type": "library",
-    "description": "Common components for the Acquia PHP SDK.",
+    "description": "Common components for the Acquia SDK for PHP.",
     "keywords": ["acquia"],
     "homepage": "https://github.com/acquia/acquia-sdk-php",
     "license": "MIT",

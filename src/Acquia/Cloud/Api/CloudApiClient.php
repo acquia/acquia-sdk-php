@@ -157,7 +157,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @param string $site
      * @param string $env
-     * @param string $distro See the \Acquia\Cloud\Api\Distro constants.
+     * @param string $distro
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *

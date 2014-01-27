@@ -45,6 +45,8 @@ class Database
     }
 
     /**
+     * @param \Acquia\Common\Environment $environment
+     *
      * @return \Acquia\Cloud\Database\Database
      */
     public function setEnvironment(Environment $environment)
@@ -54,7 +56,7 @@ class Database
     }
 
     /**
-     * @return Acquia\Common\Environment
+     * @return \Acquia\Common\Environment
      */
     public function getEnvironment()
     {
@@ -65,6 +67,8 @@ class Database
     }
 
     /**
+     * @param \Net_DNS2_Resolver $resolver
+     *
      * @return \Acquia\Cloud\Database\Database
      */
     public function setResolver(\Net_DNS2_Resolver $resolver)
@@ -123,6 +127,8 @@ class Database
     }
 
     /**
+     * @param string $dbName
+     *
      * @throws \OutOfBoundsException
      *
      * @return \Acquia\Cloud\Database\Credentials
@@ -140,13 +146,11 @@ class Database
         $host = $this->getCurrentHost($database['db_cluster_id']);
         $database['host'] = ($host) ?: key($database['db_url_ha']);
 
-        // @todo Throw exception on empty host?
-
         return new Credentials($database);
     }
 
     /**
-     * @param array $db
+     * @param in $clusterId
      *
      * @return string
      */

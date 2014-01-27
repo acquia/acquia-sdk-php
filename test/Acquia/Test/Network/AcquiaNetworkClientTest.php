@@ -2,8 +2,8 @@
 
 namespace Acquia\Test\Network;
 
+use Acquia\Common\Services;
 use Acquia\Network\AcquiaNetworkClient;
-use Acquia\Network\AcquiaServices;
 
 class AcquiaNetworkClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -132,7 +132,7 @@ class AcquiaNetworkClientTest extends \PHPUnit_Framework_TestCase
     public function testCallCheckSubscription()
     {
         $network = $this->getAcquiaNetworkClient(__DIR__ . '/xml/check_subscription.xml');
-        $subscription = $network->checkSubscription(AcquiaServices::ACQUIA_SEARCH);
+        $subscription = $network->checkSubscription(Services::ACQUIA_SEARCH);
 
         $this->assertInstanceOf('\Acquia\Network\Subscription', $subscription);
         $this->assertEquals('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx', (string) $subscription);

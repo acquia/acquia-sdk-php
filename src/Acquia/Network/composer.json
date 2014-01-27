@@ -1,7 +1,7 @@
 {
     "name": "acquia/acquia-sdk-php-network",
     "type": "library",
-    "description": "Acquia Network component for the Acquia PHP SDK.",
+    "description": "Acquia Network component for the Acquia SDK for PHP.",
     "keywords": ["acquia"],
     "homepage": "https://github.com/acquia/acquia-sdk-php",
     "license": "MIT",
