@@ -7,6 +7,10 @@
 The Acquia SDK for PHP allows developers to build applications on top of
 [Acquia](https://www.acquia.com/) services.
 
+Acquia provides open cloud hosting, developer tools and world-class support for
+Drupal, the open source content management platform that unifies content,
+community and commerce.
+
 ## Installation
 
 The SDK can be installed with [Composer](http://getcomposer.org) by adding this
