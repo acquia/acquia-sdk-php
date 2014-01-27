@@ -37,7 +37,7 @@ Basic usage examples for the SDK.
 
 ### Cloud API
 
-The [Cloud API](https://docs.acquia.com/cloud/api) is web service that that
+The [Cloud API](https://docs.acquia.com/cloud/api) is a web service that that
 developers can use to extend, enhance, and customize
 [Acquia Cloud](https://www.acquia.com/products-services/acquia-cloud).
 
@@ -54,8 +54,8 @@ $sites = $cloudapi->sites();
 
 ### Acquia Cloud Database
 
-This component allows developers to connect to the active database when running
-application on [Acquia Cloud](https://www.acquia.com/products-services/acquia-cloud).
+The Database component allows developers to connect to the active master
+database when running applications on [Acquia Cloud](https://www.acquia.com/products-services/acquia-cloud).
 
 ```php
 use Acquia\Cloud\Database\Database;
