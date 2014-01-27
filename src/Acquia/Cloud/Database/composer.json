@@ -24,8 +24,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Acquia\\Cloud\\Environment": ""
+            "Acquia\\Cloud\\Database": ""
         }
     },
-    "target-dir": "Acquia/Cloud/Environment"
+    "target-dir": "Acquia/Cloud/Database"
 }
