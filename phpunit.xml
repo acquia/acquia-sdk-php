@@ -10,7 +10,7 @@
          bootstrap="test/bootstrap.php">
 
     <testsuites>
-       <testsuite name="Acquia SDK PHP">
+       <testsuite name="Acquia SDK for PHP">
          <directory suffix="Test.php">test/Acquia/Test</directory>
        </testsuite>
     </testsuites>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="acquia-sdk-php" default="build">
+<project name="Acquia SDK for PHP" default="build">
 
   <property name="builddir" value="${basedir}/build"/>
   <property name="composer" value="${builddir}/composer.phar"/>
