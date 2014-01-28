@@ -7,5 +7,5 @@ class Databases extends \Acquia\Common\Collection
     /**
      * @var string
      */
-    protected $recordClass = '\Acquia\Cloud\Api\Response\Database';
+    protected $elementClass = '\Acquia\Cloud\Api\Response\Database';
 }

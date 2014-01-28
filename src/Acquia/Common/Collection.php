@@ -40,8 +40,7 @@ class Collection extends \ArrayObject
         $collection = array();
         foreach ($this->getArrayCopy() as $item) {
             $element = new $this->elementClass($item);
-            $id = (string) $element;
-            $element[$id] = $element;
+            $collection[(string) $element] = $element;
         }
         return new \ArrayObject($collection);
     }

@@ -16,17 +16,17 @@ class Database
     /**
      * @var \Acquia\Common\Environment
      */
-    protected $environment;
+    private $environment;
 
     /**
      * @var \Net_DNS2_Resolver
      */
-    protected $resolver;
+    private $resolver;
 
     /**
      * @var string
      */
-    protected $filepath;
+    private $filepath;
 
     /**
      * @param string $sitegroup

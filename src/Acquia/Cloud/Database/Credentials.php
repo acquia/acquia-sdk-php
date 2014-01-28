@@ -90,6 +90,8 @@ class Credentials extends \ArrayObject
      * Returns the DSN for the active host.
      *
      * @return string
+     *
+     * @throws
      */
     public function dsn()
     {

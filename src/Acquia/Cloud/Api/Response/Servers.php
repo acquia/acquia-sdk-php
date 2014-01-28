@@ -7,5 +7,5 @@ class Servers extends \Acquia\Common\Collection
     /**
      * @var string
      */
-    protected $recordClass = '\Acquia\Cloud\Api\Response\Server';
+    protected $elementClass = '\Acquia\Cloud\Api\Response\Server';
 }

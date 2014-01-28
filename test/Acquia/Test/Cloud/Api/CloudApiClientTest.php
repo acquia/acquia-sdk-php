@@ -138,6 +138,7 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('https://cloudapi.example.com/v1/sites.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\SiteNames', $response);
         $this->assertEquals($expectedResponse, (array) $response);
+        $this->assertNotEmpty(count($response));
 
         foreach ($response as $object) {
             $this->assertInstanceOf('\Acquia\Cloud\Api\Response\SiteName', $object);
@@ -170,6 +171,8 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Environments', $response);
+        $this->assertNotEmpty(count($response));
+
         foreach ($response as $object) {
             $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Environment', $object);
         }
@@ -199,6 +202,8 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/prod/servers.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Servers', $response);
+        $this->assertNotEmpty(count($response));
+
         foreach ($response as $object) {
             $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Server', $object);
         }
@@ -236,6 +241,8 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/sshkeys.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\SshKeys', $response);
+        $this->assertNotEmpty(count($response));
+
         foreach ($response as $object) {
             $this->assertInstanceOf('\Acquia\Cloud\Api\Response\SshKey', $object);
         }
@@ -312,6 +319,8 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/svnusers.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\SvnUsers', $response);
+        $this->assertNotEmpty(count($response));
+
         foreach ($response as $object) {
             $this->assertInstanceOf('\Acquia\Cloud\Api\Response\SvnUser', $object);
         }
@@ -387,6 +396,8 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/dbs.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\DatabaseNames', $response);
+        $this->assertNotEmpty(count($response));
+
         foreach ($response as $object) {
             $this->assertInstanceOf('\Acquia\Cloud\Api\Response\DatabaseName', $object);
         }
@@ -481,6 +492,8 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/prod/dbs.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Databases', $response);
+        $this->assertNotEmpty(count($response));
+
         foreach ($response as $object) {
             $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Database', $object);
         }
@@ -510,6 +523,8 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/prod/dbs/mysite/backups.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\DatabaseBackups', $response);
+        $this->assertNotEmpty(count($response));
+
         foreach ($response as $object) {
             $this->assertInstanceOf('\Acquia\Cloud\Api\Response\DatabaseBackup', $object);
         }
@@ -628,6 +643,7 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/tasks.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Tasks', $response);
+        $this->assertNotEmpty(count($response));
 
         foreach ($response as $object) {
             $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $object);
@@ -663,6 +679,7 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/prod/domains.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Domains', $response);
+        $this->assertNotEmpty(count($response));
 
         foreach ($response as $object) {
             $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Domain', $object);
