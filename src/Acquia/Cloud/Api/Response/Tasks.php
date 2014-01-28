@@ -2,10 +2,10 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Tasks extends Response
+class Tasks extends \Acquia\Common\Collection
 {
     /**
      * @var string
      */
-    protected $objectClass = '\Acquia\Cloud\Api\Response\Task';
+    protected $elementClass = '\Acquia\Cloud\Api\Response\Task';
 }

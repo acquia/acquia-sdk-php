@@ -2,10 +2,10 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Domains extends Response
+class Domains extends \Acquia\Common\Collection
 {
     /**
      * @var string
      */
-    protected $objectClass = '\Acquia\Cloud\Api\Response\Domain';
+    protected $elementClass = '\Acquia\Cloud\Api\Response\Domain';
 }

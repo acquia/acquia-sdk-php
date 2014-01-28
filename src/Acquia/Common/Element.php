@@ -1,10 +1,10 @@
 <?php
 
-namespace Acquia\Cloud\Api\Response;
+namespace Acquia\Common;
 
 use Guzzle\Http\Message\Request;
 
-class Object extends \ArrayObject
+class Element extends \ArrayObject
 {
     /**
      * @var string
@@ -14,12 +14,14 @@ class Object extends \ArrayObject
     /**
      * @param string|array|\Guzzle\Http\Message\Request $array
      */
-    public function __construct($array)
+    public function __construct($data)
     {
-        if ($array instanceof Request) {
-            $array = $array->send()->json();
-        } elseif (is_string($array)) {
-            $array = array($this->idColumn => $array);
+        if ($data instanceof Request) {
+            $array = $data->send()->json();
+        } elseif (is_string($data)) {
+            $array = array($this->idColumn => $data);
+        } else {
+            $array = (array) $data;
         }
         parent::__construct($array);
     }
@@ -27,7 +29,7 @@ class Object extends \ArrayObject
     /**
      * @param string $idColumn
      *
-     * @return \Acquia\Cloud\Api\Response\Object
+     * @return \Acquia\Common\Record
      */
     public function setIdColumn($idColumn)
     {

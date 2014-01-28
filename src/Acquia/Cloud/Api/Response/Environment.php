@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Environment extends Object
+class Environment extends \Acquia\Common\Element
 {
     /**
      * @return array

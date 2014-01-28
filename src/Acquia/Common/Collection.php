@@ -1,10 +1,10 @@
 <?php
 
-namespace Acquia\Cloud\Api\Response;
+namespace Acquia\Common;
 
 use Guzzle\Http\Message\Request;
 
-class Response extends \ArrayObject
+class Collection extends \ArrayObject
 {
     /**
      * @var \Guzzle\Http\Message\Response
@@ -14,12 +14,10 @@ class Response extends \ArrayObject
     /**
      * @var string
      */
-    protected $objectClass = '\Acquia\Cloud\Api\Response\Object';
+    protected $elementClass = '\Acquia\Common\Element';
 
     /**
      * @param \Guzzle\Http\Message\Request $request
-     *
-     * @throws \RuntimeException
      */
     public function __construct(Request $request)
     {
@@ -35,17 +33,17 @@ class Response extends \ArrayObject
      *
      * @return \ArrayObject
      *
-     * @see \Acquia\Cloud\Api\Response\Object::__toString()
+     * @see \Acquia\Common\Element::__toString()
      */
     public function getIterator()
     {
-        $objects = array();
+        $collection = array();
         foreach ($this->getArrayCopy() as $item) {
-            $object = new $this->objectClass($item);
-            $id = (string) $object;
-            $objects[$id] = $object;
+            $element = new $this->elementClass($item);
+            $id = (string) $element;
+            $element[$id] = $element;
         }
-        return new \ArrayObject($objects);
+        return new \ArrayObject($collection);
     }
 
     /**

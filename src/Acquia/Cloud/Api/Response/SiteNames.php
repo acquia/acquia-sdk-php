@@ -2,10 +2,10 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class SiteNames extends Response
+class SiteNames extends \Acquia\Common\Collection
 {
     /**
      * @var string
      */
-    protected $objectClass = '\Acquia\Cloud\Api\Response\SiteName';
+    protected $elementClass = '\Acquia\Cloud\Api\Response\SiteName';
 }

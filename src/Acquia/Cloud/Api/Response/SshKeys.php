@@ -2,10 +2,10 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class SshKeys extends Response
+class SshKeys extends \Acquia\Common\Collection
 {
     /**
      * @var string
      */
-    protected $objectClass = '\Acquia\Cloud\Api\Response\SshKey';
+    protected $elementClass = '\Acquia\Cloud\Api\Response\SshKey';
 }

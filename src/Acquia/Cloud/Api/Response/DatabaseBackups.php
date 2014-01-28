@@ -2,10 +2,10 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class DatabaseBackups extends Response
+class DatabaseBackups extends \Acquia\Common\Collection
 {
     /**
      * @var string
      */
-    protected $objectClass = '\Acquia\Cloud\Api\Response\DatabaseBackup';
+    protected $elementClass = '\Acquia\Cloud\Api\Response\DatabaseBackup';
 }

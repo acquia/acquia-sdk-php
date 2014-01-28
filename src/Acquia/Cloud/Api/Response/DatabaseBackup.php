@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class DatabaseBackup extends Object
+class DatabaseBackup extends \Acquia\Common\Element
 {
     /**
      * @var string

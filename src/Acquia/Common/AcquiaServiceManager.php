@@ -2,7 +2,6 @@
 
 namespace Acquia\Common;
 
-use Guzzle\Common\Collection;
 use Guzzle\Service\Builder\ServiceBuilder;
 use Guzzle\Service\Client;
 use Symfony\Component\Filesystem\Filesystem;
@@ -39,7 +38,7 @@ class AcquiaServiceManager extends \ArrayObject
             'conf_files',
         );
 
-        $this->config = Collection::fromConfig($config, $defaults, $required);
+        $this->config = \Guzzle\Common\Collection::fromConfig($config, $defaults, $required);
         $this->config['conf_dir'] = rtrim($this->config['conf_dir'], '/\\');
     }
 

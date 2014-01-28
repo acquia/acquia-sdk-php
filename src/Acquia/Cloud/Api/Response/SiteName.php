@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class SiteName extends Object
+class SiteName extends \Acquia\Common\Element
 {
     /**
      * @return string

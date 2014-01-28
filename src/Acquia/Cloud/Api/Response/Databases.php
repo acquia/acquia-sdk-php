@@ -2,10 +2,10 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Databases extends Response
+class Databases extends \Acquia\Common\Collection
 {
     /**
      * @var string
      */
-    protected $objectClass = '\Acquia\Cloud\Api\Response\Database';
+    protected $recordClass = '\Acquia\Cloud\Api\Response\Database';
 }

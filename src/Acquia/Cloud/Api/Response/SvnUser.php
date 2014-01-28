@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class SvnUser extends Object
+class SvnUser extends \Acquia\Common\Element
 {
     /**
      * @var string

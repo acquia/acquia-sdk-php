@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class SshKey extends Object
+class SshKey extends \Acquia\Common\Element
 {
     /**
      * @var string

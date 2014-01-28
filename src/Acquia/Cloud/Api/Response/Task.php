@@ -4,7 +4,7 @@ namespace Acquia\Cloud\Api\Response;
 
 use Acquia\Common\Json;
 
-class Task extends Object
+class Task extends \Acquia\Common\Element
 {
     /**
      * @var string

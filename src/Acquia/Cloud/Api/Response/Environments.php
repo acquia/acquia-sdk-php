@@ -2,10 +2,10 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Environments extends Response
+class Environments extends \Acquia\Common\Collection
 {
     /**
      * @var string
      */
-    protected $objectClass = '\Acquia\Cloud\Api\Response\Environment';
+    protected $elementClass = '\Acquia\Cloud\Api\Response\Environment';
 }
