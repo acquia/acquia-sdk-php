@@ -91,11 +91,22 @@ class Credentials extends \ArrayObject
      *
      * @return string
      *
-     * @throws
+     * @throws \OutOfBoundsException
      */
     public function dsn()
     {
-        return 'mysql:dbname=' . $this->databaseName() . ';host=' . $this->host() . ';port=' . $this->port();
+        // @see https://github.com/acquia/acquia-sdk-php/issues/27
+        if (!isset($this['name'])) {
+            throw new \OutOfBoundsException('Malformed response: expecting "name" property');
+        }
+        if (!isset($this['host'])) {
+            throw new \OutOfBoundsException('Malformed response: expecting "host" property');
+        }
+        if (!isset($this['port'])) {
+            throw new \OutOfBoundsException('Malformed response: expecting "port" property');
+        }
+
+        return 'mysql:dbname=' . $this['name'] . ';host=' . $this['host'] . ';port=' . $this['port'];
     }
 
     /**

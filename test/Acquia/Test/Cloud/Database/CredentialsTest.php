@@ -87,4 +87,43 @@ class CredentialsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $credentials->dsn());
         $this->assertEquals($expected, (string) $credentials);
     }
+
+    /**
+     * @expectedException \OutOfBoundsException
+     */
+    public function testFetchDsnMissingName()
+    {
+        $credentials = new Credentials(array(
+            'port' => 3306,
+            'host' => 'staging-123',
+        ));
+
+        $credentials->dsn();
+    }
+
+    /**
+     * @expectedException \OutOfBoundsException
+     */
+    public function testFetchDsnMissingHost()
+    {
+        $credentials = new Credentials(array(
+            'name' => 'mysiteprod',
+            'port' => 3306,
+        ));
+
+        $credentials->dsn();
+    }
+
+    /**
+     * @expectedException \OutOfBoundsException
+     */
+    public function testFetchDsnMissingPort()
+    {
+        $credentials = new Credentials(array(
+            'name' => 'mysiteprod',
+            'host' => 'staging-123',
+        ));
+
+        $credentials->dsn();
+    }
 }
