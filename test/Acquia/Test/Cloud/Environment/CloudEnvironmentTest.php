@@ -8,10 +8,14 @@ use Acquia\Common\Environment;
 class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
 {
     protected $originalEnv;
+    protected $originalProduction;
+    protected $originalSiteGroup;
 
     public function setUp()
     {
         $this->originalEnv = getenv('AH_SITE_ENVIRONMENT');
+        $this->originalProduction = getenv('AH_PRODUCTION');
+        $this->originalSiteGroup = getenv('AH_SITE_GROUP');
         parent::setUp();
     }
 
@@ -19,8 +23,12 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
     {
         if ($this->originalEnv) {
             putenv('AH_SITE_ENVIRONMENT=' . $this->originalEnv);
+            putenv('AH_PRODUCTION=' . $this->originalProduction);
+            putenv('AH_SITE_GROUP=' . $this->originalSiteGroup);
         } else {
             putenv('AH_SITE_ENVIRONMENT');
+            putenv('AH_PRODUCTION');
+            putenv('AH_SITE_GROUP');
         }
         parent::tearDown();
     }
@@ -51,5 +59,36 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         putenv('AH_SITE_ENVIRONMENT');
         $env = new CloudEnvironment();
         $this->assertEquals((string) $env, Environment::LOCAL);
+    }
+
+    public function testIsProduction()
+    {
+        putenv('AH_PRODUCTION=1');
+        $env = new CloudEnvironment();
+        $this->assertTrue($env->isProduction());
+    }
+
+    public function testIsNonProduction()
+    {
+        putenv('AH_PRODUCTION=0');
+        $env = new CloudEnvironment();
+        $this->assertFalse($env->isProduction());
+    }
+
+    public function testSiteGroup()
+    {
+        putenv('AH_SITE_GROUP=mysite');
+        $env = new CloudEnvironment();
+        $this->assertEquals('mysite', $env->getSiteGroup());
+    }
+
+    /**
+     * @expectedException \UnexpectedValueException
+     */
+    public function testNoSiteGroup()
+    {
+        putenv('AH_SITE_GROUP');
+        $env = new CloudEnvironment();
+        $env->getSiteGroup();
     }
 }

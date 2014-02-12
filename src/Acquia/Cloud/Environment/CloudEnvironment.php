@@ -4,6 +4,9 @@ namespace Acquia\Cloud\Environment;
 
 use Acquia\Common\Environment;
 
+/**
+ * @see https://docs.acquia.com/cloud/configure/env-variable
+ */
 class CloudEnvironment extends Environment
 {
     /**
@@ -13,5 +16,27 @@ class CloudEnvironment extends Environment
     {
         $environment = getenv('AH_SITE_ENVIRONMENT');
         return $environment ?: 'local';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProduction()
+    {
+        return (bool) getenv('AH_PRODUCTION');
+    }
+
+    /**
+     * @rturn string
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function getSiteGroup()
+    {
+        $sitegroup = getenv('AH_SITE_GROUP');
+        if (!$sitegroup) {
+            throw new \UnexpectedValueException('Expecting environment variable AH_SITE_GROUP to be set');
+        }
+        return $sitegroup;
     }
 }

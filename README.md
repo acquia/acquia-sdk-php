@@ -66,7 +66,7 @@ database when running applications on [Acquia Cloud](https://www.acquia.com/prod
 ```php
 use Acquia\Cloud\Database\Database;
 
-$database = new Database('mysite');
+$database = new Database();
 $creds = $database->credentials('mydatabase');
 
 $dbh = new PDO($creds, $creds->username(), $creds->password());

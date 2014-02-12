@@ -2,7 +2,6 @@
 
 namespace Acquia\Cloud\Database;
 
-use Acquia\Common\Environment;
 use Acquia\Common\Json;
 use Acquia\Cloud\Environment\CloudEnvironment;
 
@@ -11,10 +10,10 @@ class Database
     /**
      * @var string
      */
-    protected $sitegroup;
+    private $sitegroup;
 
     /**
-     * @var \Acquia\Common\Environment
+     * @var \Acquia\Cloud\Environment\CloudEnvironment
      */
     private $environment;
 
@@ -29,34 +28,40 @@ class Database
     private $filepath;
 
     /**
-     * @param string $sitegroup
+     * @param string
+     *
+     * @return \Acquia\Cloud\Database\Database
      */
-    public function __construct($sitegroup)
+    public function setSiteGroup($sitegroup)
     {
         $this->sitegroup = $sitegroup;
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getSitegroup()
+    public function getSiteGroup()
     {
+        if (!isset($this->sitegroup)) {
+            $this->sitegroup = $this->getEnvironment()->getSiteGroup();
+        }
         return $this->sitegroup;
     }
 
     /**
-     * @param \Acquia\Common\Environment $environment
+     * @param \Acquia\Cloud\Environment\CloudEnvironment $environment
      *
      * @return \Acquia\Cloud\Database\Database
      */
-    public function setEnvironment(Environment $environment)
+    public function setEnvironment(CloudEnvironment $environment)
     {
         $this->environment = $environment;
         return $this;
     }
 
     /**
-     * @return \Acquia\Common\Environment
+     * @return \Acquia\Cloud\Environment\CloudEnvironment
      */
     public function getEnvironment()
     {
@@ -104,7 +109,7 @@ class Database
     public function getCredentialsFilepath()
     {
         if (!isset($this->filepath)) {
-            $settingsDir = $this->sitegroup . $this->getEnvironment();
+            $settingsDir = $this->getSiteGroup() . $this->getEnvironment();
             $this->filepath = '/var/www/site-php/' . $settingsDir . '/creds.json';
         }
         return $this->filepath;
