@@ -19,7 +19,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
     const LIVEDEV_ENABLE   = 'enable';
     const LIVEDEV_DISABLE  = 'disable';
 
-     /**
+    /**
      * {@inheritdoc}
      *
      * @return \Acquia\Cloud\Api\CloudApiClient

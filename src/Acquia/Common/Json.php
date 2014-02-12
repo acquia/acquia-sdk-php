@@ -7,7 +7,7 @@ class Json
     /**
      * @var boolean
      */
-    static protected $useNativePrettyPrint = true;
+    protected static $useNativePrettyPrint = true;
 
     /**
      * Use the native PHP pretty print options. Set to false to use the local
@@ -15,7 +15,7 @@ class Json
      *
      * @param boolean $useNative
      */
-    static public function useNativePrettyPrint($useNative = true)
+    public static function useNativePrettyPrint($useNative = true)
     {
         self::$useNativePrettyPrint = $useNative;
     }

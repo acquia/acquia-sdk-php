@@ -116,7 +116,8 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
      *
      * @return array
      */
-    protected function defaultRequestParams() {
+    protected function defaultRequestParams()
+    {
         $params = array(
             'authenticator' => $this->buildAuthenticator(),
             'ssl'           => $this->https === true ? 1 : 0,
