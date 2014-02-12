@@ -9,15 +9,15 @@ use Guzzle\Service\Client;
 
 class CloudApiClient extends Client implements AcquiaServiceManagerAware
 {
-    const BASE_URL  = 'https://cloudapi.acquia.com';
-    const BASE_PATH = '/v1';
+    const BASE_URL         = 'https://cloudapi.acquia.com';
+    const BASE_PATH        = '/v1';
 
     const INSTALL_MAKEFILE = 'make_url';
-    const INSTALL_NAME = 'distro_name';
-    const INSTALL_PROJECT = 'distro_url';
+    const INSTALL_NAME     = 'distro_name';
+    const INSTALL_PROJECT  = 'distro_url';
 
-    const LIVEDEV_ENABLE = 'enable';
-    const LIVEDEV_DISABLE = 'disable';
+    const LIVEDEV_ENABLE   = 'enable';
+    const LIVEDEV_DISABLE  = 'disable';
 
      /**
      * {@inheritdoc}
