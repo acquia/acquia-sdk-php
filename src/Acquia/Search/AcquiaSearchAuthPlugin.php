@@ -3,6 +3,7 @@
 namespace Acquia\Search;
 
 use Guzzle\Common\Event;
+use Guzzle\Http\Message\EntityEnclosingRequest;
 use Guzzle\Http\Message\Request;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -88,8 +89,8 @@ class AcquiaSearchAuthPlugin implements EventSubscriberInterface
         $signature = new Signature($this->derivedKey);
 
         $url = $request->getPath();
-        if ('POST' == $request->getMethod()) {
-            $body = (string) $request->getPostFields();
+        if ('POST' == $request->getMethod() && $request instanceof EntityEnclosingRequest) {
+            $body = (string) $request->getBody();
             $hash = $signature->generate($body);
         } else {
             $url .= '?' . $request->getQuery();
