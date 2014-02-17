@@ -115,6 +115,9 @@ $results = $index->select('my keywords');
 Refer to the [PSolr](https://github.com/cpliakas/psolr) project's documentation
 for more advanced usage examples.
 
+*Recommended*: Use the Service Manager to store credentials so that you don't have
+to query the Acquia Network on every search request.
+
 ## The Acquia Service Manager
 
 The Acquia Service Manager simplifies credential management and client
