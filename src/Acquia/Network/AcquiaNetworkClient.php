@@ -12,7 +12,7 @@ use Guzzle\Service\Client;
 class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
 {
     const NONCE_LENGTH = 55;
-    const VERSION = '0.5';
+    const VERSION = '0.8.0';
 
     /**
      * @var string
