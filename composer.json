@@ -34,6 +34,7 @@
         "sebastian/phpcpd": "~2.0"
     },
     "replace": {
+        "acquia/acquia-sdk-php-json": "self.version",
         "acquia/acquia-sdk-php-common": "self.version",
         "acquia/acquia-sdk-php-network": "self.version",
         "acquia/acquia-sdk-php-search": "self.version",

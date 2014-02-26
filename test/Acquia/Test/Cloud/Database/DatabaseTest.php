@@ -4,8 +4,8 @@ namespace Acquia\Test\Cloud\Database;
 
 use Acquia\Cloud\Database\Database;
 use Acquia\Cloud\Environment\CloudEnvironment;
-use Acquia\Common\Json;
 use Acquia\Common\Environment;
+use Acquia\Json\Json;
 
 class DatabaseTest extends \PHPUnit_Framework_TestCase
 {

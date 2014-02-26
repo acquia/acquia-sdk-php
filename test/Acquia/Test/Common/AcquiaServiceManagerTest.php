@@ -3,7 +3,7 @@
 namespace Acquia\Test\Common;
 
 use Acquia\Common\AcquiaServiceManager;
-use Acquia\Common\Json;
+use Acquia\Json\Json;
 use Guzzle\Service\Builder\ServiceBuilder;
 
 class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase

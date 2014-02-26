@@ -30,6 +30,6 @@
         "\u00e9",
         "/path/to/api.json",
         "/another\\/path\\//to/api.json",
-        "\\Acquia\\Common\\Json"
+        "\\Acquia\\Json\\Json"
     ]
 }

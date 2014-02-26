@@ -4,7 +4,6 @@ namespace Acquia\Test\Json;
 
 use Acquia\Json\Json;
 
-
 class JsonTest extends \PHPUnit_Framework_TestCase
 {
     protected $testArray = array(
@@ -39,7 +38,7 @@ class JsonTest extends \PHPUnit_Framework_TestCase
             "\xc3\xa9",
             '/path/to/api.json',
             "/another\\/path\\//to/api.json",
-            '\Acquia\Common\Json',
+            '\Acquia\Json\Json',
         )
     );
 

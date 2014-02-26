@@ -2,6 +2,7 @@
 
 namespace Acquia\Common;
 
+use Acquia\Json\Json;
 use Guzzle\Service\Builder\ServiceBuilder;
 use Guzzle\Service\Client;
 use Symfony\Component\Filesystem\Filesystem;
