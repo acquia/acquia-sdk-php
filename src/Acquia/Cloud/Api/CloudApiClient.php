@@ -3,8 +3,8 @@
 namespace Acquia\Cloud\Api;
 
 use Acquia\Common\AcquiaServiceManagerAware;
-use Acquia\Common\Json;
 use Guzzle\Common\Collection;
+use Acquia\Json\Json;
 use Guzzle\Service\Client;
 
 class CloudApiClient extends Client implements AcquiaServiceManagerAware

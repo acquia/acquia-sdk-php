@@ -2,8 +2,8 @@
 
 namespace Acquia\Cloud\Database;
 
-use Acquia\Common\Json;
 use Acquia\Cloud\Environment\CloudEnvironment;
+use Acquia\Json\Json;
 
 class Database
 {

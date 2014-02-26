@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-use Acquia\Common\Json;
+use Acquia\Json\Json;
 
 class Task extends \Acquia\Common\Element
 {

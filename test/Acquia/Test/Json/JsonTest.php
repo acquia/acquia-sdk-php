@@ -1,8 +1,8 @@
 <?php
 
-namespace Acquia\Test\Common;
+namespace Acquia\Test\Json;
 
-use Acquia\Common\Json;
+use Acquia\Json\Json;
 
 
 class JsonTest extends \PHPUnit_Framework_TestCase
