@@ -37,7 +37,7 @@ autoloader in your PHP scripts so that the SDK classes are made available.
 require_once 'vendor/autoload.php';
 ```
 
-### Take Only What You Need
+#### Take Only What You Need
 
 Instead of downloading the entire SDK, it is recommended to take only what you
 need by requiring the individual components you intend to use. For example, the
