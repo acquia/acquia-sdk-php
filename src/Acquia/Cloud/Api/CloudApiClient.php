@@ -883,7 +883,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
         return new Response\Task($request);
     }
 
-/**
+    /**
      * @param string $site
      * @param string $env
      * @param string $action
@@ -895,7 +895,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @see http://cloudapi.acquia.com/#POST__sites__site_envs__env_livedev__action-instance_route
      */
-    public function liveDev($site, $env, $action, $discard = FALSE)
+    public function liveDev($site, $env, $action, $discard = false)
     {
         $variables = array(
             'site' => $site,
@@ -916,7 +916,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function enableLiveDev($site, $env, $discard = FALSE)
+    public function enableLiveDev($site, $env, $discard = false)
     {
         return $this->liveDev($site, $env, self::LIVEDEV_ENABLE, $discard);
     }
@@ -930,7 +930,7 @@ class CloudApiClient extends Client implements AcquiaServiceManagerAware
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function disableLiveDev($site, $env, $discard = FALSE)
+    public function disableLiveDev($site, $env, $discard = false)
     {
         return $this->liveDev($site, $env, self::LIVEDEV_DISABLE, $discard);
     }
