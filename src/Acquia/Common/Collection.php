@@ -17,6 +17,13 @@ class Collection extends \ArrayObject
     protected $elementClass = '\Acquia\Common\Element';
 
     /**
+     * The array key containing the collection, null if it is not nested.
+     *
+     * @var string
+     */
+    protected $collectionProperty;
+
+    /**
      * @param \Guzzle\Http\Message\Request $request
      */
     public function __construct(Request $request)
@@ -37,11 +44,20 @@ class Collection extends \ArrayObject
      */
     public function getIterator()
     {
+        $array = $this->getArrayCopy();
+
+        // Is the collection nested in the array?
+        if (isset($this->collectionProperty) && isset($array[$this->collectionProperty])) {
+            $array = $array[$this->collectionProperty];
+        }
+
+        // Build the collection.
         $collection = array();
-        foreach ($this->getArrayCopy() as $item) {
+        foreach ($array as $item) {
             $element = new $this->elementClass($item);
             $collection[(string) $element] = $element;
         }
+
         return new \ArrayObject($collection);
     }
 
