@@ -62,12 +62,6 @@ class AcquiaSearchClientTest extends \PHPUnit_Framework_TestCase
         ));
     }
 
-    public function testGetBuilderClass()
-    {
-        $solr = $this->getAcquiaSearchClient();
-        $this->assertEquals('Acquia\Search\AcquiaSearchService', $solr->getBuilderClass());
-    }
-
     public function testGetBuilderParams()
     {
         $expected = array (

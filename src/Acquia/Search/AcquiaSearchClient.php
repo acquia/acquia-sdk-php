@@ -38,14 +38,6 @@ class AcquiaSearchClient extends SolrClient implements ServiceManagerAware
     /**
      * {@inheritdoc}
      */
-    public function getBuilderClass()
-    {
-        return 'Acquia\Search\AcquiaSearchService';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function getBuilderParams()
     {
         return array(
