@@ -10,7 +10,7 @@ abstract class SignatureAbstract
     protected $secretKey;
 
     /**
-     * @var \Acquia\Rest\NoncerAbstract
+     * @var \Acquia\Rest\NoncerInterface
      */
     private $noncer;
 
@@ -73,7 +73,7 @@ abstract class SignatureAbstract
     /**
      * Returns a noncer, instantiates it if it doesn't exist.
      *
-     * @return \Acquia\Rest\NoncerAbstract
+     * @return \Acquia\Rest\NoncerInterface
      *
      * @throws \UnexpectedValueException
      */
@@ -81,8 +81,8 @@ abstract class SignatureAbstract
     {
         if (!isset($this->noncer)) {
             $this->noncer = new self::$defaultNoncerClass($this->noncerLength);
-            if (!$this->noncer instanceof NoncerAbstract) {
-                throw new \UnexpectedValueException('Noncer must be an instance of Acquia\Rest\NoncerAbstract');
+            if (!$this->noncer instanceof NoncerInterface) {
+                throw new \UnexpectedValueException('Noncer must implement Acquia\Rest\NoncerInterface');
             }
         }
         return $this->noncer;

@@ -2,7 +2,7 @@
 
 namespace Acquia\Rest;
 
-abstract class NoncerAbstract
+abstract class NoncerAbstract implements NoncerInterface
 {
     const DEFAULT_LENGTH = 24;
 

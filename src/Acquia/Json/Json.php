@@ -2,7 +2,7 @@
 
 namespace Acquia\Json;
 
-class Json
+class Json implements JsonInterface
 {
     /**
      * @var boolean
