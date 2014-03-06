@@ -2,7 +2,7 @@
 
 namespace Acquia\Search;
 
-use Acquia\Common\AcquiaServiceManagerAware;
+use Acquia\Rest\AcquiaServiceManagerAware;
 use Guzzle\Common\Collection;
 use PSolr\Client\SolrClient;
 

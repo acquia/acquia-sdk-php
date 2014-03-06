@@ -2,7 +2,7 @@
 
 namespace Acquia\Network;
 
-use Acquia\Common\SignatureAbstract;
+use Acquia\Rest\SignatureAbstract;
 
 /**
  * Generates the HMAC hash used to sign Acquia Network requests.

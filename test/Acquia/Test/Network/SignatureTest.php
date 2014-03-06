@@ -15,7 +15,7 @@ class SignatureTest extends \PHPUnit_Framework_TestCase
     public function tearDown()
     {
          parent::tearDown();
-         Signature::setDefaultNoncerClass('Acquia\Common\RandomStringNoncer');
+         Signature::setDefaultNoncerClass('Acquia\Rest\RandomStringNoncer');
     }
 
     /**

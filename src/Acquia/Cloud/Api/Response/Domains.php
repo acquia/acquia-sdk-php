@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Domains extends \Acquia\Common\Collection
+class Domains extends \Acquia\Rest\Collection
 {
     /**
      * @var string

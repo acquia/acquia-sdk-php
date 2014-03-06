@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Test\Common;
+namespace Acquia\Test\Rest;
 
 use Guzzle\Service\Client;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Acquia\Test\Common;
+namespace Acquia\Test\Rest;
 
-use Acquia\Common\AcquiaServiceManager;
+use Acquia\Rest\AcquiaServiceManager;
 use Acquia\Json\Json;
 use Guzzle\Service\Builder\ServiceBuilder;
 
@@ -11,7 +11,7 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
     protected $builderConfig = array(
         'services' => array(
             'testservice' => array(
-                'class' => 'Acquia\Test\Common\DummyClient',
+                'class' => 'Acquia\Test\Rest\DummyClient',
                 'params' => array(
                     'param1' => 'foo',
                     'param2' => 'bar',

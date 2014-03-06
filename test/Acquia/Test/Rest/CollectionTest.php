@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Test\Common;
+namespace Acquia\Test\Rest;
 
 use Acquia\Json\Json;
 use Guzzle\Http\Client;
@@ -27,7 +27,7 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
 
         $collection = new DummyCollection($request);
         foreach ($collection as $element) {
-            $this->assertInstanceOf('\Acquia\Common\Element', $element);
+            $this->assertInstanceOf('\Acquia\Rest\Element', $element);
             $this->assertEquals('value1', (string) $element);
         }
     }

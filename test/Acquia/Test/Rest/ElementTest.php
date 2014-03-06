@@ -1,8 +1,8 @@
 <?php
 
-namespace Acquia\Test\Common;
+namespace Acquia\Test\Rest;
 
-use Acquia\Common\Element;
+use Acquia\Rest\Element;
 
 class ElementTest extends \PHPUnit_Framework_TestCase
 {

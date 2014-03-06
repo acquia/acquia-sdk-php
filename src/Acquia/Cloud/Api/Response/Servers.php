@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Servers extends \Acquia\Common\Collection
+class Servers extends \Acquia\Rest\Collection
 {
     /**
      * @var string

@@ -2,7 +2,7 @@
 
 namespace Acquia\Search;
 
-use Acquia\Common\SignatureAbstract;
+use Acquia\Rest\SignatureAbstract;
 
 /**
  * Generates the HMAC hash used to sign Acquia Search requests.

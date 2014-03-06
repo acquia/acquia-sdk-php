@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Api;
 
-use Acquia\Common\AcquiaServiceManagerAware;
+use Acquia\Rest\AcquiaServiceManagerAware;
 use Guzzle\Common\Collection;
 use Acquia\Json\Json;
 use Guzzle\Service\Client;

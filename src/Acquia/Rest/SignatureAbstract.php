@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Common;
+namespace Acquia\Rest;
 
 abstract class SignatureAbstract
 {
@@ -10,7 +10,7 @@ abstract class SignatureAbstract
     protected $secretKey;
 
     /**
-     * @var \Acquia\Common\NoncerAbstract
+     * @var \Acquia\Rest\NoncerAbstract
      */
     private $noncer;
 
@@ -27,7 +27,7 @@ abstract class SignatureAbstract
     /**
      * @var string
      */
-    protected static $defaultNoncerClass = 'Acquia\Common\RandomStringNoncer';
+    protected static $defaultNoncerClass = 'Acquia\Rest\RandomStringNoncer';
 
     /**
      * @param string $secretKey
@@ -73,7 +73,7 @@ abstract class SignatureAbstract
     /**
      * Returns a noncer, instantiates it if it doesn't exist.
      *
-     * @return \Acquia\Common\NoncerAbstract
+     * @return \Acquia\Rest\NoncerAbstract
      *
      * @throws \UnexpectedValueException
      */
@@ -82,7 +82,7 @@ abstract class SignatureAbstract
         if (!isset($this->noncer)) {
             $this->noncer = new self::$defaultNoncerClass($this->noncerLength);
             if (!$this->noncer instanceof NoncerAbstract) {
-                throw new \UnexpectedValueException('Noncer must be an instance of Acquia\Common\NoncerAbstract');
+                throw new \UnexpectedValueException('Noncer must be an instance of Acquia\Rest\NoncerAbstract');
             }
         }
         return $this->noncer;
@@ -109,7 +109,7 @@ abstract class SignatureAbstract
     /**
      * @param int $requestTime
      *
-     * @return \Acquia\Common\SignatureAbstract
+     * @return \Acquia\Rest\SignatureAbstract
      */
     public function setRequestTime($requestTime)
     {
@@ -118,7 +118,7 @@ abstract class SignatureAbstract
     }
 
     /**
-     * @return \Acquia\Common\SignatureAbstract
+     * @return \Acquia\Rest\SignatureAbstract
      */
     public function unsetRequestTime()
     {

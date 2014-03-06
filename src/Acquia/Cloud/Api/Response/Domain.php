@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Domain extends \Acquia\Common\Element
+class Domain extends \Acquia\Rest\Element
 {
     /**
      * @param string

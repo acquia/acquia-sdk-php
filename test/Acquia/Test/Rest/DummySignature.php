@@ -1,8 +1,8 @@
 <?php
 
-namespace Acquia\Test\Common;
+namespace Acquia\Test\Rest;
 
-use Acquia\Common\SignatureAbstract;
+use Acquia\Rest\SignatureAbstract;
 
 class DummySignature extends SignatureAbstract
 {

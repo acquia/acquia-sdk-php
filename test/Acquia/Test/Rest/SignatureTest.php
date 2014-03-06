@@ -1,8 +1,8 @@
 <?php
 
-namespace Acquia\Test\Common;
+namespace Acquia\Test\Rest;
 
-use Acquia\Common\SignatureAbstract;
+use Acquia\Rest\SignatureAbstract;
 
 class SignatureTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,7 +14,7 @@ class SignatureTest extends \PHPUnit_Framework_TestCase
 
     public function testSetDefaultNoncer()
     {
-        $class = 'Acquia\Test\Common\DummyNoncer';
+        $class = 'Acquia\Test\Rest\DummyNoncer';
         SignatureAbstract::setDefaultNoncerClass($class);
 
         $this->assertEquals($class, SignatureAbstract::getDefaultNoncerClass());
@@ -29,15 +29,15 @@ class SignatureTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetBadDefaultNoncer()
     {
-        $class = 'Acquia\Test\Common\DummyNoncer';
-        SignatureAbstract::setDefaultNoncerClass('Acquia\Test\Common\DummySignature');
+        $class = 'Acquia\Test\Rest\DummyNoncer';
+        SignatureAbstract::setDefaultNoncerClass('Acquia\Test\Rest\DummySignature');
         $signature = new DummySignature('secret-key');
 
         try {
             $noncer = $signature->getNoncer();
         } catch (\Exception $e) {
             // Revert back to the original so subsequent tests don't fail.
-            SignatureAbstract::setDefaultNoncerClass('Acquia\Common\RandomStringNoncer');
+            SignatureAbstract::setDefaultNoncerClass('Acquia\Rest\RandomStringNoncer');
             throw $e;
         }
     }

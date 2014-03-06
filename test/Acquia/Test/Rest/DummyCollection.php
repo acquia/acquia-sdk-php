@@ -1,8 +1,8 @@
 <?php
 
-namespace Acquia\Test\Common;
+namespace Acquia\Test\Rest;
 
-class DummyCollection extends \Acquia\Common\Collection
+class DummyCollection extends \Acquia\Rest\Collection
 {
     /**
      * @var string

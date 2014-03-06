@@ -2,10 +2,10 @@
 
 namespace Acquia\Network;
 
-use Acquia\Common\AcquiaServiceManagerAware;
 use Acquia\Common\Services;
 use Acquia\Common\Version;
 use Acquia\Network\Subscription;
+use Acquia\Rest\AcquiaServiceManagerAware;
 use fXmlRpc\Exception\ResponseException;
 use Guzzle\Common\Collection;
 use Guzzle\Service\Client;

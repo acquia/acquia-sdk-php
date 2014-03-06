@@ -1,8 +1,8 @@
 <?php
 
-namespace Acquia\Test\Common;
+namespace Acquia\Test\Rest;
 
-use Acquia\Common\AcquiaServiceManagerAware;
+use Acquia\Rest\AcquiaServiceManagerAware;
 use Guzzle\Service\Client;
 
 class DummyClient extends Client implements AcquiaServiceManagerAware

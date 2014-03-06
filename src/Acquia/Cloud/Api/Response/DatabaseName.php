@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class DatabaseName extends \Acquia\Common\Element
+class DatabaseName extends \Acquia\Rest\Element
 {
     /**
      * @return string

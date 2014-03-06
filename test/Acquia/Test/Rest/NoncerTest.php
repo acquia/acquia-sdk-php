@@ -1,8 +1,8 @@
 <?php
 
-namespace Acquia\Test\Common;
+namespace Acquia\Test\Rest;
 
-use Acquia\Common\RandomStringNoncer;
+use Acquia\Rest\RandomStringNoncer;
 
 class NoncerTest extends \PHPUnit_Framework_TestCase
 {

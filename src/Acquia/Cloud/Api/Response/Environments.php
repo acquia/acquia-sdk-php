@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Environments extends \Acquia\Common\Collection
+class Environments extends \Acquia\Rest\Collection
 {
     /**
      * @var string

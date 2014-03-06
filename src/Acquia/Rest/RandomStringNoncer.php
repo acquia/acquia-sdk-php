@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Common;
+namespace Acquia\Rest;
 
 /**
  * Returns a random string of ASCII characters.

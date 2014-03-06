@@ -1,7 +1,7 @@
 {
-    "name": "acquia/acquia-sdk-php-common",
+    "name": "acquia/acquia-sdk-php-rest",
     "type": "library",
-    "description": "Common components for the Acquia SDK for PHP.",
+    "description": "REST components for the Acquia SDK for PHP.",
     "keywords": ["acquia"],
     "homepage": "https://github.com/acquia/acquia-sdk-php",
     "license": "MIT",
@@ -14,12 +14,13 @@
     "require": {
         "php": ">=5.3.0",
         "acquia/acquia-sdk-php-json": "self.version",
+        "guzzle/service": "~3.0",
         "symfony/filesystem": "~2.0"
     },
     "autoload": {
         "psr-0": {
-            "Acquia\\Common": ""
+            "Acquia\\Rest": ""
         }
     },
-    "target-dir": "Acquia/Common"
+    "target-dir": "Acquia/Rest"
 }

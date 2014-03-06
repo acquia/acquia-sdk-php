@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Common;
+namespace Acquia\Rest;
 
 use Guzzle\Http\Message\Request;
 
@@ -29,7 +29,7 @@ class Element extends \ArrayObject
     /**
      * @param string $idColumn
      *
-     * @return \Acquia\Common\Record
+     * @return \Acquia\Rest\Element
      */
     public function setIdColumn($idColumn)
     {

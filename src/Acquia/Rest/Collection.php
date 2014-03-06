@@ -1,6 +1,6 @@
 <?php
 
-namespace Acquia\Common;
+namespace Acquia\Rest;
 
 use Guzzle\Http\Message\Request;
 
@@ -14,7 +14,7 @@ class Collection extends \ArrayObject
     /**
      * @var string
      */
-    protected $elementClass = '\Acquia\Common\Element';
+    protected $elementClass = '\Acquia\Rest\Element';
 
     /**
      * The array key containing the collection, null if it is not nested.
@@ -40,7 +40,7 @@ class Collection extends \ArrayObject
      *
      * @return \ArrayObject
      *
-     * @see \Acquia\Common\Element::__toString()
+     * @see \Acquia\Rest\Element::__toString()
      */
     public function getIterator()
     {

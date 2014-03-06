@@ -2,7 +2,7 @@
 
 namespace Acquia\Test\Network;
 
-use Acquia\Common\NoncerAbstract;
+use Acquia\Rest\NoncerAbstract;
 
 class MockNoncer extends NoncerAbstract
 {

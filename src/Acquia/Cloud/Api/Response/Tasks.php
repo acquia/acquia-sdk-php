@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Api\Response;
 
-class Tasks extends \Acquia\Common\Collection
+class Tasks extends \Acquia\Rest\Collection
 {
     /**
      * @var string
