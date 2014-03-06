@@ -4,6 +4,7 @@ namespace Acquia\Network;
 
 use Acquia\Common\AcquiaServiceManagerAware;
 use Acquia\Common\Services;
+use Acquia\Common\Version;
 use Acquia\Network\Subscription;
 use fXmlRpc\Exception\ResponseException;
 use Guzzle\Common\Collection;
@@ -12,7 +13,6 @@ use Guzzle\Service\Client;
 class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
 {
     const NONCE_LENGTH = 55;
-    const VERSION = '0.8.1';
 
     /**
      * @var string
@@ -289,7 +289,7 @@ class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
 
         if ($services & Services::ACQUIA_SEARCH) {
             $options = array(
-                'search_version' => array('acquia/acquia-search-sdk' => self::VERSION)
+                'search_version' => array('acquia/acquia-search-sdk' => Version::RELEASE)
             );
         }
 
