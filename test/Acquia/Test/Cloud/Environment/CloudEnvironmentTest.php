@@ -3,7 +3,7 @@
 namespace Acquia\Test\Cloud\Environment;
 
 use Acquia\Cloud\Environment\CloudEnvironment;
-use Acquia\Common\Environment;
+use Acquia\Environment\Environment;
 
 class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
 {

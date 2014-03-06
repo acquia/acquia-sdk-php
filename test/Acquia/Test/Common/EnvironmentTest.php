@@ -2,7 +2,7 @@
 
 namespace Acquia\Test\Common;
 
-use Acquia\Common\Environment;
+use Acquia\Environment\Environment;
 
 class EnvironmentTest extends \PHPUnit_Framework_TestCase
 {

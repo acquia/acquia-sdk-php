@@ -1,8 +1,8 @@
 <?php
 
-namespace Acquia\Common;
+namespace Acquia\Environment;
 
-class Environment
+class Environment implements EnvironmentInterface
 {
     const PRODUCTION  = 'prod';
     const STAGING     = 'test';

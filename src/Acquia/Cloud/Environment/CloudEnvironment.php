@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Environment;
 
-use Acquia\Common\Environment;
+use Acquia\Environment\Environment;
 
 /**
  * @see https://docs.acquia.com/cloud/configure/env-variable
