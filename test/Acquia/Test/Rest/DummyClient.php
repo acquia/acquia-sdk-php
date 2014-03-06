@@ -2,10 +2,10 @@
 
 namespace Acquia\Test\Rest;
 
-use Acquia\Rest\AcquiaServiceManagerAware;
+use Acquia\Rest\ServiceManagerAware;
 use Guzzle\Service\Client;
 
-class DummyClient extends Client implements AcquiaServiceManagerAware
+class DummyClient extends Client implements ServiceManagerAware
 {
     function getBuilderParams()
     {

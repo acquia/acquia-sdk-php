@@ -146,9 +146,9 @@ the specified directory. Note that the Acquia Search client is a service
 builder which is why we use the `setBuilder` method for it.
 
 ```php
-use Acquia\Common\AcquiaServiceManager;
+use Acquia\Common\ServiceManager;
 
-$services = new AcquiaServiceManager(array(
+$services = new ServiceManager(array(
     'conf_dir' => '/path/to/conf/dir',
 ));
 
@@ -170,9 +170,9 @@ names the clients after their index identifiers.
 
 ```php
 
-use Acquia\Common\AcquiaServiceManager;
+use Acquia\Common\ServiceManager;
 
-$services = new AcquiaServiceManager(array(
+$services = new ServiceManager(array(
     'conf_dir' => '/path/to/conf/dir',
 ));
 

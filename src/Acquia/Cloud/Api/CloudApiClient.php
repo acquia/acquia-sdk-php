@@ -2,12 +2,12 @@
 
 namespace Acquia\Cloud\Api;
 
-use Acquia\Rest\AcquiaServiceManagerAware;
+use Acquia\Rest\ServiceManagerAware;
 use Guzzle\Common\Collection;
 use Acquia\Json\Json;
 use Guzzle\Service\Client;
 
-class CloudApiClient extends Client implements AcquiaServiceManagerAware
+class CloudApiClient extends Client implements ServiceManagerAware
 {
     const BASE_URL         = 'https://cloudapi.acquia.com';
     const BASE_PATH        = '/v1';

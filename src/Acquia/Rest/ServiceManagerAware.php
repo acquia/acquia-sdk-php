@@ -2,7 +2,7 @@
 
 namespace Acquia\Rest;
 
-interface AcquiaServiceManagerAware
+interface ServiceManagerAware
 {
     /**
      * Returns the parameters that can be used by the service manager to

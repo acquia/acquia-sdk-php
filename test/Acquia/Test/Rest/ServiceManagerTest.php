@@ -2,11 +2,11 @@
 
 namespace Acquia\Test\Rest;
 
-use Acquia\Rest\AcquiaServiceManager;
+use Acquia\Rest\ServiceManager;
 use Acquia\Json\Json;
 use Guzzle\Service\Builder\ServiceBuilder;
 
-class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
+class ServiceManagerTest extends \PHPUnit_Framework_TestCase
 {
     protected $builderConfig = array(
         'services' => array(
@@ -39,23 +39,23 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function getAcquiaServiceManager()
+    public function getServiceManager()
     {
-        return new AcquiaServiceManager(array(
+        return new ServiceManager(array(
             'conf_dir' => 'build/test',
         ));
     }
 
     public function testGetConfig()
     {
-        $services = $this->getAcquiaServiceManager();
+        $services = $this->getServiceManager();
         $this->assertEquals('build/test', $services->getConfig()->get('conf_dir'));
     }
 
     public function testSetFilesystem()
     {
         $filesystem = new MockFilesystem();
-        $services = $this->getAcquiaServiceManager();
+        $services = $this->getServiceManager();
         $services->setFilesystem($filesystem);
 
         $this->assertEquals($filesystem, $services->getFilesystem());
@@ -63,13 +63,13 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetDefaultFilesystem()
     {
-        $services = $this->getAcquiaServiceManager();
+        $services = $this->getServiceManager();
         $this->assertInstanceOf('\Symfony\Component\Filesystem\Filesystem', $services->getFilesystem());
     }
 
     public function testConfigDefaults()
     {
-        $services = new AcquiaServiceManager();
+        $services = new ServiceManager();
 
         $expected = 'conf/testgroup.json';
         $filename = $services->getConfigFilename('testgroup');
@@ -78,7 +78,7 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testConfigFilename()
     {
-        $services = new AcquiaServiceManager(array(
+        $services = new ServiceManager(array(
             'conf_dir' => 'test-dir',
         ));
 
@@ -90,7 +90,7 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testHasConfigFile()
     {
-        $services = $this->getAcquiaServiceManager();
+        $services = $this->getServiceManager();
 
         $this->assertTrue($services->hasConfigFile('testgroup'));
         $this->assertFalse($services->hasConfigFile('missing'));
@@ -98,7 +98,7 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testLoad()
     {
-        $services = $this->getAcquiaServiceManager();
+        $services = $this->getServiceManager();
 
         $testBuilder = $services['testgroup'];
         $this->assertTrue(isset($testBuilder['testservice']));
@@ -115,7 +115,7 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testSetBuilder()
     {
-        $services = new AcquiaServiceManager();
+        $services = new ServiceManager();
 
         $builder = ServiceBuilder::factory(array());
         $services->setBuilder('newbuilder', $builder);
@@ -125,7 +125,7 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveBuilder()
     {
-        $services = $this->getAcquiaServiceManager();
+        $services = $this->getServiceManager();
 
         $builder = $services['testgroup'];
         unset($services['testgroup']);
@@ -137,7 +137,7 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetInvalidBuilder()
     {
-        $services = new AcquiaServiceManager();
+        $services = new ServiceManager();
 
         $builder = 'Not a ServiceBuilder class';
         $services['invalid'] = $builder;
@@ -145,7 +145,7 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testSetClient()
     {
-        $services = $this->getAcquiaServiceManager();
+        $services = $this->getServiceManager();
 
         $client = new DummyClient();
         $services->setClient('testgroup', 'newservice', $client);
@@ -157,7 +157,7 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetInvalidClient()
     {
-        $services = $this->getAcquiaServiceManager();
+        $services = $this->getServiceManager();
 
         $badClient = new DummyInvalidClient();
         $services->setClient('testgroup', 'newservice', $badClient);
@@ -165,7 +165,7 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetClient()
     {
-        $services = $this->getAcquiaServiceManager();
+        $services = $this->getServiceManager();
 
         $testService = $services->getClient('testgroup', 'testservice');
         $this->assertTrue($testService instanceof DummyClient);
@@ -176,7 +176,7 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testRemoveClient()
     {
-        $services = $this->getAcquiaServiceManager();
+        $services = $this->getServiceManager();
 
         $services->removeClient('testgroup', 'testservice');
         $services->save();
@@ -189,7 +189,7 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testSaveNewServiceGroup()
     {
-        $services = $this->getAcquiaServiceManager();
+        $services = $this->getServiceManager();
         $builder = $services->getBuilder('testgroup');
         $services->setBuilder('newgroup', clone $builder);
 
@@ -202,7 +202,7 @@ class AcquiaServiceManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testDeleteServiceGroup()
     {
-        $services = $this->getAcquiaServiceManager();
+        $services = $this->getServiceManager();
         $builder = $services->getBuilder('testgroup');
         $services->deleteServiceGroup('testgroup');
 

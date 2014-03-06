@@ -2,11 +2,11 @@
 
 namespace Acquia\Search;
 
-use Acquia\Rest\AcquiaServiceManagerAware;
+use Acquia\Rest\ServiceManagerAware;
 use Guzzle\Common\Collection;
 use PSolr\Client\SolrClient;
 
-class AcquiaSearchClient extends SolrClient implements AcquiaServiceManagerAware
+class AcquiaSearchClient extends SolrClient implements ServiceManagerAware
 {
     /**
      * {@inheritdoc}

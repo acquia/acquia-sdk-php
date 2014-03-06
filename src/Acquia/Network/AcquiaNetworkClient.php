@@ -5,12 +5,12 @@ namespace Acquia\Network;
 use Acquia\Common\Services;
 use Acquia\Common\Version;
 use Acquia\Network\Subscription;
-use Acquia\Rest\AcquiaServiceManagerAware;
+use Acquia\Rest\ServiceManagerAware;
 use fXmlRpc\Exception\ResponseException;
 use Guzzle\Common\Collection;
 use Guzzle\Service\Client;
 
-class AcquiaNetworkClient extends Client implements AcquiaServiceManagerAware
+class AcquiaNetworkClient extends Client implements ServiceManagerAware
 {
     const NONCE_LENGTH = 55;
 

@@ -7,7 +7,7 @@ use Guzzle\Service\Builder\ServiceBuilder;
 use Guzzle\Service\Client;
 use Symfony\Component\Filesystem\Filesystem;
 
-class AcquiaServiceManager extends \ArrayObject
+class ServiceManager extends \ArrayObject
 {
     /**
      * @var \Guzzle\Common\Collection
@@ -54,7 +54,7 @@ class AcquiaServiceManager extends \ArrayObject
     /**
      * @param \Symfony\Component\Filesystem\Filesystem $filesystem
      *
-     * @return \Acquia\Rest\AcquiaServiceManager
+     * @return \Acquia\Rest\ServiceManager
      */
     public function setFilesystem(Filesystem $filesystem)
     {
@@ -168,7 +168,7 @@ class AcquiaServiceManager extends \ArrayObject
      * @param string $group
      * @param \Guzzle\Service\Builder\ServiceBuilder $builder
      *
-     * @return \Acquia\Rest\AcquiaServiceManager
+     * @return \Acquia\Rest\ServiceManager
      */
     public function setBuilder($group, ServiceBuilder $builder)
     {
@@ -182,13 +182,13 @@ class AcquiaServiceManager extends \ArrayObject
      * @param string $name
      * @param \Guzzle\Service\Client $client
      *
-     * @return \Acquia\Rest\AcquiaServiceManager
+     * @return \Acquia\Rest\ServiceManager
      */
     public function setClient($group, $name, Client $client)
     {
         // Must also be service manager aware.
-        if (!$client instanceof AcquiaServiceManagerAware) {
-            throw new \UnexpectedValueException('Client must implement Acquia\Rest\AcquiaServiceManagerAware');
+        if (!$client instanceof ServiceManagerAware) {
+            throw new \UnexpectedValueException('Client must implement Acquia\Rest\ServiceManagerAware');
         }
 
         $builder = $this[$group];
@@ -226,7 +226,7 @@ class AcquiaServiceManager extends \ArrayObject
      * @param string $group
      * @param string $name
      *
-     * @return \Acquia\Rest\AcquiaServiceManager
+     * @return \Acquia\Rest\ServiceManager
      */
     public function removeClient($group, $name)
     {
