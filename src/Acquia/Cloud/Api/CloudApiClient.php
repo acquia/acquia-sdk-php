@@ -901,7 +901,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'site' => $site,
             'env' => $env,
             'action' => $action,
-            'discard' => (int)$discard,
+            'discard' => (int) $discard,
         );
         $request = $this->post(array('{+base_path}/sites/{site}/envs/{env}/livedev/{action}.json?discard={discard}', $variables));
         return new Response\Task($request);
