@@ -857,7 +857,7 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/livedev_enable.json');
         $response = $cloudapi->enableLiveDev('stage-one:mysite', 'dev');
 
-        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/dev/livedev/enable.json', $this->requestListener->getUrl());
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/dev/livedev/enable.json?discard=0', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
         $this->assertEquals('12345', (string) $response);
 
@@ -882,7 +882,7 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/livedev_disable.json');
         $response = $cloudapi->disableLiveDev('stage-one:mysite', 'dev');
 
-        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/dev/livedev/disable.json', $this->requestListener->getUrl());
+        $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/envs/dev/livedev/disable.json?discard=0', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
         $this->assertEquals('12345', (string) $response);
 

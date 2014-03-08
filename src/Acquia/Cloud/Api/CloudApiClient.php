@@ -887,6 +887,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
      * @param string $site
      * @param string $env
      * @param string $action
+     * @param bool $discard
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *
@@ -894,41 +895,44 @@ class CloudApiClient extends Client implements ServiceManagerAware
      *
      * @see http://cloudapi.acquia.com/#POST__sites__site_envs__env_livedev__action-instance_route
      */
-    public function liveDev($site, $env, $action)
+    public function liveDev($site, $env, $action, $discard = false)
     {
         $variables = array(
             'site' => $site,
             'env' => $env,
             'action' => $action,
+            'discard' => (int)$discard,
         );
-        $request = $this->post(array('{+base_path}/sites/{site}/envs/{env}/livedev/{action}.json', $variables));
+        $request = $this->post(array('{+base_path}/sites/{site}/envs/{env}/livedev/{action}.json?discard={discard}', $variables));
         return new Response\Task($request);
     }
 
     /**
      * @param string $site
      * @param string $env
+     * @param bool $discard
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function enableLiveDev($site, $env)
+    public function enableLiveDev($site, $env, $discard = false)
     {
-        return $this->liveDev($site, $env, self::LIVEDEV_ENABLE);
+        return $this->liveDev($site, $env, self::LIVEDEV_ENABLE, $discard);
     }
 
     /**
      * @param string $site
      * @param string $env
+     * @param bool $discard
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      */
-    public function disableLiveDev($site, $env)
+    public function disableLiveDev($site, $env, $discard = false)
     {
-        return $this->liveDev($site, $env, self::LIVEDEV_DISABLE);
+        return $this->liveDev($site, $env, self::LIVEDEV_DISABLE, $discard);
     }
 
     /**
