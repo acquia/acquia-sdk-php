@@ -4,9 +4,12 @@ namespace Acquia\Test\Cloud\Environment;
 
 use Acquia\Cloud\Environment\CloudEnvironment;
 use Acquia\Environment\Environment;
+use Acquia\Json\Json;
 
 class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
 {
+    const SITEGROUP = 'mysite';
+
     protected $originalEnv;
     protected $originalProduction;
     protected $originalSiteGroup;
@@ -16,6 +19,7 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         $this->originalEnv = getenv('AH_SITE_ENVIRONMENT');
         $this->originalProduction = getenv('AH_PRODUCTION');
         $this->originalSiteGroup = getenv('AH_SITE_GROUP');
+        putenv('AH_SITE_GROUP=' . self::SITEGROUP);
         parent::setUp();
     }
 
@@ -31,6 +35,28 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
             putenv('AH_SITE_GROUP');
         }
         parent::tearDown();
+    }
+
+    public function testSetSitegroup()
+    {
+        $env = new CloudEnvironment();
+        $env->setSiteGroup('anothergroup');
+        $this->assertEquals('anothergroup', $env->getSiteGroup());
+    }
+
+    public function testGetSitegroupFromEnvironment()
+    {
+        $originalSitegroup = getenv('AH_SITE_GROUP');
+        putenv('AH_SITE_GROUP=' . self::SITEGROUP);
+
+        $env = new CloudEnvironment();
+        $this->assertEquals(self::SITEGROUP, $env->getSitegroup());
+
+        if ($originalSitegroup) {
+            putenv('AH_SITE_GROUP=' . $originalSitegroup);
+        } else {
+            putenv('AH_SITE_GROUP');
+        }
     }
 
     public function testProdEnvironment()
@@ -90,5 +116,44 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         putenv('AH_SITE_GROUP');
         $env = new CloudEnvironment();
         $env->getSiteGroup();
+    }
+
+    public function testSetCredentialsFilepath()
+    {
+        $env = new CloudEnvironment();
+        $objectChaining = $env->setCredentialsFilepath('/test/path');
+
+        $this->assertEquals($env, $objectChaining);
+        $this->assertEquals('/test/path', $env->getCredentialsFilepath());
+    }
+
+    public function testGetDefaultCredentialsFilepath()
+    {
+        $env = new CloudEnvironment();
+        $env->setEnvironment(Environment::PRODUCTION);
+
+        $expected = '/var/www/site-php/' . self::SITEGROUP . Environment::PRODUCTION . '/creds.json';
+        $this->assertEquals($expected, $env->getCredentialsFilepath());
+    }
+
+    public function testParseCredentialsFile()
+    {
+        $filepath = __DIR__ . '/json/creds.json';
+
+        $env = new CloudEnvironment();
+        $env->setCredentialsFilepath($filepath);
+
+        $expected = Json::decode(file_get_contents($filepath));
+        $this->assertEquals($expected, $env->serviceCredentials());
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testInvalidCredentialsFile()
+    {
+        $env = new CloudEnvironment();
+        $env->setCredentialsFilepath(__DIR__ . '/json/bad-file.json');
+        $env->serviceCredentials();
     }
 }

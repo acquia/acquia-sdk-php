@@ -5,30 +5,10 @@ namespace Acquia\Test\Cloud\Database;
 use Acquia\Cloud\Database\Database;
 use Acquia\Cloud\Environment\CloudEnvironment;
 use Acquia\Environment\Environment;
-use Acquia\Json\Json;
 
 class DatabaseTest extends \PHPUnit_Framework_TestCase
 {
     const SITEGROUP = 'mysite';
-
-    protected $originalSiteGroup;
-
-    public function setUp()
-    {
-        $this->originalSiteGroup = getenv('AH_SITE_GROUP');
-        putenv('AH_SITE_GROUP=' . self::SITEGROUP);
-        parent::setUp();
-    }
-
-    public function tearDown()
-    {
-        if ($this->originalSiteGroup) {
-            putenv('AH_SITE_GROUP=' . $this->originalSiteGroup);
-        } else {
-            putenv('AH_SITE_GROUP');
-        }
-        parent::tearDown();
-    }
 
     /**
      * Helper function that returns a database object for the prod environment.
@@ -38,52 +18,32 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     public function getProductionDatabase()
     {
         $environment = new CloudEnvironment();
-        $environment->setEnvironment(Environment::PRODUCTION);
+        $environment
+            ->setEnvironment(Environment::PRODUCTION)
+            ->setCredentialsFilepath(__DIR__ . '/../Environment/json/creds.json')
+        ;
 
         $database = new Database();
         return $database
-            ->setEnvironment($environment)
+            ->setCloudEnvironment($environment)
             ->setResolver(new TestResolver())
-            ->setCredentialsFilepath(__DIR__ . '/json/creds.json')
         ;
-    }
-
-    public function testSetSitegroup()
-    {
-        $database = new Database();
-        $database->setSiteGroup('anothergroup');
-        $this->assertEquals('anothergroup', $database->getSiteGroup());
-    }
-
-    public function testGetSitegroupFromEnvironment()
-    {
-        $originalSitegroup = getenv('AH_SITE_GROUP');
-        putenv('AH_SITE_GROUP=' . self::SITEGROUP);
-
-        $database = new Database();
-        $this->assertEquals(self::SITEGROUP, $database->getSitegroup());
-
-        if ($originalSitegroup) {
-            putenv('AH_SITE_GROUP=' . $originalSitegroup);
-        } else {
-            putenv('AH_SITE_GROUP');
-        }
     }
 
     public function testSetEnvironment()
     {
         $environment = new CloudEnvironment();
         $database = new Database();
-        $objectChaining = $database->setEnvironment($environment);
+        $objectChaining = $database->setCloudEnvironment($environment);
 
         $this->assertEquals($database, $objectChaining);
-        $this->assertEquals($environment, $database->getEnvironment());
+        $this->assertEquals($environment, $database->getCloudEnvironment());
     }
 
     public function testGetDefaultEnvironment()
     {
         $database = new Database();
-        $environment = $database->getEnvironment();
+        $environment = $database->getCloudEnvironment();
         $this->assertInstanceOf('\Acquia\Cloud\Environment\CloudEnvironment', $environment);
     }
 
@@ -104,42 +64,22 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Net_DNS2_Resolver', $resolver);
     }
 
-    public function testSetCredentialsFilepath()
+    public function testResolverException()
     {
-        $database = new Database();
-        $objectChaining = $database->setCredentialsFilepath('/test/path');
+        $database = $this->getProductionDatabase();
+        $database->getResolver()->throwException();
 
-        $this->assertEquals($database, $objectChaining);
-        $this->assertEquals('/test/path', $database->getCredentialsFilepath());
-    }
-
-    public function testGetDefaultCredentialsFilepath()
-    {
-        $environment = new CloudEnvironment();
-        $environment->setEnvironment(Environment::PRODUCTION);
-        $database = new Database();
-        $database->setEnvironment($environment);
-
-        $expected = '/var/www/site-php/' . self::SITEGROUP . Environment::PRODUCTION . '/creds.json';
-        $this->assertEquals($expected, $database->getCredentialsFilepath());
-    }
-
-    public function testParseCredentialsFile()
-    {
-        $database = new Database();
-
-        $filepath = __DIR__ . '/json/creds.json';
-        $expected = Json::decode(file_get_contents($filepath));
-        $this->assertEquals($expected, $database->parseCredentialsFile($filepath));
+        $host = $database->getCurrentHost('1234');
+        $this->assertEmpty($host);
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException \OutOfBoundsException
      */
-    public function testInvalidCredentialsFile()
+    public function testCredentialsInvalidDatabase()
     {
-        $database = new Database();
-        $database->parseCredentialsFile(__DIR__ . '/json/bad-file.json');
+        $database = $this->getProductionDatabase();
+        $database->credentials('bad-db');
     }
 
     public function testCredentials()
@@ -163,23 +103,5 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedUrls,  $credentials->urls());
         $this->assertEquals($expectedDsn,   $credentials->dsn());
         $this->assertEquals($expectedDsn,   (string) $credentials);
-    }
-
-    public function testResolverException()
-    {
-        $database = $this->getProductionDatabase();
-        $database->getResolver()->throwException();
-
-        $host = $database->getCurrentHost('1234');
-        $this->assertEmpty($host);
-    }
-
-    /**
-     * @expectedException \OutOfBoundsException
-     */
-    public function testCredentialsInvalidDatabase()
-    {
-        $database = $this->getProductionDatabase();
-        $database->credentials('bad-db');
     }
 }

@@ -12,6 +12,8 @@ interface EnvironmentInterface
      * Sets the environemnt identifier, e.g. "dev", "test", "prod", etc.
      *
      * @param string $environment
+     *
+     * @return \Acquia\Environment\EnvironmentInterface
      */
     public function setEnvironment($environment);
 

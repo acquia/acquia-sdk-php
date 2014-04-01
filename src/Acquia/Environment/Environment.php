@@ -34,7 +34,9 @@ class Environment implements EnvironmentInterface
     }
 
     /**
-     * @param string $environment
+     * {@inheritDoc}
+     *
+     * @return \Acquia\Environment\Environment
      */
     public function setEnvironment($environment)
     {
@@ -42,10 +44,11 @@ class Environment implements EnvironmentInterface
             throw new \UnexpectedValueException('Environment must be a string');
         }
         $this->environment = $environment;
+        return $this;
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function getEnvironment()
     {
@@ -53,7 +56,7 @@ class Environment implements EnvironmentInterface
     }
 
     /**
-     * @return bool
+     * {@inheritDoc}
      */
     public function isProduction()
     {
@@ -61,7 +64,7 @@ class Environment implements EnvironmentInterface
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
     public function __toString()
     {

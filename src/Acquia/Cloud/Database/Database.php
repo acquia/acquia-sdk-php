@@ -3,19 +3,15 @@
 namespace Acquia\Cloud\Database;
 
 use Acquia\Cloud\Environment\CloudEnvironment;
-use Acquia\Json\Json;
+use Acquia\Cloud\Environment\CloudEnvironmentAware;
+use Acquia\Cloud\Environment\CloudEnvironmentInterface;
 
-class Database
+class Database implements CloudEnvironmentAware
 {
     /**
-     * @var string
+     * @var \Acquia\Cloud\Environment\CloudEnvironmentInterface
      */
-    private $sitegroup;
-
-    /**
-     * @var \Acquia\Cloud\Environment\CloudEnvironment
-     */
-    private $environment;
+    private $cloudEnvironment;
 
     /**
      * @var \Net_DNS2_Resolver
@@ -23,52 +19,25 @@ class Database
     private $resolver;
 
     /**
-     * @var string
-     */
-    private $filepath;
-
-    /**
-     * @param string
+     * {@inheritDoc}
      *
      * @return \Acquia\Cloud\Database\Database
      */
-    public function setSiteGroup($sitegroup)
+    public function setCloudEnvironment(CloudEnvironmentInterface $cloudEnvironment)
     {
-        $this->sitegroup = $sitegroup;
+        $this->cloudEnvironment = $cloudEnvironment;
         return $this;
     }
 
     /**
-     * @return string
+     * {@inheritDoc}
      */
-    public function getSiteGroup()
+    public function getCloudEnvironment()
     {
-        if (!isset($this->sitegroup)) {
-            $this->sitegroup = $this->getEnvironment()->getSiteGroup();
+        if (!isset($this->cloudEnvironment)) {
+            $this->cloudEnvironment = new CloudEnvironment();
         }
-        return $this->sitegroup;
-    }
-
-    /**
-     * @param \Acquia\Cloud\Environment\CloudEnvironment $environment
-     *
-     * @return \Acquia\Cloud\Database\Database
-     */
-    public function setEnvironment(CloudEnvironment $environment)
-    {
-        $this->environment = $environment;
-        return $this;
-    }
-
-    /**
-     * @return \Acquia\Cloud\Environment\CloudEnvironment
-     */
-    public function getEnvironment()
-    {
-        if (!isset($this->environment)) {
-            $this->environment = new CloudEnvironment();
-        }
-        return $this->environment;
+        return $this->cloudEnvironment;
     }
 
     /**
@@ -95,43 +64,6 @@ class Database
     }
 
     /**
-     * @return \Acquia\Cloud\Database\Database
-     */
-    public function setCredentialsFilepath($filepath)
-    {
-        $this->filepath = $filepath;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCredentialsFilepath()
-    {
-        if (!isset($this->filepath)) {
-            $settingsDir = $this->getSiteGroup() . $this->getEnvironment();
-            $this->filepath = '/var/www/site-php/' . $settingsDir . '/creds.json';
-        }
-        return $this->filepath;
-    }
-
-    /**
-     * @param string $filepath
-     *
-     * @return array
-     *
-     * @throws \RuntimeException
-     * @throws \UnexpectedValueException
-     */
-    public function parseCredentialsFile($filepath)
-    {
-        if (!file_exists($filepath)) {
-            throw new \RuntimeException('File not found: ' . $filepath);
-        }
-        return Json::decode(file_get_contents($filepath));
-    }
-
-    /**
      * @param string $dbName
      *
      * @throws \OutOfBoundsException
@@ -140,14 +72,13 @@ class Database
      */
     public function credentials($dbName)
     {
-        $filepath  = $this->getCredentialsFilepath();
-        $databases = $this->parseCredentialsFile($filepath);
+        $creds = $this->cloudEnvironment->serviceCredentials();
 
-        if (!isset($databases['databases'][$dbName])) {
+        if (!isset($creds['databases'][$dbName])) {
             throw new \OutOfBoundsException('Invalid database: ' . $dbName);
         }
 
-        $database = $databases['databases'][$dbName];
+        $database = $creds['databases'][$dbName];
         $host = $this->getCurrentHost($database['db_cluster_id']);
         $database['host'] = ($host) ?: key($database['db_url_ha']);
 
