@@ -22,20 +22,21 @@ class Json implements JsonInterface
 
     /**
      * @param mixed $data
+     * @param bool $prettyPrint
      *
      * @return string
      */
-    public static function encode($data)
+    public static function encode($data, $prettyPrint = true)
     {
         $options = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT;
 
         $useNative = self::$useNativePrettyPrint && defined('JSON_PRETTY_PRINT') && defined('JSON_UNESCAPED_SLASHES');
-        if ($useNative) {
+        if ($prettyPrint && $useNative) {
             $options = $options | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES;
         }
 
         $json = json_encode($data, $options);
-        if (!$useNative) {
+        if ($prettyPrint && !$useNative) {
             $json = self::prettyPrint($json);
         }
 
