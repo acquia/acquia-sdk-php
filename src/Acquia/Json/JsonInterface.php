@@ -18,4 +18,12 @@ interface JsonInterface
      */
     public static function decode($json);
 
+    /**
+     * @param string $filepath
+     *
+     * @return array
+     *
+     * @throws \RuntimeException
+     */
+    public static function parseFile($filepath);
 }

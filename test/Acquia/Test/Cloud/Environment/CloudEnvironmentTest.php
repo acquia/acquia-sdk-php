@@ -146,14 +146,4 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         $expected = Json::decode(file_get_contents($filepath));
         $this->assertEquals($expected, $env->serviceCredentials());
     }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testInvalidCredentialsFile()
-    {
-        $env = new CloudEnvironment();
-        $env->setCredentialsFilepath(__DIR__ . '/json/bad-file.json');
-        $env->serviceCredentials();
-    }
 }

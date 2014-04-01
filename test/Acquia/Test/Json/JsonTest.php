@@ -63,4 +63,28 @@ class JsonTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($this->testArray, Json::decode($this->getTestJson()));
     }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testParseJsonFileMissing()
+    {
+        Json::parseFile(__DIR__ . '/json/missing-file.json');
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testParseJsonFileUnreadable()
+    {
+        JsonReadFileError::parseFile(__DIR__ . '/json/test.json');
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     */
+    public function testParseJsonFileInvalid()
+    {
+        Json::parseFile(__DIR__ . '/json/invalid.json');
+    }
 }

@@ -124,4 +124,40 @@ class Json implements JsonInterface
         return $result;
     }
 
+    /**
+     * Parses a file into a PHP array.
+     *
+     * @param string $filepath
+     *
+     * @throws \RuntimeException
+     */
+    static public function parseFile($filepath)
+    {
+        if (!is_file($filepath)) {
+            throw new \RuntimeException('File not found: ' . $filepath);
+        }
+
+        if (!$filedata = static::readFiledata($filepath)) {
+            throw new \RuntimeException('Error reading file: ' . $filepath);
+        }
+
+        if (!$json = self::decode($filedata)) {
+            throw new \RuntimeException('Error parsing json: ' . $filepath);
+        }
+
+        return $json;
+    }
+
+    /**
+     * Wrapper around file_get_contents(), useful for testing the inability to
+     * read a file.
+     *
+     * @param string $filepath
+     *
+     * @return string|false
+     */
+    static protected function readFiledata($filepath)
+    {
+        return @file_get_contents($filepath);
+    }
 }

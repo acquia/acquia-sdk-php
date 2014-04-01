@@ -96,23 +96,13 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
      * @return array
      *
      * @throws \RuntimeException
-     *
-     * @todo JsonFile class? https://github.com/acquia/acquia-sdk-php/issues/44
      */
     public function serviceCredentials()
     {
         if (!isset($this->creds)) {
             $filepath = $this->getCredentialsFilepath();
-            if (!is_file($filepath)) {
-                throw new \RuntimeException('File not found: ' . $filepath);
-            }
-            if (!$filedata = @file_get_contents($filepath)) {
-                throw new \RuntimeException('Error reading file: ' . $filepath);
-            }
-            if (!$json = Json::decode($filedata)) {
-                throw new \RuntimeException('Error parsing json: ' . $filepath);
-            }
+            $this->creds = Json::parseFile($filepath);
         }
-        return $json;
+        return $this->creds;
     }
 }
