@@ -12,5 +12,8 @@
             "db_cluster_id": "1234",
             "port": 3306
         }
+    },
+    "memcached_servers": {
+        "6645": "ded-123.stage-one.hosting.acquia.com:11211"
     }
 }

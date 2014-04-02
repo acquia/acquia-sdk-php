@@ -2,20 +2,20 @@
 
 namespace Acquia\Test\Cloud\Database;
 
-use Acquia\Cloud\Database\Database;
+use Acquia\Cloud\Database\DatabaseService;
 use Acquia\Cloud\Environment\CloudEnvironment;
 use Acquia\Environment\Environment;
 
-class DatabaseTest extends \PHPUnit_Framework_TestCase
+class DatabaseServiceTest extends \PHPUnit_Framework_TestCase
 {
     const SITEGROUP = 'mysite';
 
     /**
      * Helper function that returns a database object for the prod environment.
      *
-     * @return \Acquia\Cloud\Database\Database
+     * @return \Acquia\Cloud\Database\DatabaseService
      */
-    public function getProductionDatabase()
+    public function getProductionDatabaseService()
     {
         $environment = new CloudEnvironment();
         $environment
@@ -23,8 +23,8 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
             ->setCredentialsFilepath(__DIR__ . '/../Environment/json/creds.json')
         ;
 
-        $database = new Database();
-        return $database
+        $service = new DatabaseService();
+        return $service
             ->setCloudEnvironment($environment)
             ->setResolver(new TestResolver())
         ;
@@ -33,43 +33,43 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
     public function testSetEnvironment()
     {
         $environment = new CloudEnvironment();
-        $database = new Database();
-        $objectChaining = $database->setCloudEnvironment($environment);
+        $service = new DatabaseService();
+        $objectChaining = $service->setCloudEnvironment($environment);
 
-        $this->assertEquals($database, $objectChaining);
-        $this->assertEquals($environment, $database->getCloudEnvironment());
+        $this->assertEquals($service, $objectChaining);
+        $this->assertEquals($environment, $service->getCloudEnvironment());
     }
 
     public function testGetDefaultEnvironment()
     {
-        $database = new Database();
-        $environment = $database->getCloudEnvironment();
+        $service = new DatabaseService();
+        $environment = $service->getCloudEnvironment();
         $this->assertInstanceOf('\Acquia\Cloud\Environment\CloudEnvironment', $environment);
     }
 
     public function testSetResolver()
     {
         $resolver = new TestResolver();
-        $database = new Database();
-        $objectChaining = $database->setResolver($resolver);
+        $service = new DatabaseService();
+        $objectChaining = $service->setResolver($resolver);
 
-        $this->assertEquals($database, $objectChaining);
-        $this->assertEquals($resolver, $database->getResolver());
+        $this->assertEquals($service, $objectChaining);
+        $this->assertEquals($resolver, $service->getResolver());
     }
 
     public function testGetDefaultResolver()
     {
-        $database = new Database();
-        $resolver = $database->getResolver();
+        $service = new DatabaseService();
+        $resolver = $service->getResolver();
         $this->assertInstanceOf('\Net_DNS2_Resolver', $resolver);
     }
 
     public function testResolverException()
     {
-        $database = $this->getProductionDatabase();
-        $database->getResolver()->throwException();
+        $service = $this->getProductionDatabaseService();
+        $service->getResolver()->throwException();
 
-        $host = $database->getCurrentHost('1234');
+        $host = $service->getCurrentHost('1234');
         $this->assertEmpty($host);
     }
 
@@ -78,19 +78,19 @@ class DatabaseTest extends \PHPUnit_Framework_TestCase
      */
     public function testCredentialsInvalidDatabase()
     {
-        $database = $this->getProductionDatabase();
-        $database->credentials('bad-db');
+        $service = $this->getProductionDatabaseService();
+        $service->credentials('bad-db');
     }
 
     public function testCredentials()
     {
-        $database     = $this->getProductionDatabase();
-        $credentials  = $database->credentials(self::SITEGROUP);
+        $service      = $this->getProductionDatabaseService();
+        $credentials  = $service->credentials(self::SITEGROUP);
         $expectedUrls = array('staging-123' => 'mysqli://mysiteprod:abcdefg@staging-123:3306/mysiteprod');
         $expectedUrl  = $expectedUrls['staging-123'];
         $expectedDsn  = 'mysql:dbname=mysiteprod;host=staging-123;port=3306';
 
-        $this->assertInstanceOf('\Acquia\Cloud\Database\Credentials', $credentials);
+        $this->assertInstanceOf('\Acquia\Cloud\Database\DatabaseCredentials', $credentials);
         $this->assertEquals('1234',         $credentials->id());
         $this->assertEquals('1234',         $credentials->clusterId());
         $this->assertEquals('mysite',       $credentials->role());

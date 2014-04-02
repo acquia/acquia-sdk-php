@@ -72,21 +72,6 @@ $cloudapi = CloudApiClient::factory(array(
 $sites = $cloudapi->sites();
 ```
 
-### Acquia Cloud Database
-
-The Database component allows developers to connect to the active master
-database when running applications on [Acquia Cloud](https://www.acquia.com/products-services/acquia-cloud).
-
-```php
-use Acquia\Cloud\Database\Database;
-
-$database = new Database();
-$creds = $database->credentials('mydatabase');
-
-$dbh = new PDO($creds, $creds->username(), $creds->password());
-
-```
-
 ### Acquia Network
 
 The [Acquia Network](https://www.acquia.com/products-services/drupal-support-and-cloud-services)
@@ -131,6 +116,42 @@ for more advanced usage examples.
 
 *Recommended*: Use the Service Manager to store credentials so that you don't have
 to query the Acquia Network on every search request.
+
+### Acquia Cloud Database
+
+The Database component allows developers to connect to the active master
+database when running applications on [Acquia Cloud](https://www.acquia.com/products-services/acquia-cloud).
+
+```php
+use Acquia\Cloud\Database\DatabaseService;
+
+$service = new DatabaseService();
+$creds = $service->credentials('mydatabase');
+
+$dbh = new PDO($creds, $creds->username(), $creds->password());
+
+```
+
+### Acquia Cloud Memcache
+
+The Memcache component allows developers to connect to the [Memcached](http://memcached.org/)
+caching system when running applications on [Acquia Cloud](https://www.acquia.com/products-services/acquia-cloud).
+
+```php
+use Acquia\Cloud\Memcache\MemcacheService;
+
+$service = new MemcacheService();
+$creds = $service->credentials();
+
+$memcache = new \Memcache();
+foreach ($creds as $server) {
+    $memcache->addServer($server->host(), $server->port());
+}
+
+```
+
+Refer to the [Memcache PECL](http://us2.php.net/manual/en/book.memcache.php)
+project's documentation for more details.
 
 ## The Acquia Service Manager
 

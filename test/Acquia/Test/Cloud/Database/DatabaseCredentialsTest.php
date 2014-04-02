@@ -2,14 +2,14 @@
 
 namespace Acquia\Test\Cloud\Database;
 
-use Acquia\Cloud\Database\Credentials;
+use Acquia\Cloud\Database\DatabaseCredentials;
 
-class CredentialsTest extends \PHPUnit_Framework_TestCase
+class DatabaseCredentialsTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @return \Acquia\Cloud\Database\Credentials
+     * @return \Acquia\Cloud\Database\DatabaseCredentials
      */
-    public function getCredentials()
+    public function getDatabaseCredentials()
     {
         $data = array(
             'id' => '1234',
@@ -25,64 +25,64 @@ class CredentialsTest extends \PHPUnit_Framework_TestCase
             'host' => 'staging-123',
         );
 
-        return new Credentials($data);
+        return new DatabaseCredentials($data);
     }
 
     public function testFetchId()
     {
-        $this->assertEquals('1234', $this->getCredentials()->id());
+        $this->assertEquals('1234', $this->getDatabaseCredentials()->id());
     }
 
     public function testFetchClusterId()
     {
-        $this->assertEquals('5678', $this->getCredentials()->clusterId());
+        $this->assertEquals('5678', $this->getDatabaseCredentials()->clusterId());
     }
 
     public function testFetchRole()
     {
-        $this->assertEquals('mysite', $this->getCredentials()->role());
+        $this->assertEquals('mysite', $this->getDatabaseCredentials()->role());
     }
 
     public function testFetchDatabaseName()
     {
-        $this->assertEquals('mysiteprod', $this->getCredentials()->databaseName());
+        $this->assertEquals('mysiteprod', $this->getDatabaseCredentials()->databaseName());
     }
 
     public function testFetchUsername()
     {
-        $this->assertEquals('myusername', $this->getCredentials()->username());
+        $this->assertEquals('myusername', $this->getDatabaseCredentials()->username());
     }
 
     public function testFetchPassword()
     {
-        $this->assertEquals('abcdefg', $this->getCredentials()->password());
+        $this->assertEquals('abcdefg', $this->getDatabaseCredentials()->password());
     }
 
     public function testFetchPort()
     {
-        $this->assertEquals(3306, $this->getCredentials()->port());
+        $this->assertEquals(3306, $this->getDatabaseCredentials()->port());
     }
 
     public function testFetchHost()
     {
-        $this->assertEquals('staging-123', $this->getCredentials()->host());
+        $this->assertEquals('staging-123', $this->getDatabaseCredentials()->host());
     }
 
     public function testFetchUrls()
     {
         $expected = array('staging-123' => 'mysqli://mysiteprod:abcdefg@staging-123:3306/mysiteprod');
-        $this->assertEquals($expected, $this->getCredentials()->urls());
+        $this->assertEquals($expected, $this->getDatabaseCredentials()->urls());
     }
 
     public function testFetchActiveUrl()
     {
         $expected = 'mysqli://mysiteprod:abcdefg@staging-123:3306/mysiteprod';
-        $this->assertEquals($expected, $this->getCredentials()->activeUrl());
+        $this->assertEquals($expected, $this->getDatabaseCredentials()->activeUrl());
     }
 
     public function testFetchDsn()
     {
-        $credentials = $this->getCredentials();
+        $credentials = $this->getDatabaseCredentials();
         $expected = 'mysql:dbname=mysiteprod;host=staging-123;port=3306';
         $this->assertEquals($expected, $credentials->dsn());
         $this->assertEquals($expected, (string) $credentials);
@@ -93,7 +93,7 @@ class CredentialsTest extends \PHPUnit_Framework_TestCase
      */
     public function testFetchDsnMissingName()
     {
-        $credentials = new Credentials(array(
+        $credentials = new DatabaseCredentials(array(
             'port' => 3306,
             'host' => 'staging-123',
         ));
@@ -106,7 +106,7 @@ class CredentialsTest extends \PHPUnit_Framework_TestCase
      */
     public function testFetchDsnMissingHost()
     {
-        $credentials = new Credentials(array(
+        $credentials = new DatabaseCredentials(array(
             'name' => 'mysiteprod',
             'port' => 3306,
         ));
@@ -119,7 +119,7 @@ class CredentialsTest extends \PHPUnit_Framework_TestCase
      */
     public function testFetchDsnMissingPort()
     {
-        $credentials = new Credentials(array(
+        $credentials = new DatabaseCredentials(array(
             'name' => 'mysiteprod',
             'host' => 'staging-123',
         ));

@@ -2,7 +2,7 @@
 
 namespace Acquia\Cloud\Database;
 
-class Credentials extends \ArrayObject
+class DatabaseCredentials extends \ArrayObject
 {
     /**
      * @return int

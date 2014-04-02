@@ -6,7 +6,7 @@ use Acquia\Cloud\Environment\CloudEnvironment;
 use Acquia\Cloud\Environment\CloudEnvironmentAware;
 use Acquia\Cloud\Environment\CloudEnvironmentInterface;
 
-class Database implements CloudEnvironmentAware
+class DatabaseService implements CloudEnvironmentAware, DatabaseServiceInterface
 {
     /**
      * @var \Acquia\Cloud\Environment\CloudEnvironmentInterface
@@ -21,7 +21,7 @@ class Database implements CloudEnvironmentAware
     /**
      * {@inheritDoc}
      *
-     * @return \Acquia\Cloud\Database\Database
+     * @return \Acquia\Cloud\Database\DatabaseService
      */
     public function setCloudEnvironment(CloudEnvironmentInterface $cloudEnvironment)
     {
@@ -43,7 +43,7 @@ class Database implements CloudEnvironmentAware
     /**
      * @param \Net_DNS2_Resolver $resolver
      *
-     * @return \Acquia\Cloud\Database\Database
+     * @return \Acquia\Cloud\Database\DatabaseService
      */
     public function setResolver(\Net_DNS2_Resolver $resolver)
     {
@@ -64,11 +64,7 @@ class Database implements CloudEnvironmentAware
     }
 
     /**
-     * @param string $dbName
-     *
-     * @throws \OutOfBoundsException
-     *
-     * @return \Acquia\Cloud\Database\Credentials
+     * {@inheritDoc}
      */
     public function credentials($dbName)
     {
@@ -82,7 +78,7 @@ class Database implements CloudEnvironmentAware
         $host = $this->getCurrentHost($database['db_cluster_id']);
         $database['host'] = ($host) ?: key($database['db_url_ha']);
 
-        return new Credentials($database);
+        return new DatabaseCredentials($database);
     }
 
     /**
