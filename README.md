@@ -169,6 +169,27 @@ foreach ($creds as $server) {
 
 ```
 
+The SDK facilitates code portability for developers who like to test their
+application locally. The following snippet shows how to connect to a local
+memcache server.
+
+```php
+use Acquia\Cloud\Memcache\MemcacheService;
+use Acquia\Cloud\Environment\LocalEnvironment;
+
+$environment = new LocalEnvironment('mysite');
+$environment->addMemcacheCredentials('localhost', 11211);
+
+$service  = new MemcacheService(environment);
+$memcache = new \Memcache();
+
+$creds = $service->credentials();
+foreach ($creds as $server) {
+    $memcache->addServer($server->host(), $server->port());
+}
+
+```
+
 Refer to the [Memcache PECL](http://us2.php.net/manual/en/book.memcache.php)
 project's documentation for more details.
 
