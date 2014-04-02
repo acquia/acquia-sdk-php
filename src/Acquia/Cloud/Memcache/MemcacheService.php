@@ -14,6 +14,17 @@ class MemcacheService implements CloudEnvironmentAware, MemcacheServiceInterface
     private $cloudEnvironment;
 
     /**
+     * @param \Acquia\Cloud\Environment\CloudEnvironmentInterface $cloudEnvironment
+     */
+    public function __construct(CloudEnvironmentInterface $cloudEnvironment = null)
+    {
+        if ($cloudEnvironment === null) {
+            $cloudEnvironment = new CloudEnvironment();
+        }
+        $this->setCloudEnvironment($cloudEnvironment);
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @return \Acquia\Cloud\Memcache\MemcacheService
@@ -29,9 +40,6 @@ class MemcacheService implements CloudEnvironmentAware, MemcacheServiceInterface
      */
     public function getCloudEnvironment()
     {
-        if (!isset($this->cloudEnvironment)) {
-            $this->cloudEnvironment = new CloudEnvironment();
-        }
         return $this->cloudEnvironment;
     }
 

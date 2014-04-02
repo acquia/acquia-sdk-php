@@ -132,6 +132,25 @@ $dbh = new PDO($creds, $creds->username(), $creds->password());
 
 ```
 
+The SDK facilitates code portability for developers who like to test their
+application locally. The following snippet shows how to connect to a local
+database.
+
+```php
+use Acquia\Cloud\Database\DatabaseService;
+use Acquia\Cloud\Environment\LocalEnvironment;
+
+// "mydatabase" is the name of the database on Acquia Cloud.
+$environment = new LocalEnvironment('mysite');
+$environment->addDatabaseCredentials('mydatabase', 'local_db_name', 'db_user', 'db_password');
+
+$service = new DatabaseService($environment);
+
+$creds = $service->credentials('mydatabase');
+$dbh = new PDO($creds, $creds->username(), $creds->password());
+
+```
+
 ### Acquia Cloud Memcache
 
 The Memcache component allows developers to connect to the [Memcached](http://memcached.org/)

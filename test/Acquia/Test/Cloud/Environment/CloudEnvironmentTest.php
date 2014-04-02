@@ -37,6 +37,20 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         parent::tearDown();
     }
 
+    public function testIsAcquia()
+    {
+        putenv('AH_SITE_ENVIRONMENT=' . Environment::PRODUCTION);
+        $env = new CloudEnvironment();
+        $this->assertTrue($env->isAcquia());
+    }
+
+    public function testIsNotAcquia()
+    {
+        putenv('AH_SITE_ENVIRONMENT=' . Environment::LOCAL);
+        $env = new CloudEnvironment();
+        $this->assertFalse($env->isAcquia());
+    }
+
     public function testSetSitegroup()
     {
         $env = new CloudEnvironment();
@@ -46,17 +60,9 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
 
     public function testGetSitegroupFromEnvironment()
     {
-        $originalSitegroup = getenv('AH_SITE_GROUP');
         putenv('AH_SITE_GROUP=' . self::SITEGROUP);
-
         $env = new CloudEnvironment();
         $this->assertEquals(self::SITEGROUP, $env->getSitegroup());
-
-        if ($originalSitegroup) {
-            putenv('AH_SITE_GROUP=' . $originalSitegroup);
-        } else {
-            putenv('AH_SITE_GROUP');
-        }
     }
 
     public function testProdEnvironment()

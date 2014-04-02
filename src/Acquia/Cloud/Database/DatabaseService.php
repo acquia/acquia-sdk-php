@@ -19,6 +19,17 @@ class DatabaseService implements CloudEnvironmentAware, DatabaseServiceInterface
     private $resolver;
 
     /**
+     * @param \Acquia\Cloud\Environment\CloudEnvironmentInterface $cloudEnvironment
+     */
+    public function __construct(CloudEnvironmentInterface $cloudEnvironment = null)
+    {
+        if ($cloudEnvironment === null) {
+            $cloudEnvironment = new CloudEnvironment();
+        }
+        $this->setCloudEnvironment($cloudEnvironment);
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @return \Acquia\Cloud\Database\DatabaseService
@@ -34,9 +45,6 @@ class DatabaseService implements CloudEnvironmentAware, DatabaseServiceInterface
      */
     public function getCloudEnvironment()
     {
-        if (!isset($this->cloudEnvironment)) {
-            $this->cloudEnvironment = new CloudEnvironment();
-        }
         return $this->cloudEnvironment;
     }
 
