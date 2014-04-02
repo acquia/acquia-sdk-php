@@ -31,7 +31,15 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
     public function init()
     {
         $environment = getenv('AH_SITE_ENVIRONMENT');
-        return $environment ?: 'local';
+        return $environment ?: self::LOCAL;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isAcquia()
+    {
+        return $this->getEnvironment() != self::LOCAL;
     }
 
     /**

@@ -5,6 +5,13 @@ namespace Acquia\Cloud\Environment;
 interface CloudEnvironmentInterface
 {
     /**
+     * Returns whether the application is running on Acquia Cloud.
+     *
+     * @return bool
+     */
+    public function isAcquia();
+
+    /**
      * Returns an associative array
      * @return array
      *
@@ -13,8 +20,7 @@ interface CloudEnvironmentInterface
     public function serviceCredentials();
 
     /**
-     * Sets the application's site group. Generally this value is detected at
-     * runtime, so this method is most useful for testing purposes.
+     * Sets the application's site group.
      *
      * @param string $sitegroup
      *
@@ -23,9 +29,7 @@ interface CloudEnvironmentInterface
     public function setSiteGroup($sitegroup);
 
     /**
-     * Returns the application's site group, this value is usually set
-     * dynamically at runtime since it is usually detected from an environment
-     * variable.
+     * Returns the application's site group.
      *
      * @return string
      *

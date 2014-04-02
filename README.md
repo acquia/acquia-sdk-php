@@ -126,8 +126,8 @@ database when running applications on [Acquia Cloud](https://www.acquia.com/prod
 use Acquia\Cloud\Database\DatabaseService;
 
 $service = new DatabaseService();
-$creds = $service->credentials('mydatabase');
 
+$creds = $service->credentials('mydatabase');
 $dbh = new PDO($creds, $creds->username(), $creds->password());
 
 ```
@@ -140,10 +140,10 @@ caching system when running applications on [Acquia Cloud](https://www.acquia.co
 ```php
 use Acquia\Cloud\Memcache\MemcacheService;
 
-$service = new MemcacheService();
-$creds = $service->credentials();
-
+$service  = new MemcacheService();
 $memcache = new \Memcache();
+
+$creds = $service->credentials();
 foreach ($creds as $server) {
     $memcache->addServer($server->host(), $server->port());
 }
