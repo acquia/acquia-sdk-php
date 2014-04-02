@@ -131,7 +131,7 @@ class Json implements JsonInterface
      *
      * @throws \RuntimeException
      */
-    static public function parseFile($filepath)
+    public static function parseFile($filepath)
     {
         if (!is_file($filepath)) {
             throw new \RuntimeException('File not found: ' . $filepath);
@@ -156,7 +156,7 @@ class Json implements JsonInterface
      *
      * @return string|false
      */
-    static protected function readFiledata($filepath)
+    protected static function readFiledata($filepath)
     {
         return @file_get_contents($filepath);
     }
