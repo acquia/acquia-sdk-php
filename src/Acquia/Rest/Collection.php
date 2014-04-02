@@ -19,7 +19,11 @@ class Collection extends \ArrayObject
     /**
      * The array key containing the collection, null if it is not nested.
      *
-     * @var string
+     * Alternately set an array of keys that the may contain the collection.
+     * This is useful when working with inconsistent APIs that store colelctions
+     * of the same elements in different properties depending on the endpoint.
+     *
+     * @var string|array
      */
     protected $collectionProperty;
 
@@ -40,6 +44,8 @@ class Collection extends \ArrayObject
      *
      * @return \ArrayObject
      *
+     * @throws \OutOfBoundsException
+     *
      * @see \Acquia\Rest\Element::__toString()
      */
     public function getIterator()
@@ -47,8 +53,22 @@ class Collection extends \ArrayObject
         $array = $this->getArrayCopy();
 
         // Is the collection nested in the array?
-        if (isset($this->collectionProperty) && isset($array[$this->collectionProperty])) {
-            $array = $array[$this->collectionProperty];
+        if (isset($this->collectionProperty)) {
+
+            // Locate the collection in the response.
+            $collectionFound = false;
+            foreach ((array) $this->collectionProperty as $property) {
+                if (isset($array[$property])) {
+                    $collectionFound = true;
+                    break;
+                }
+            }
+
+            if (!$collectionFound) {
+                throw new \OutOfBoundsException('Collection not found in response');
+            }
+
+            $array = $array[$property];
         }
 
         // Build the collection.
