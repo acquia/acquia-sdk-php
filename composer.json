@@ -38,6 +38,7 @@
         "acquia/acquia-sdk-php-cloud-api": "self.version",
         "acquia/acquia-sdk-php-cloud-env": "self.version",
         "acquia/acquia-sdk-php-cloud-db": "self.version",
+        "acquia/acquia-sdk-php-cloud-memcache": "self.version",
         "acquia/acquia-sdk-php-common": "self.version",
         "acquia/acquia-sdk-php-env": "self.version",
         "acquia/acquia-sdk-php-json": "self.version",
