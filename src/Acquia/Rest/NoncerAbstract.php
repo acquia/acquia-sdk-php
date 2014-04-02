@@ -17,7 +17,7 @@ abstract class NoncerAbstract implements NoncerInterface
     protected $length;
 
     /**
-     * @var string $length
+     * @param string $length
      */
     public function __construct($length = self::DEFAULT_LENGTH)
     {

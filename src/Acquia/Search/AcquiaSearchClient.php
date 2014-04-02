@@ -29,7 +29,8 @@ class AcquiaSearchClient extends SolrClient implements ServiceManagerAware
         $solr->getConfig()->set('base_path', '/solr/' . $indexId);
 
         // Attach the Acquia Search HMAC Authentication plugin to the client.
-        $plugin = new AcquiaSearchAuthPlugin($indexId, $derivedKey);
+        $signature = new Signature($derivedKey);
+        $plugin = new AcquiaSearchAuthPlugin($indexId, $signature);
         $solr->addSubscriber($plugin);
 
         return $solr;

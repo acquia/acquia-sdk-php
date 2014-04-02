@@ -18,18 +18,18 @@ class AcquiaSearchAuthPlugin implements EventSubscriberInterface
     protected $indexId;
 
     /**
-     * @var string
+     * @var \Acquia\Search\Signature
      */
-    protected $derivedKey;
+    protected $signature;
 
     /**
      * @param string $indexId
-     * @param string $derivedKey
+     * @param \Acquia\Search\Signature $signature
      */
-    public function __construct($indexId, $derivedKey)
+    public function __construct($indexId, Signature $signature)
     {
         $this->indexId = $indexId;
-        $this->derivedKey = $derivedKey;
+        $this->signature = $signature;
     }
 
     /**
@@ -66,7 +66,7 @@ class AcquiaSearchAuthPlugin implements EventSubscriberInterface
      */
     public function getDerivedKey()
     {
-        return $this->derivedKey;
+        return $this->signature->getSecretKey();
     }
 
     /**
@@ -86,19 +86,20 @@ class AcquiaSearchAuthPlugin implements EventSubscriberInterface
      */
     public function signRequest(Request $request)
     {
-        $signature = new Signature($this->derivedKey);
-
         $url = $request->getPath();
         if ('POST' == $request->getMethod() && $request instanceof EntityEnclosingRequest) {
             $body = (string) $request->getBody();
-            $hash = $signature->generate($body);
+            $hash = $this->signature->generate($body);
         } else {
             $url .= '?' . $request->getQuery();
-            $hash = $signature->generate($url);
+            $hash = $this->signature->generate($url);
         }
 
-        $request->addCookie('acquia_solr_time', $signature->getRequestTime());
-        $request->addCookie('acquia_solr_nonce', $signature->getNonce());
+        $request->addCookie('acquia_solr_time', $this->signature->getRequestTime());
+        $request->addCookie('acquia_solr_nonce', $this->signature->getNonce());
         $request->addCookie('acquia_solr_hmac', $hash . ';');
+
+        // The timestamp should be current for each request.
+        $this->signature->unsetRequestTime();
     }
 }
