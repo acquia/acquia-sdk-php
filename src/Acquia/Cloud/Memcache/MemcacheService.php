@@ -21,6 +21,7 @@ class MemcacheService implements CloudEnvironmentAware, MemcacheServiceInterface
         if ($cloudEnvironment === null) {
             $cloudEnvironment = new CloudEnvironment();
         }
+
         $this->setCloudEnvironment($cloudEnvironment);
     }
 
