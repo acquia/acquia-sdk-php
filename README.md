@@ -132,6 +132,8 @@ $dbh = new PDO($creds, $creds->username(), $creds->password());
 
 ```
 
+#### Local Development
+
 The SDK facilitates code portability for developers who like to test their
 application locally. The following snippet shows how to connect to a local
 database.
@@ -168,6 +170,8 @@ foreach ($creds as $server) {
 }
 
 ```
+
+#### Local Development
 
 The SDK facilitates code portability for developers who like to test their
 application locally. The following snippet shows how to connect to a local
