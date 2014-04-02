@@ -247,7 +247,18 @@ $index = $services->getClient('search', 'XXXX-XXXXX');
 
 ```
 
-## For Developers
+## Contributing and Development
+
+Submit changes using GitHub's standard [pull request](https://help.github.com/articles/using-pull-requests) workflow.
+
+All code should adhere to the following standards:
+
+* [PSR-0](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md)
+* [PSR-1](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md)
+* [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
+
+It is recommend to use the [PHP Coding Standards Fixer](https://github.com/fabpot/PHP-CS-Fixer)
+tool to ensure that code adheres to the coding standards mentioned above.
 
 Refer to [PHP Project Starter's documentation](https://github.com/cpliakas/php-project-starter#using-apache-ant)
 for the Apache Ant targets supported by this project.
