@@ -53,16 +53,16 @@ following code requires the Acquia Search component and it's dependencies.
 
 The following components are available:
 
-* [acquia/acquia-sdk-php-cloud-api](https://packagist.org/packages/acquia/acquia-sdk-php-cloud-api)
-* [acquia/acquia-sdk-php-cloud-db](https://packagist.org/packages/acquia/acquia-sdk-php-cloud-db)
-* [acquia/acquia-sdk-php-cloud-memcache](https://packagist.org/packages/acquia/acquia-sdk-php-cloud-memcache)
-* [acquia/acquia-sdk-php-cloud-env](https://packagist.org/packages/acquia/acquia-sdk-php-cloud-env)
-* [acquia/acquia-sdk-php-common](https://packagist.org/packages/acquia/acquia-sdk-php-common)
-* [acquia/acquia-sdk-php-env](https://packagist.org/packages/acquia/acquia-sdk-php-env)
-* [acquia/acquia-sdk-php-json](https://packagist.org/packages/acquia/acquia-sdk-php-json)
-* [acquia/acquia-sdk-php-network](https://packagist.org/packages/acquia/acquia-sdk-php-network)
-* [acquia/acquia-sdk-php-rest](https://packagist.org/packages/acquia/acquia-sdk-php-rest)
-* [acquia/acquia-sdk-php-search](https://packagist.org/packages/acquia/acquia-sdk-php-search)
+* [acquia/acquia-sdk-php-cloud-api](https://packagist.org/packages/acquia/acquia-sdk-php-cloud-api) Cloud API client library
+* [acquia/acquia-sdk-php-cloud-db](https://packagist.org/packages/acquia/acquia-sdk-php-cloud-db) Returns credentials for the active master database on Acquia Cloud
+* [acquia/acquia-sdk-php-cloud-memcache](https://packagist.org/packages/acquia/acquia-sdk-php-cloud-memcache) Returns credentials for the memcache servers on Acquia Cloud
+* [acquia/acquia-sdk-php-cloud-env](https://packagist.org/packages/acquia/acquia-sdk-php-cloud-env) Provides context about the Acquia Cloud environment
+* [acquia/acquia-sdk-php-common](https://packagist.org/packages/acquia/acquia-sdk-php-common) SDK version and constants that denote Acquia Services
+* [acquia/acquia-sdk-php-env](https://packagist.org/packages/acquia/acquia-sdk-php-env) Allows applications to add context about the environment they are running in
+* [acquia/acquia-sdk-php-json](https://packagist.org/packages/acquia/acquia-sdk-php-json) Utility methods to work with JSON
+* [acquia/acquia-sdk-php-network](https://packagist.org/packages/acquia/acquia-sdk-php-network) Acquia Network client library
+* [acquia/acquia-sdk-php-rest](https://packagist.org/packages/acquia/acquia-sdk-php-rest) Utility methods for consuming REST-like APIs
+* [acquia/acquia-sdk-php-search](https://packagist.org/packages/acquia/acquia-sdk-php-search) Acquia Search client library
 
 ## Usage
 
