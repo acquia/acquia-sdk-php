@@ -51,6 +51,19 @@ following code requires the Acquia Search component and it's dependencies.
 }
 ```
 
+The following components are available:
+
+* [acquia/acquia-sdk-php-cloud-api](https://packagist.org/packages/acquia/acquia-sdk-php-cloud-api)
+* [acquia/acquia-sdk-php-cloud-db](https://packagist.org/packages/acquia/acquia-sdk-php-cloud-db)
+* [acquia/acquia-sdk-php-cloud-memcache](https://packagist.org/packages/acquia/acquia-sdk-php-cloud-memcache)
+* [acquia/acquia-sdk-php-cloud-env](https://packagist.org/packages/acquia/acquia-sdk-php-cloud-env)
+* [acquia/acquia-sdk-php-common](https://packagist.org/packages/acquia/acquia-sdk-php-common)
+* [acquia/acquia-sdk-php-env](https://packagist.org/packages/acquia/acquia-sdk-php-env)
+* [acquia/acquia-sdk-php-json](https://packagist.org/packages/acquia/acquia-sdk-php-json)
+* [acquia/acquia-sdk-php-network](https://packagist.org/packages/acquia/acquia-sdk-php-network)
+* [acquia/acquia-sdk-php-rest](https://packagist.org/packages/acquia/acquia-sdk-php-rest)
+* [acquia/acquia-sdk-php-search](https://packagist.org/packages/acquia/acquia-sdk-php-search)
+
 ## Usage
 
 Basic usage examples for the SDK.
