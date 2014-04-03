@@ -20,8 +20,9 @@ class Collection extends \ArrayObject
      * The array key containing the collection, null if it is not nested.
      *
      * Alternately set an array of keys that the may contain the collection.
-     * This is useful when working with inconsistent APIs that store colelctions
-     * of the same elements in different properties depending on the endpoint.
+     * This is useful when working with inconsistent APIs that store collections
+     * of the same elements in different properties depending on the endpoint
+     * that is consumed.
      *
      * @var string|array
      */
