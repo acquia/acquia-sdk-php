@@ -26,6 +26,11 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
     private $creds;
 
     /**
+     * @var string
+     */
+    private $sitename;
+
+    /**
      * {@inheritdoc}
      */
     public function init()
@@ -75,6 +80,33 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
             }
         }
         return $this->sitegroup;
+    }
+
+    /**
+     * @param string $sitename
+     *
+     * @return \Acquia\Cloud\Environment\CloudEnvironment
+     */
+    public function setSiteName($sitename)
+    {
+        $this->sitename = $sitename;
+        return $this;
+    }
+
+    /**
+     * @rturn string
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function getSiteName()
+    {
+        if (!isset($this->sitename)) {
+            $this->sitename = getenv('AH_SITE_NAME');
+            if (!$this->sitename) {
+                throw new \UnexpectedValueException('Expecting environment variable AH_SITE_NAME to be set');
+            }
+        }
+        return $this->sitename;
     }
 
     /**
