@@ -26,6 +26,11 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
     private $creds;
 
     /**
+     * @var string
+     */
+    private $sitename;
+
+    /**
      * {@inheritdoc}
      */
     public function init()
@@ -78,6 +83,33 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
     }
 
     /**
+     * @param string $sitename
+     *
+     * @return \Acquia\Cloud\Environment\CloudEnvironment
+     */
+    public function setSiteName($sitename)
+    {
+        $this->sitename = $sitename;
+        return $this;
+    }
+
+    /**
+     * @rturn string
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function getSiteName()
+    {
+        if (!isset($this->sitename)) {
+            $this->sitename = getenv('AH_SITE_NAME');
+            if (!$this->sitename) {
+                throw new \UnexpectedValueException('Expecting environment variable AH_SITE_NAME to be set');
+            }
+        }
+        return $this->sitename;
+    }
+
+    /**
      * @param string $filepath
      *
      * @return \Acquia\Cloud\Environment\CloudEnvironment
@@ -94,7 +126,7 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
     public function getCredentialsFilepath()
     {
         if (!isset($this->filepath)) {
-            $settingsDir = $this->getSiteGroup() . $this->getEnvironment();
+            $settingsDir = $this->getSiteGroup() . '.' . $this->getEnvironment();
             $this->filepath = '/var/www/site-php/' . $settingsDir . '/creds.json';
         }
         return $this->filepath;
