@@ -175,7 +175,7 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         $env = new CloudEnvironment();
         $env->setEnvironment(Environment::PRODUCTION);
 
-        $expected = '/var/www/site-php/' . self::SITEGROUP . Environment::PRODUCTION . '/creds.json';
+        $expected = '/var/www/site-php/' . self::SITEGROUP .'.'. Environment::PRODUCTION . '/creds.json';
         $this->assertEquals($expected, $env->getCredentialsFilepath());
     }
 
