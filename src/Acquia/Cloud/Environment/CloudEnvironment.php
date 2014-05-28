@@ -94,7 +94,7 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
     public function getCredentialsFilepath()
     {
         if (!isset($this->filepath)) {
-            $settingsDir = $this->getSiteGroup() . $this->getEnvironment();
+            $settingsDir = $this->getSiteGroup() . '.' . $this->getEnvironment();
             $this->filepath = '/var/www/site-php/' . $settingsDir . '/creds.json';
         }
         return $this->filepath;
