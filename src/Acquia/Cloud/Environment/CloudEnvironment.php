@@ -30,7 +30,7 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
      */
     public function init()
     {
-        $environment = getenv('AH_SITE_ENVIRONMENT');
+        $environment = $_ENV['AH_SITE_ENVIRONMENT'];
         return $environment ?: self::LOCAL;
     }
 
@@ -47,7 +47,7 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
      */
     public function isProduction()
     {
-        return (bool) getenv('AH_PRODUCTION');
+        return (bool) $_ENV['AH_PRODUCTION'];
     }
 
     /**
@@ -69,7 +69,7 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
     public function getSiteGroup()
     {
         if (!isset($this->sitegroup)) {
-            $this->sitegroup = getenv('AH_SITE_GROUP');
+            $this->sitegroup = $_ENV['AH_SITE_GROUP'];
             if (!$this->sitegroup) {
                 throw new \UnexpectedValueException('Expecting environment variable AH_SITE_GROUP to be set');
             }

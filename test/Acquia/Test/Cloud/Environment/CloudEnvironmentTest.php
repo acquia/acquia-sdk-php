@@ -16,9 +16,9 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->originalEnv = getenv('AH_SITE_ENVIRONMENT');
-        $this->originalProduction = getenv('AH_PRODUCTION');
-        $this->originalSiteGroup = getenv('AH_SITE_GROUP');
+        $this->originalEnv = $_ENV['AH_SITE_ENVIRONMENT'];
+        $this->originalProduction = $_ENV['AH_PRODUCTION'];
+        $this->originalSiteGroup = $_ENV['AH_SITE_GROUP'];
         putenv('AH_SITE_GROUP=' . self::SITEGROUP);
         parent::setUp();
     }
