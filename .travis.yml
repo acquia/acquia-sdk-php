@@ -11,6 +11,3 @@ before_script:
 
 after_script:
   - php vendor/bin/coveralls -v
-
-env:
-  - AH_SITE_ENVIRONMENT=dev
