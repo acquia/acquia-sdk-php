@@ -12,21 +12,25 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
 
     protected $originalEnv;
     protected $originalProduction;
+    protected $originalSiteEnv;
     protected $originalSiteGroup;
+    protected $originalServer;
 
     public function setUp()
     {
-        $this->originalEnv = $_ENV['AH_SITE_ENVIRONMENT'];
-        $this->originalProduction = $_ENV['AH_PRODUCTION'];
-        $this->originalSiteGroup = $_ENV['AH_SITE_GROUP'];
+        $this->originalEnv = $_ENV;
+        $this->originalServer = $_SERVER;
+        $this->originalSiteEnv = getenv('AH_SITE_ENVIRONMENT');
+        $this->originalProduction = getenv('AH_PRODUCTION');
+        $this->originalSiteGroup = getenv('AH_SITE_GROUP');
         putenv('AH_SITE_GROUP=' . self::SITEGROUP);
         parent::setUp();
     }
 
     public function tearDown()
     {
-        if ($this->originalEnv) {
-            putenv('AH_SITE_ENVIRONMENT=' . $this->originalEnv);
+        if ($this->originalSiteEnv) {
+            putenv('AH_SITE_ENVIRONMENT=' . $this->originalSiteEnv);
             putenv('AH_PRODUCTION=' . $this->originalProduction);
             putenv('AH_SITE_GROUP=' . $this->originalSiteGroup);
         } else {
@@ -34,6 +38,8 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
             putenv('AH_PRODUCTION');
             putenv('AH_SITE_GROUP');
         }
+        $_ENV = $this->originalEnv;
+        $_SERVER = $this->originalServer;
         parent::tearDown();
     }
 
@@ -119,7 +125,9 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
      */
     public function testNoSiteGroup()
     {
-        putenv('AH_SITE_GROUP');
+        putenv('AH_SITE_GROUP=');
+        unset($_SERVER['AH_SITE_GROUP']);
+        unset($_ENV['AH_SITE_GROUP']);
         $env = new CloudEnvironment();
         $env->getSiteGroup();
     }
