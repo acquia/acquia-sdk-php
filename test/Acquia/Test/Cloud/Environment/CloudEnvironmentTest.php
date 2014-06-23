@@ -136,7 +136,7 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
 
     public function testSiteName()
     {
-        putenv('AH_SITE_NAME=mysitename');
+        putenv('AH_SITE_NAME=mysiteenv');
         $env = new CloudEnvironment();
         $this->assertEquals('mysiteenv', $env->getSiteName());
     }
