@@ -1,7 +1,7 @@
 # Acquia SDK for PHP
 
-[![Build Status](https://travis-ci.org/acquia/acquia-sdk-php.png?branch=master)](https://travis-ci.org/acquia/acquia-sdk-php)
-[![Coverage Status](https://coveralls.io/repos/acquia/acquia-sdk-php/badge.png?branch=master)](https://coveralls.io/r/acquia/acquia-sdk-php?branch=master)
+[![Build Status](https://travis-ci.org/acquia/acquia-sdk-php.svg?branch=master)](https://travis-ci.org/acquia/acquia-sdk-php)
+[![Coverage Status](https://img.shields.io/coveralls/acquia/acquia-sdk-php.svg)](https://coveralls.io/r/acquia/acquia-sdk-php?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/acquia/acquia-sdk-php/v/stable.png)](https://packagist.org/packages/acquia/acquia-sdk-php)
 
 The Acquia SDK for PHP allows developers to [build](https://www.youtube.com/watch?v=8wDSj18sXbg)
