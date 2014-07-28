@@ -13,12 +13,16 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
 
     protected $originalEnv;
     protected $originalProduction;
+    protected $originalSiteEnv;
     protected $originalSiteGroup;
     protected $originalSiteName;
+    protected $originalServer;
 
     public function setUp()
     {
-        $this->originalEnv = getenv('AH_SITE_ENVIRONMENT');
+        $this->originalEnv = $_ENV;
+        $this->originalServer = $_SERVER;
+        $this->originalSiteEnv = getenv('AH_SITE_ENVIRONMENT');
         $this->originalProduction = getenv('AH_PRODUCTION');
         $this->originalSiteGroup = getenv('AH_SITE_GROUP');
         $this->originalSiteName = getenv('AH_SITE_NAME');
@@ -29,8 +33,8 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
 
     public function tearDown()
     {
-        if ($this->originalEnv) {
-            putenv('AH_SITE_ENVIRONMENT=' . $this->originalEnv);
+        if ($this->originalSiteEnv) {
+            putenv('AH_SITE_ENVIRONMENT=' . $this->originalSiteEnv);
             putenv('AH_PRODUCTION=' . $this->originalProduction);
             putenv('AH_SITE_GROUP=' . $this->originalSiteGroup);
             putenv('AH_SITE_NAME=' . $this->originalSiteName);
@@ -40,6 +44,8 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
             putenv('AH_SITE_GROUP');
             putenv('AH_SITE_NAME');
         }
+        $_ENV = $this->originalEnv;
+        $_SERVER = $this->originalServer;
         parent::tearDown();
     }
 
@@ -146,7 +152,9 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
      */
     public function testNoSiteGroup()
     {
-        putenv('AH_SITE_GROUP');
+        putenv('AH_SITE_GROUP=');
+        unset($_SERVER['AH_SITE_GROUP']);
+        unset($_ENV['AH_SITE_GROUP']);
         $env = new CloudEnvironment();
         $env->getSiteGroup();
     }
@@ -175,7 +183,8 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         $env = new CloudEnvironment();
         $env->setEnvironment(Environment::PRODUCTION);
 
-        $expected = '/var/www/site-php/' . self::SITEGROUP .'.'. Environment::PRODUCTION . '/creds.json';
+        $expected = '/var/www/site-php/' . self::SITEGROUP . '.' . Environment::PRODUCTION . '/creds.json';
+
         $this->assertEquals($expected, $env->getCredentialsFilepath());
     }
 

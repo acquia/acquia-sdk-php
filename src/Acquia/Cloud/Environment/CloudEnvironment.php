@@ -30,12 +30,34 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
      */
     private $sitename;
 
+     * Acquia Cloud variables may be set in settings.inc after PHP init,
+     * so make sure that we are loading them.
+     *
+     * @param string $key
+     * @return string The value of the environment variable or false if not found
+     * @see https://github.com/acquia/acquia-sdk-php/pull/58#issuecomment-45167451
+     */
+    protected function getenv($key)
+    {
+        $value = getenv($key);
+        if ($value === false) {
+            if (isset($_ENV[$key])) {
+                $value = $_ENV[$key];
+            }
+            if (isset($_SERVER[$key])) {
+                $value = $_SERVER[$key];
+            }
+        }
+        return $value;
+    }
+
+
     /**
      * {@inheritdoc}
      */
     public function init()
     {
-        $environment = getenv('AH_SITE_ENVIRONMENT');
+        $environment = $this->getenv('AH_SITE_ENVIRONMENT');
         return $environment ?: self::LOCAL;
     }
 
@@ -52,7 +74,7 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
      */
     public function isProduction()
     {
-        return (bool) getenv('AH_PRODUCTION');
+        return (bool) $this->getenv('AH_PRODUCTION');
     }
 
     /**
@@ -74,7 +96,7 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
     public function getSiteGroup()
     {
         if (!isset($this->sitegroup)) {
-            $this->sitegroup = getenv('AH_SITE_GROUP');
+            $this->sitegroup = $this->getenv('AH_SITE_GROUP');
             if (!$this->sitegroup) {
                 throw new \UnexpectedValueException('Expecting environment variable AH_SITE_GROUP to be set');
             }
