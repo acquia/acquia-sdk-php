@@ -864,7 +864,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
     /**
      * @param string $site
      * @param string $sourceEnv
-     * @param string $target
+     * @param string $targetEnv
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *

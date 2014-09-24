@@ -17,7 +17,7 @@ abstract class NoncerAbstract implements NoncerInterface
     protected $length;
 
     /**
-     * @param string $length
+     * @param integer $length
      */
     public function __construct($length = self::DEFAULT_LENGTH)
     {
@@ -33,7 +33,7 @@ abstract class NoncerAbstract implements NoncerInterface
     }
 
     /**
-     * @return string
+     * @return integer
      */
     public function getLength()
     {

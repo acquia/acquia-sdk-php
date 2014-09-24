@@ -79,7 +79,7 @@ class LocalEnvironment extends Environment implements CloudEnvironmentInterface
      * @param string $username
      * @param string|null $password
      * @param string $host
-     * @param string $port
+     * @param integer $port
      *
      * @return \Acquia\Cloud\Environment\LocalEnvironment
      */
