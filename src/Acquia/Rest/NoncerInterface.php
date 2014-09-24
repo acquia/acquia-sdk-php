@@ -20,6 +20,7 @@ interface NoncerInterface
      * Generates and returns a nonce.
      *
      * @see NoncerAbstract::generate()
+     * @return string
      */
     public function __toString();
 }
