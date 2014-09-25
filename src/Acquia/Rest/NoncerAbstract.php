@@ -25,7 +25,7 @@ abstract class NoncerAbstract implements NoncerInterface
     }
 
     /**
-     * @param string $length
+     * @param int $length
      */
     public function setLength($length)
     {
