@@ -23,7 +23,6 @@ class Signature extends SignatureAbstract
          $key = $this->getSecretKey();
 
          if (empty($params['rpc_version']) || $params['rpc_version'] < 2) {
-              $encoded_params = serialize($params);
               $string = $time . ':' . $nonce . ':' . $key . ':' . serialize($params);
 
               return base64_encode(
