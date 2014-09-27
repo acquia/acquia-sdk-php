@@ -4,6 +4,7 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/acquia/acquia-sdk-php/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/acquia/acquia-sdk-php/?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/acquia/acquia-sdk-php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/acquia/acquia-sdk-php/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/acquia/acquia-sdk-php/v/stable.png)](https://packagist.org/packages/acquia/acquia-sdk-php)
+[![License](https://poser.pugx.org/acquia/acquia-sdk-php/license.svg)](https://packagist.org/packages/acquia/acquia-sdk-php)
 
 The Acquia SDK for PHP allows developers to [build](https://www.youtube.com/watch?v=8wDSj18sXbg)
 applications on top of [Acquia](https://www.acquia.com/) services.
