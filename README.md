@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/acquia/acquia-sdk-php.svg?branch=master)](https://travis-ci.org/acquia/acquia-sdk-php)
 [![Code Coverage](https://scrutinizer-ci.com/g/acquia/acquia-sdk-php/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/acquia/acquia-sdk-php/?branch=master)
+[![HHVM Status](http://hhvm.h4cc.de/badge/acquia/acquia-sdk-php.svg)](http://hhvm.h4cc.de/package/acquia/acquia-sdk-php)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/acquia/acquia-sdk-php/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/acquia/acquia-sdk-php/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/acquia/acquia-sdk-php/v/stable.png)](https://packagist.org/packages/acquia/acquia-sdk-php)
 [![License](https://poser.pugx.org/acquia/acquia-sdk-php/license.svg)](https://packagist.org/packages/acquia/acquia-sdk-php)
