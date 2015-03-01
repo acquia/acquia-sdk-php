@@ -284,6 +284,9 @@ class CloudApiClient extends Client implements ServiceManagerAware
      * @param string $site
      * @param string $publicKey
      * @param string $nickname
+     * @param bool $shellAccess
+     * @param bool $vcsAccess
+     * @param array $blacklist
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *
@@ -291,14 +294,19 @@ class CloudApiClient extends Client implements ServiceManagerAware
      *
      * @see http://cloudapi.acquia.com/#POST__sites__site_sshkeys-instance_route
      */
-    public function addSshKey($site, $publicKey, $nickname)
+    public function addSshKey($site, $publicKey, $nickname, $shellAccess = true, $vcsAccess = true, $blacklist = array())
     {
         $path = '{+base_path}/sites/{site}/sshkeys.json?nickname={nickname}';
         $variables = array(
             'site' => $site,
             'nickname' => $nickname,
         );
-        $body = Json::encode(array('ssh_pub_key' => $publicKey));
+        $body = Json::encode(array(
+          'ssh_pub_key' => $publicKey,
+          'shell_access' => $shellAccess,
+          'vcs_access' => $vcsAccess,
+          'blacklist' => $blacklist,
+        ));
         $request = $this->post(array($path, $variables), null, $body);
         return new Response\Task($request);
     }
