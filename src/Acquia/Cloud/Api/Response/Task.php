@@ -36,6 +36,16 @@ class Task extends \Acquia\Rest\Element
     }
 
     /**
+     * Gets the Unix timestamp indicating when this task was started.
+     *
+     * @return int
+     *   The Unix timestamp.
+     */
+    public function startTime() {
+        return intval($this['started']);
+    }
+
+    /**
      * @return string|array
      */
     public function body()
@@ -78,6 +88,16 @@ class Task extends \Acquia\Rest\Element
     public function completed()
     {
         return !empty($this['completed']);
+    }
+
+    /**
+     * Gets the Unix timestamp indicating when this task was completed.
+     *
+     * @return int
+     *   The Unix timestamp.
+     */
+    public function completedTime() {
+        return intval($this['completed']);
     }
 
     /**

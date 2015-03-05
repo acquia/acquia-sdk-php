@@ -581,7 +581,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
      * @param string $db
      * @param int $backupId
      *
-     * @return \Acquia\Cloud\Api\Response\Tasks
+     * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      *

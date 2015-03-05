@@ -10,7 +10,7 @@ class DatabaseBackup extends \Acquia\Rest\Element
     protected $idColumn = 'id';
 
     /**
-     * @var string
+     * @return string
      */
     public function checksum()
     {
@@ -18,7 +18,7 @@ class DatabaseBackup extends \Acquia\Rest\Element
     }
 
     /**
-     * @var string
+     * @return string
      */
     public function databaseName()
     {
@@ -26,7 +26,7 @@ class DatabaseBackup extends \Acquia\Rest\Element
     }
 
     /**
-     * @var boolean
+     * @return boolean
      */
     public function deleted()
     {
@@ -34,7 +34,7 @@ class DatabaseBackup extends \Acquia\Rest\Element
     }
 
     /**
-     * @var string
+     * @return string
      */
     public function link()
     {
@@ -42,7 +42,7 @@ class DatabaseBackup extends \Acquia\Rest\Element
     }
 
     /**
-     * @var \DateTime
+     * @return \DateTime
      */
     public function started()
     {
@@ -51,7 +51,7 @@ class DatabaseBackup extends \Acquia\Rest\Element
     }
 
     /**
-     * @var string
+     * @return string
      */
     public function type()
     {
@@ -59,7 +59,7 @@ class DatabaseBackup extends \Acquia\Rest\Element
     }
 
     /**
-     * @var \DateTime
+     * @return \DateTime
      */
     public function completed()
     {
@@ -68,7 +68,7 @@ class DatabaseBackup extends \Acquia\Rest\Element
     }
 
     /**
-     * @var string
+     * @return string
      */
     public function path()
     {
@@ -76,7 +76,7 @@ class DatabaseBackup extends \Acquia\Rest\Element
     }
 
     /**
-     * @var string
+     * @return string
      */
     public function id()
     {
