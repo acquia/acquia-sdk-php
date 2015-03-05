@@ -453,6 +453,12 @@ class CloudApiClient extends Client implements ServiceManagerAware
     /**
      * @param string $site
      * @param string $db
+     * @param array $cluster_map
+     *   Optional. A mapping containing all environments and the cluster to which
+     *   the associated database should be created. Each entry consists of the
+     *   environment name as the key and the database cluster ID as the value.
+     *   Note that if more than one cluster is associated with a site group,
+     *   this map is required.
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *
@@ -460,10 +466,23 @@ class CloudApiClient extends Client implements ServiceManagerAware
      *
      * @see http://cloudapi.acquia.com/#POST__sites__site_dbs-instance_route
      */
-    public function addDatabase($site, $db)
+    public function addDatabase($site, $db, $cluster_map = NULL)
     {
         $variables = array('site' => $site);
-        $body = Json::encode(array('db' => $db));
+        $options = array();
+        if (is_array($cluster_map) && !empty($cluster_map)) {
+            foreach ($cluster_map as $env => $db_cluster) {
+                if (is_string($env) && !empty($env) &&
+                  intval($db_cluster) > 0) {
+                    $options[$env] = array('db_cluster' => (string) $db_cluster);
+                }
+            }
+        }
+        $body = array('db' => $db);
+        if (count($options) > 0) {
+            $body['options'] = $options;
+        }
+        $body = Json::encode($body);
         $request = $this->post(array('{+base_path}/sites/{site}/dbs.json', $variables), null, $body);
         return new Response\Task($request);
     }
@@ -471,6 +490,9 @@ class CloudApiClient extends Client implements ServiceManagerAware
     /**
      * @param string $site
      * @param string $db
+     * @param bool $backup
+     *   Optional. If TRUE, a final backup of the database instance in each
+     *   environment is made before deletion.
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *
@@ -478,13 +500,14 @@ class CloudApiClient extends Client implements ServiceManagerAware
      *
      * @see http://cloudapi.acquia.com/#DELETE__sites__site_dbs__db-instance_route
      */
-    public function deleteDatabase($site, $db)
+    public function deleteDatabase($site, $db, $backup = TRUE)
     {
         $variables = array(
             'site' => $site,
             'db' => $db,
+            'backup' => $backup ? 1 : 0,
         );
-        $request = $this->delete(array('{+base_path}/sites/{site}/dbs/{db}.json', $variables));
+        $request = $this->delete(array('{+base_path}/sites/{site}/dbs/{db}.json?backup={backup}', $variables));
         return new Response\Task($request);
     }
 
@@ -582,7 +605,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
      * @param string $db
      * @param int $backupId
      *
-     * @return \Acquia\Cloud\Api\Response\Tasks
+     * @return \Acquia\Cloud\Api\Response\Task
      *
      * @throws \Guzzle\Http\Exception\ClientErrorResponseException
      *
@@ -777,10 +800,20 @@ class CloudApiClient extends Client implements ServiceManagerAware
     }
 
     /**
+     * Moves domains atomically from one environment to another.
+     *
      * @param string $site
+     *   The site.
      * @param string|array $domains
+     *   The domain name(s) as an array of strings, or the string '*' to move all
+     *   domains.
      * @param string $sourceEnv
+     *   The environment which currently has this domain.
      * @param string $targetEnv
+     *   The destination environment for the domain.
+     * @param bool $skipSiteUpdate
+     *   Optional. If set to TRUE this will inhibit running
+     *   fields-config-web.php for this domain move.
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *
@@ -788,13 +821,19 @@ class CloudApiClient extends Client implements ServiceManagerAware
      *
      * @see http://cloudapi.acquia.com/#POST__sites__site_domain_move__source__target-instance_route
      */
-    public function moveDomain($site, $domains, $sourceEnv, $targetEnv)
+    public function moveDomain($site, $domains, $sourceEnv, $targetEnv, $skipSiteUpdate = FALSE)
     {
         $paths = '{+base_path}/sites/{site}/domain-move/{source}/{target}.json';
+        $update_site = '';
+        if ($skipSiteUpdate) {
+            $update_site = '1';
+            $paths .= '?skip_site_update={update_site}';
+        }
         $variables = array(
           'site' => $site,
           'source' => $sourceEnv,
           'target' => $targetEnv,
+          'update_site' => $update_site,
         );
         $body = Json::encode(array('domains' => (array) $domains));
         $request = $this->post(array($paths, $variables), null, $body);

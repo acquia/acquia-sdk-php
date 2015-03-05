@@ -2,7 +2,7 @@
 
 namespace Acquia\Rest;
 
-use Guzzle\Http\Message\Request;
+use Guzzle\Http\Message\RequestInterface;
 
 class Collection extends \ArrayObject
 {
@@ -29,9 +29,9 @@ class Collection extends \ArrayObject
     protected $collectionProperty;
 
     /**
-     * @param \Guzzle\Http\Message\Request $request
+     * @param \Guzzle\Http\Message\RequestInterface $request
      */
-    public function __construct(Request $request)
+    public function __construct(RequestInterface $request)
     {
         $this->response = $request->send();
         parent::__construct($this->response->json());
@@ -58,6 +58,7 @@ class Collection extends \ArrayObject
 
             // Locate the collection in the response.
             $collectionFound = false;
+            $property = NULL;
             foreach ((array) $this->collectionProperty as $property) {
                 if (isset($array[$property])) {
                     $collectionFound = true;
