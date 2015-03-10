@@ -260,6 +260,9 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('12345', $response->id());
         $this->assertEquals('ssh-rsa AAAA== test@example.com', $response->publicKey());
         $this->assertEquals('test@example.com', $response->nickname());
+        $this->assertEquals(TRUE, $response->shellAccess());
+        $this->assertEquals(TRUE, $response->vcsAccess());
+        $this->assertEquals(array('test'), $response->blacklist());
     }
 
     public function testCallAddSshKey()
@@ -733,6 +736,7 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/tasks/12345.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('started', $response->logs());
 
         // NOTE: Task methods are already well-tested so we don't have to do
         // anything else here.
@@ -746,6 +750,7 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/tasks/12345.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
+        $this->assertEquals('started', $response->logs());
     }
 
     public function testCallDomains()

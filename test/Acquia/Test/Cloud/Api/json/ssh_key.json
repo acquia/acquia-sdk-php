@@ -1,1 +1,1 @@
-{"id":"12345","ssh_pub_key":"ssh-rsa AAAA== test@example.com","nickname":"test@example.com"}
+{"id":"12345","ssh_pub_key":"ssh-rsa AAAA== test@example.com","nickname":"test@example.com","shell_access":"1","vcs_access":"1","blacklist":["test"]}

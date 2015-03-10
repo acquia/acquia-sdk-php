@@ -148,4 +148,14 @@ class Task extends \Acquia\Rest\Element
     {
         return $this['percentage'];
     }
+
+    /**
+     * Gets the task log data.
+     *
+     * @return string
+     *   The log data.
+     */
+    public function logs() {
+        return $this['logs'];
+    }
 }
