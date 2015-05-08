@@ -14,8 +14,11 @@
     "require": {
         "php": ">=5.3.0",
         "acquia/acquia-sdk-php-json": "self.version",
-        "guzzle/service": "~3.0",
         "symfony/filesystem": "~2.0"
+    },
+    "suggest": {
+        "guzzlehttp/guzzle": "The current version of Guzzle may be useful with Collection and Element classes.",
+        "guzzle/service": "This older (deprecated) version of Guzzle may be useful with Collection and Element classes."
     },
     "autoload": {
         "psr-0": {
