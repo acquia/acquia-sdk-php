@@ -317,12 +317,18 @@ class CloudApiClient extends Client implements ServiceManagerAware
      *
      * @return \Acquia\Cloud\Api\Response\Task
      *
-     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
+     * @throws \Guzzle\Http\Exception\ClientErrorResponseException|\InvalidArgumentException
      *
      * @see http://cloudapi.acquia.com/#DELETE__sites__site_sshkeys__sshkeyid-instance_route
      */
     public function deleteSshKey($site, $keyId)
     {
+        if (!is_string($site)) {
+            throw new \InvalidArgumentException('The site parameter must be a string.');
+        }
+        if (!is_int($keyId)) {
+            throw new \InvalidArgumentException('The keyId parameter must be an integer.');
+        }
         $variables = array(
             'site' => $site,
             'id' => $keyId,

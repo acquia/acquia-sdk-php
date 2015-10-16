@@ -295,7 +295,7 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
     public function testCallDeleteSshKey()
     {
         $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/ssh_key_add.json');
-        $response = $cloudapi->deleteSshKey('stage-one:mysite', '12345');
+        $response = $cloudapi->deleteSshKey('stage-one:mysite', 12345);
 
         $this->assertEquals('https://cloudapi.example.com/v1/sites/stage-one%3Amysite/sshkeys/12345.json', $this->requestListener->getUrl());
         $this->assertInstanceOf('\Acquia\Cloud\Api\Response\Task', $response);
@@ -317,6 +317,24 @@ class CloudApiClientTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($response->recipient());
         $this->assertEquals('SiteUpdateFactory', $response->sender());
         $this->assertNull($response->percentage());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCallDeleteSshKeySiteParameterError()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/ssh_key_add.json');
+        $cloudapi->deleteSshKey(0000, 12345);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testCallDeleteSshKeyKeyIdParameterError()
+    {
+        $cloudapi = $this->getCloudApiClient(__DIR__ . '/json/ssh_key_add.json');
+        $cloudapi->deleteSshKey('stage-one:mysite', '12345');
     }
 
     public function testCallSvnUsers()
