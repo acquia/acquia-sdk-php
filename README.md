@@ -21,12 +21,6 @@ library as a dependency to your composer.json file.
 
 ```json
 {
-    "repositories": [
-        {
-            "type": "pear",
-            "url": "pear.php.net"
-        }
-    ],
     "require": {
         "acquia/acquia-sdk-php": "*"
     }
