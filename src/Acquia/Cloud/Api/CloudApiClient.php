@@ -13,7 +13,6 @@ class CloudApiClient extends Client implements ServiceManagerAware
     const BASE_PATH        = '/v1';
 
     const INSTALL_MAKEFILE = 'make_url';
-    const INSTALL_NAME     = 'distro_name';
     const INSTALL_PROJECT  = 'distro_url';
 
     const LIVEDEV_ENABLE   = 'enable';
@@ -150,22 +149,6 @@ class CloudApiClient extends Client implements ServiceManagerAware
         );
         $request = $this->post(array('{+base_path}/sites/{site}/envs/{env}/install/{type}.json?source={source}', $variables));
         return new Response\Task($request);
-    }
-
-    /**
-     * Install one of Acquia Cloud’s built-in supported distros.
-     *
-     * @param string $site
-     * @param string $env
-     * @param string $distro
-     *
-     * @return \Acquia\Cloud\Api\Response\Task
-     *
-     * @throws \Guzzle\Http\Exception\ClientErrorResponseException
-     */
-    public function installDistroByName($site, $env, $distro)
-    {
-        return $this->installDistro($site, $env, self::INSTALL_NAME, $distro);
     }
 
     /**
