@@ -182,7 +182,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
      */
     public function installDistroByProject($site, $env, $projectName, $version)
     {
-        $source = 'http://ftp.drupal.org/files/projects/' . $projectName . '-' . $version . 'tar.gz';
+        $source = 'http://ftp.drupal.org/files/projects/' . $projectName . '-' . $version . '-core.tar.gz';
         return $this->installDistro($site, $env, self::INSTALL_PROJECT, $source);
     }
 
