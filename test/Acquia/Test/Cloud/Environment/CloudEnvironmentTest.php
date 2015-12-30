@@ -9,11 +9,13 @@ use Acquia\Json\Json;
 class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
 {
     const SITEGROUP = 'mysite';
+    const SITENAME = 'mysiteenv';
 
     protected $originalEnv;
     protected $originalProduction;
     protected $originalSiteEnv;
     protected $originalSiteGroup;
+    protected $originalSiteName;
     protected $originalServer;
 
     public function setUp()
@@ -23,7 +25,9 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         $this->originalSiteEnv = getenv('AH_SITE_ENVIRONMENT');
         $this->originalProduction = getenv('AH_PRODUCTION');
         $this->originalSiteGroup = getenv('AH_SITE_GROUP');
+        $this->originalSiteName = getenv('AH_SITE_NAME');
         putenv('AH_SITE_GROUP=' . self::SITEGROUP);
+        putenv('AH_SITE_NAME=' . self::SITENAME);
         parent::setUp();
     }
 
@@ -33,10 +37,12 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
             putenv('AH_SITE_ENVIRONMENT=' . $this->originalSiteEnv);
             putenv('AH_PRODUCTION=' . $this->originalProduction);
             putenv('AH_SITE_GROUP=' . $this->originalSiteGroup);
+            putenv('AH_SITE_NAME=' . $this->originalSiteName);
         } else {
             putenv('AH_SITE_ENVIRONMENT');
             putenv('AH_PRODUCTION');
             putenv('AH_SITE_GROUP');
+            putenv('AH_SITE_NAME');
         }
         $_ENV = $this->originalEnv;
         $_SERVER = $this->originalServer;
@@ -64,11 +70,25 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('anothergroup', $env->getSiteGroup());
     }
 
+    public function testSetSitename()
+    {
+        $env = new CloudEnvironment();
+        $env->setSiteName('anothername');
+        $this->assertEquals('anothername', $env->getSiteName());
+    }
+
     public function testGetSitegroupFromEnvironment()
     {
         putenv('AH_SITE_GROUP=' . self::SITEGROUP);
         $env = new CloudEnvironment();
         $this->assertEquals(self::SITEGROUP, $env->getSitegroup());
+    }
+
+    public function testGetSitenameFromEnvironment()
+    {
+        putenv('AH_SITE_NAME=' . self::SITENAME);
+        $env = new CloudEnvironment();
+        $this->assertEquals(self::SITENAME, $env->getSitename());
     }
 
     public function testProdEnvironment()
@@ -120,6 +140,13 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('mysite', $env->getSiteGroup());
     }
 
+    public function testSiteName()
+    {
+        putenv('AH_SITE_NAME=mysiteenv');
+        $env = new CloudEnvironment();
+        $this->assertEquals('mysiteenv', $env->getSiteName());
+    }
+
     /**
      * @expectedException \UnexpectedValueException
      */
@@ -130,6 +157,16 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         unset($_ENV['AH_SITE_GROUP']);
         $env = new CloudEnvironment();
         $env->getSiteGroup();
+    }
+
+    /**
+     * @expectedException \UnexpectedValueException
+     */
+    public function testNoSiteName()
+    {
+        putenv('AH_SITE_NAME');
+        $env = new CloudEnvironment();
+        $env->getSiteName();
     }
 
     public function testSetCredentialsFilepath()
@@ -147,6 +184,7 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         $env->setEnvironment(Environment::PRODUCTION);
 
         $expected = '/var/www/site-php/' . self::SITEGROUP . '.' . Environment::PRODUCTION . '/creds.json';
+
         $this->assertEquals($expected, $env->getCredentialsFilepath());
     }
 
