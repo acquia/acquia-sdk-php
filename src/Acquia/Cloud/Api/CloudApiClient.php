@@ -4,12 +4,14 @@ namespace Acquia\Cloud\Api;
 
 use Acquia\Json\Json;
 use Acquia\Rest\ServiceManagerAware;
+use Guzzle\Common\Collection;
 use GuzzleHttp\Client;
-use GuzzleHttp\Collection;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\UriTemplate;
 
 class CloudApiClient extends Client implements ServiceManagerAware
 {
-    const BASE_URL         = 'https://cloudapi.acquia.com';
+    const BASE_URI         = 'https://cloudapi.acquia.com';
     const BASE_PATH        = '/v1';
 
     const INSTALL_MAKEFILE = 'make_url';
@@ -23,16 +25,16 @@ class CloudApiClient extends Client implements ServiceManagerAware
      *
      * @return \Acquia\Cloud\Api\CloudApiClient
      */
-    public static function factory($config = array())
+    public static function factory($config = array(), HandlerStack $handler = null)
     {
         $required = array(
-            'base_url',
+            'base_uri',
             'username',
             'password',
         );
 
         $defaults = array(
-            'base_url' => (self::BASE_URL . self::BASE_PATH . '/'),
+            'base_uri' => (self::BASE_URI . self::BASE_PATH . '/'),
             'headers' => ['Content-Type' => 'application/json; charset=utf-8'],
         );
 
@@ -44,15 +46,12 @@ class CloudApiClient extends Client implements ServiceManagerAware
             $config->remove('password');
         }
 
-        // Instantiate the Client object.
-        $base_url = $config->get('base_url');
-        $config->remove('base_url');
-        $config->remove('base_path');
+        if (isset($handler)) {
+            $config->set('handler', $handler);
+        }
 
-        $client = new static([
-            'base_url' => $base_url,
-            'defaults' => $config->toArray(),
-        ]);
+        // Instantiate the Client object.
+        $client = new static($config->toArray());
 
         return $client;
     }
@@ -62,10 +61,11 @@ class CloudApiClient extends Client implements ServiceManagerAware
      */
     public function getBuilderParams()
     {
+        $config = $this->getConfig();
         return array(
-            'base_url' => $this->getBaseUrl(),
-            'username' => $this->getDefaultOption('auth/0'),
-            'password' => $this->getDefaultOption('auth/1'),
+            'base_uri' => (string)$config['base_uri'],
+            'username' => $config['auth']['0'],
+            'password' =>$config['auth']['1'],
         );
     }
 
@@ -94,7 +94,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
     public function site($site)
     {
         $variables = array('site' => $site);
-        $request = $this->get(array('sites/{site}.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}.json', $variables));
         return new Response\Site($request);
     }
 
@@ -110,7 +110,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
     public function environments($site)
     {
         $variables = array('site' => $site);
-        $request = $this->get(array('sites/{site}/envs.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/envs.json', $variables));
         return new Response\Environments($request);
     }
 
@@ -130,7 +130,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'site' => $site,
             'env' => $env,
         );
-        $request = $this->get(array('sites/{site}/envs/{env}.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/envs/{env}.json', $variables));
         return new Response\Environment($request);
     }
 
@@ -154,7 +154,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'type' => $type,
             'source' => $source,
         );
-        $request = $this->post(array('sites/{site}/envs/{env}/install/{type}.json?source={source}', $variables));
+        $request = $this->post((new UriTemplate())->expand('sites/{site}/envs/{env}/install/{type}.json?source={source}', $variables));
         return new Response\Task($request);
     }
 
@@ -208,7 +208,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'site' => $site,
             'env' => $env,
         );
-        $request = $this->get(array('sites/{site}/envs/{env}/servers.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/envs/{env}/servers.json', $variables));
         return new Response\Servers($request);
     }
 
@@ -230,7 +230,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'env' => $env,
             'server' => $server,
         );
-        $request = $this->get(array('sites/{site}/envs/{env}/servers/{server}.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/envs/{env}/servers/{server}.json', $variables));
         return new Response\Server($request);
     }
 
@@ -246,7 +246,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
     public function sshKeys($site)
     {
         $variables = array('site' => $site);
-        $request = $this->get(array('sites/{site}/sshkeys.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/sshkeys.json', $variables));
         return new Response\SshKeys($request);
     }
 
@@ -266,7 +266,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'site' => $site,
             'id' => $keyId,
         );
-        $request = $this->get(array('sites/{site}/sshkeys/{id}.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/sshkeys/{id}.json', $variables));
         return new Response\SshKey($request);
     }
 
@@ -297,7 +297,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'vcs_access' => $vcsAccess,
             'blacklist' => $blacklist,
         ));
-        $request = $this->post(array($path, $variables), ['body' => $body]);
+        $request = $this->post((new UriTemplate())->expand($path, $variables), ['body' => $body]);
         return new Response\Task($request);
     }
 
@@ -323,7 +323,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'site' => $site,
             'id' => $keyId,
         );
-        $request = $this->delete(array('sites/{site}/sshkeys/{id}.json', $variables));
+        $request = $this->delete((new UriTemplate())->expand('sites/{site}/sshkeys/{id}.json', $variables));
         return new Response\Task($request);
     }
 
@@ -339,7 +339,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
     public function svnUsers($site)
     {
         $variables = array('site' => $site);
-        $request = $this->get(array('sites/{site}/svnusers.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/svnusers.json', $variables));
         return new Response\SvnUsers($request);
     }
 
@@ -359,7 +359,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'site' => $site,
             'id' => $userId,
         );
-        $request = $this->get(array('sites/{site}/svnusers/{id}.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/svnusers/{id}.json', $variables));
         return new Response\SvnUser($request);
     }
 
@@ -384,7 +384,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'username' => $username,
         );
         $body = Json::encode(array('password' => $password));
-        $request = $this->post(array($path, $variables), ['body' => $body]);
+        $request = $this->post((new UriTemplate())->expand($path, $variables), ['body' => $body]);
         return new Response\Task($request);
     }
 
@@ -406,7 +406,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'site' => $site,
             'id' => $userId,
         );
-        $request = $this->delete(array('sites/{site}/svnusers/{id}.json', $variables));
+        $request = $this->delete((new UriTemplate())->expand('sites/{site}/svnusers/{id}.json', $variables));
         return new Response\Task($request);
     }
 
@@ -422,7 +422,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
     public function databases($site)
     {
         $variables = array('site' => $site);
-        $request = $this->get(array('sites/{site}/dbs.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/dbs.json', $variables));
         return new Response\DatabaseNames($request);
     }
 
@@ -442,7 +442,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'site' => $site,
             'db' => $db,
         );
-        $request = $this->get(array('sites/{site}/dbs/{db}.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/dbs/{db}.json', $variables));
         return new Response\DatabaseName($request);
     }
 
@@ -479,7 +479,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             $body['options'] = $options;
         }
         $body = Json::encode($body);
-        $request = $this->post(array('sites/{site}/dbs.json', $variables), ['body' => $body]);
+        $request = $this->post((new UriTemplate())->expand('sites/{site}/dbs.json', $variables), ['body' => $body]);
         return new Response\Task($request);
     }
 
@@ -502,7 +502,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'db' => $db,
             'backup' => $backup ? 1 : 0,
         );
-        $request = $this->delete(array('sites/{site}/dbs/{db}.json?backup={backup}', $variables));
+        $request = $this->delete((new UriTemplate())->expand('sites/{site}/dbs/{db}.json?backup={backup}', $variables));
         return new Response\Task($request);
     }
 
@@ -522,7 +522,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'site' => $site,
             'env' => $env,
         );
-        $request = $this->get(array('sites/{site}/envs/{env}/dbs.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/envs/{env}/dbs.json', $variables));
         return new Response\Databases($request);
     }
 
@@ -544,7 +544,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'env' => $env,
             'db' => $db,
         );
-        $request = $this->get(array('sites/{site}/envs/{env}/dbs/{db}.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/envs/{env}/dbs/{db}.json', $variables));
         return new Response\Database($request);
     }
 
@@ -566,7 +566,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'env' => $env,
             'db' => $db,
         );
-        $request = $this->get(array('sites/{site}/envs/{env}/dbs/{db}/backups.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/envs/{env}/dbs/{db}/backups.json', $variables));
         return new Response\DatabaseBackups($request);
     }
 
@@ -590,7 +590,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'db' => $db,
             'id' => $backupId,
         );
-        $request = $this->get(array('sites/{site}/envs/{env}/dbs/{db}/backups/{id}.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/envs/{env}/dbs/{db}/backups/{id}.json', $variables));
         return new Response\DatabaseBackup($request);
     }
 
@@ -614,7 +614,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'db' => $db,
             'backup' => $backupId,
         );
-        $request = $this->delete(array('sites/{site}/envs/{env}/dbs/{db}/backups/{backup}.json', $variables));
+        $request = $this->delete((new UriTemplate())->expand('sites/{site}/envs/{env}/dbs/{db}/backups/{backup}.json', $variables));
         return new Response\Task($request);
     }
 
@@ -640,7 +640,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'id' => $backupId,
         );
         return $this->get(
-            array('sites/{site}/envs/{env}/dbs/{db}/backups/{id}/download.json', $variables),
+          (new UriTemplate())->expand('sites/{site}/envs/{env}/dbs/{db}/backups/{id}/download.json', $variables),
             ['save_to' => $outfile]
         );
     }
@@ -663,7 +663,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'env' => $env,
             'db' => $db,
         );
-        $request = $this->post(array('sites/{site}/envs/{env}/dbs/{db}/backups.json', $variables));
+        $request = $this->post((new UriTemplate())->expand('sites/{site}/envs/{env}/dbs/{db}/backups.json', $variables));
         return new Response\Task($request);
     }
 
@@ -687,7 +687,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'db' => $db,
             'id' => $backupId,
         );
-        $request = $this->post(array('sites/{site}/envs/{env}/dbs/{db}/backups/{id}/restore.json', $variables));
+        $request = $this->post((new UriTemplate())->expand('sites/{site}/envs/{env}/dbs/{db}/backups/{id}/restore.json', $variables));
         return new Response\Task($request);
     }
 
@@ -705,7 +705,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
         $variables = array(
             'site' => $site,
         );
-        $request = $this->get(array('sites/{site}/tasks.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/tasks.json', $variables));
         return new Response\Tasks($request);
     }
 
@@ -725,7 +725,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'site' => $site,
             'task' => $taskId,
         );
-        $request = $this->get(array('sites/{site}/tasks/{task}.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/tasks/{task}.json', $variables));
         return new Response\Task($request);
     }
 
@@ -745,7 +745,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'site' => $site,
             'env' => $env,
         );
-        $request = $this->get(array('sites/{site}/envs/{env}/domains.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/envs/{env}/domains.json', $variables));
         return new Response\Domains($request);
     }
 
@@ -767,7 +767,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'env' => $env,
             'domain' => $domain,
         );
-        $request = $this->get(array('sites/{site}/envs/{env}/domains/{domain}.json', $variables));
+        $request = $this->get((new UriTemplate())->expand('sites/{site}/envs/{env}/domains/{domain}.json', $variables));
         return new Response\Domain($request);
     }
 
@@ -789,7 +789,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'env' => $env,
             'domain' => $domain,
         );
-        $request = $this->post(array('sites/{site}/envs/{env}/domains/{domain}.json', $variables));
+        $request = $this->post((new UriTemplate())->expand('sites/{site}/envs/{env}/domains/{domain}.json', $variables));
         return new Response\Task($request);
     }
 
@@ -830,7 +830,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'update_site' => $update_site,
         );
         $body = Json::encode(array('domains' => (array) $domains));
-        $request = $this->post(array($paths, $variables), ['body' => $body]);
+        $request = $this->post((new UriTemplate())->expand($paths, $variables), ['body' => $body]);
         return new Response\Task($request);
     }
 
@@ -852,7 +852,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'env' => $env,
             'domain' => $domain,
         );
-        $request = $this->delete(array('sites/{site}/envs/{env}/domains/{domain}.json', $variables));
+        $request = $this->delete((new UriTemplate())->expand('sites/{site}/envs/{env}/domains/{domain}.json', $variables));
         return new Response\Task($request);
     }
 
@@ -874,7 +874,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'env' => $env,
             'domain' => $domain,
         );
-        $request = $this->delete(array('sites/{site}/envs/{env}/domains/{domain}/cache.json', $variables));
+        $request = $this->delete((new UriTemplate())->expand('sites/{site}/envs/{env}/domains/{domain}/cache.json', $variables));
         return new Response\Task($request);
     }
 
@@ -898,7 +898,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'source' => $sourceEnv,
             'target' => $targetEnv,
         );
-        $request = $this->post(array('sites/{site}/dbs/{db}/db-copy/{source}/{target}.json', $variables));
+        $request = $this->post((new UriTemplate())->expand('sites/{site}/dbs/{db}/db-copy/{source}/{target}.json', $variables));
         return new Response\Task($request);
     }
 
@@ -920,7 +920,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'source' => $sourceEnv,
             'target' => $targetEnv,
         );
-        $request = $this->post(array('sites/{site}/files-copy/{source}/{target}.json', $variables));
+        $request = $this->post((new UriTemplate())->expand('sites/{site}/files-copy/{source}/{target}.json', $variables));
         return new Response\Task($request);
     }
 
@@ -944,7 +944,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'action' => $action,
             'discard' => (int) $discard,
         );
-        $request = $this->post(array('sites/{site}/envs/{env}/livedev/{action}.json?discard={discard}', $variables));
+        $request = $this->post((new UriTemplate())->expand('sites/{site}/envs/{env}/livedev/{action}.json?discard={discard}', $variables));
         return new Response\Task($request);
     }
 
@@ -996,7 +996,7 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'source' => $sourceEnv,
             'target' => $targetEnv,
         );
-        $request = $this->post(array('sites/{site}/code-deploy/{source}/{target}.json', $variables));
+        $request = $this->post((new UriTemplate())->expand('sites/{site}/code-deploy/{source}/{target}.json', $variables));
         return new Response\Task($request);
     }
 
@@ -1020,7 +1020,8 @@ class CloudApiClient extends Client implements ServiceManagerAware
             'env' => $env,
             'path' => $vcsPath,
         );
-        $request = $this->post(array('sites/{site}/envs/{env}/code-deploy.json?path={path}', $variables));
+
+        $request = $this->post((new UriTemplate())->expand('sites/{site}/envs/{env}/code-deploy.json?path={path}', $variables));
         return new Response\Task($request);
     }
 

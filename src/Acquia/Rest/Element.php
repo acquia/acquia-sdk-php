@@ -10,14 +10,14 @@ class Element extends \ArrayObject
     protected $idColumn = 'name';
 
     /**
-     * @param string|array|\Guzzle\Http\Message\RequestInterface|\GuzzleHttp\Message\Response $dataSource
+     * @param string|array|\GuzzleHttp\Psr7\Request|\Psr\Http\Message\ResponseInterface $dataSource
      */
     public function __construct($dataSource)
     {
-        if (is_a($dataSource, '\Guzzle\Http\Message\RequestInterface')) {
-            $array = $dataSource->send()->json();
-        } elseif (is_a($dataSource, '\GuzzleHttp\Message\Response')) {
-            $array = $dataSource->json();
+        if (is_a($dataSource, '\GuzzleHttp\Psr7\Request')) {
+            $array = json_decode($dataSource->send()->getBody(), TRUE);
+        } elseif (is_a($dataSource, '\Psr\Http\Message\ResponseInterface')) {
+            $array = json_decode($dataSource->getBody(), TRUE);
         } elseif (is_string($dataSource)) {
             $array = array($this->idColumn => $dataSource);
         } else {
