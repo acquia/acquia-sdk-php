@@ -4,7 +4,7 @@
   <property name="builddir" value="${basedir}/build"/>
   <property name="composer" value="${builddir}/composer.phar"/>
 
-  <target name="build" depends="lint,composer,phploc,pdepend,phpmd-ci,phpcpd,phpunit"/>
+  <target name="build" depends="lint,composer,phploc,pdepend,phpmd-ci,phpcpd,phpunit,phar"/>
 
   <target name="clean" description="Cleanup build artifacts">
     <delete dir="${builddir}"/>
@@ -68,6 +68,27 @@
     </exec>
   </target>
 
+  <target name="box-check" depends="prepare">
+    <available file="${builddir}/box.phar" property="box.present"/>
+  </target>
+
+  <target name="box-download" unless="box.present">
+    <property name="box.noupdate" value="true"/>
+    <get src="https://box-project.github.io/box2/installer.php" dest="${builddir}/installer.php"/>
+    <exec executable="php" dir="${builddir}">
+      <arg value="installer.php"/>
+    </exec>
+    <delete file="${builddir}/installer.php"/>
+  </target>
+
+  <target name="box-update" unless="box.noupdate">
+    <exec executable="php">
+      <arg value="${builddir}/box.phar"/>
+      <arg value="update"/>
+      <arg value="--quiet"/>
+    </exec>
+  </target>
+
   <target name="phploc" depends="composer" description="Measure project size using PHPLOC">
     <exec executable="${basedir}/vendor/bin/phploc">
       <arg value="--log-csv" />
@@ -113,6 +134,23 @@
 
   <target name="phpunit" depends="composer" description="Run unit tests with PHPUnit">
     <exec executable="${basedir}/vendor/bin/phpunit" failonerror="true"/>
+  </target>
+
+  <target name="phar" depends="composer,box-check,box-download,box-update" description="Build phar">
+    <exec executable="php">
+      <arg value="${builddir}/composer.phar"/>
+      <arg value="install"/>
+      <arg value="--no-dev"/>
+      <arg value="--quiet"/>
+    </exec>
+    <exec executable="${builddir}/box.phar">
+      <arg value="build"/>
+    </exec>
+    <exec executable="php">
+      <arg value="${builddir}/composer.phar"/>
+      <arg value="install"/>
+      <arg value="--quiet"/>
+    </exec>
   </target>
 
 </project>

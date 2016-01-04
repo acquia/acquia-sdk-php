@@ -1,0 +1,28 @@
+{
+  "directories": ["src"],
+  "files": [
+   "LICENSE",
+    "vendor/guzzle/guzzle/src/Guzzle/Http/Resources/cacert.pem"
+  ],
+  "finder": [
+    {
+      "name": "*.php",
+      "exclude": [
+        "phing",
+        "test",
+        "tests",
+        "Test",
+        "Tests",
+        "Tester"
+      ],
+      "in": "vendor"
+    }
+  ],
+  "git-version": "package_version",
+  "main": "vendor/autoload.php",
+  "output": "build/acquia-sdk.phar",
+  "stub": true,
+  "shebang": false,
+  "compression": "GZ",
+  "algorithm": "SHA1"
+}
