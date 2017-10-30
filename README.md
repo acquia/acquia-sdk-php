@@ -1,3 +1,5 @@
+# NOTE: This repository was maintained exclusively by developers who no longer work at Acquia. As this is not an official Acquia initiative, it is currently (as of 2017) considered unsupported and no further updates should be expected.
+
 # Acquia SDK for PHP
 
 [![Build Status](https://travis-ci.org/acquia/acquia-sdk-php.svg?branch=master)](https://travis-ci.org/acquia/acquia-sdk-php)
