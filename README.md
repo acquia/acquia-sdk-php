@@ -1,4 +1,4 @@
-# NOTE: This repository was maintained exclusively by developers who no longer work at Acquia. As this is not an official Acquia initiative, it is currently (as of 2017) considered unsupported and no further updates should be expected.
+## NOTE: This repository is no longer actively maintained and has not been updated to support PHP 7.1
 
 # Acquia SDK for PHP
 
