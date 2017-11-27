@@ -3,7 +3,10 @@
 namespace Acquia\Test\Rest;
 
 use Acquia\Json\Json;
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 
 class CollectionTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,14 +18,16 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $response = new \Guzzle\Http\Message\Response(200);
-        $response->setBody(Json::encode($data));
+        $mock = new MockHandler([
+          new Response(200, [], Json::encode($data)),
+        ]);
 
-        $mock = new \Guzzle\Plugin\Mock\MockPlugin();
-        $mock->addResponse($response);
+        $handler = HandlerStack::create($mock);
+        $client = new Client([
+          'handler' => $handler,
+            'base_uri' => 'http://example.com',
+        ]);
 
-        $client = new Client('http://example.com');
-        $client->addSubscriber($mock);
         $request = $client->get('/test');
 
         $collection = new DummyCollection($request);
@@ -43,14 +48,16 @@ class CollectionTest extends \PHPUnit_Framework_TestCase
             ),
         );
 
-        $response = new \Guzzle\Http\Message\Response(200);
-        $response->setBody(Json::encode($data));
+        $mock = new MockHandler([
+          new Response(200, [], Json::encode($data)),
+        ]);
 
-        $mock = new \Guzzle\Plugin\Mock\MockPlugin();
-        $mock->addResponse($response);
+        $handler = HandlerStack::create($mock);
+        $client = new Client([
+          'handler' => $handler,
+          'base_uri' => 'http://example.com',
+        ]);
 
-        $client = new Client('http://example.com');
-        $client->addSubscriber($mock);
         $request = $client->get('/test');
 
         $collection = new DummyCollection($request);
