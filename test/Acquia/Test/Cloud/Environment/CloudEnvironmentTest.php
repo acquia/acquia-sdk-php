@@ -9,11 +9,15 @@ use Acquia\Json\Json;
 class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
 {
     const SITEGROUP = 'mysite';
+    const SITENAME = 'mysiteenvdev';
+    const CURRENTREGION = 'us-east-1';
 
     protected $originalEnv;
     protected $originalProduction;
     protected $originalSiteEnv;
     protected $originalSiteGroup;
+    protected $originalSiteName;
+    protected $originalCurrentRegion;
     protected $originalServer;
 
     public function setUp()
@@ -23,7 +27,11 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         $this->originalSiteEnv = getenv('AH_SITE_ENVIRONMENT');
         $this->originalProduction = getenv('AH_PRODUCTION');
         $this->originalSiteGroup = getenv('AH_SITE_GROUP');
+        $this->originalSiteName = getenv('AH_SITE_NAME');
+        $this->originalCurrentRegion = getenv('AH_CURRENT_REGION');
         putenv('AH_SITE_GROUP=' . self::SITEGROUP);
+        putenv('AH_SITE_NAME=' . self::SITENAME);
+        putenv('AH_CURRENT_REGION=' . self::CURRENTREGION);
         parent::setUp();
     }
 
@@ -33,10 +41,14 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
             putenv('AH_SITE_ENVIRONMENT=' . $this->originalSiteEnv);
             putenv('AH_PRODUCTION=' . $this->originalProduction);
             putenv('AH_SITE_GROUP=' . $this->originalSiteGroup);
+            putenv('AH_SITE_NAME=' . $this->originalSiteName);
+            putenv('AH_CURRENT_REGION=' . $this->originalCurrentRegion);
         } else {
             putenv('AH_SITE_ENVIRONMENT');
             putenv('AH_PRODUCTION');
             putenv('AH_SITE_GROUP');
+            putenv('AH_SITE_NAME');
+            putenv('AH_CURRENT_REGION');
         }
         $_ENV = $this->originalEnv;
         $_SERVER = $this->originalServer;
@@ -64,11 +76,40 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('anothergroup', $env->getSiteGroup());
     }
 
+    public function testSetSitename()
+    {
+        $env = new CloudEnvironment();
+        $env->setSiteName('anothersite');
+        $this->assertEquals('anothersite', $env->getSiteName());
+    }
+
+
+    public function testSetCurrentregion()
+    {
+        $env = new CloudEnvironment();
+        $env->setCurrentRegion('us-west-2');
+        $this->assertEquals('us-west-2', $env->getCurrentRegion());
+    }
+
     public function testGetSitegroupFromEnvironment()
     {
         putenv('AH_SITE_GROUP=' . self::SITEGROUP);
         $env = new CloudEnvironment();
         $this->assertEquals(self::SITEGROUP, $env->getSitegroup());
+    }
+
+    public function testGetSitenameFromEnvironment()
+    {
+       putenv('AH_SITE_NAME=' . self::SITENAME);
+       $env = new CloudEnvironment();
+       $this->assertEquals(self::SITENAME, $env->getSitename());
+    }
+
+    public function testGetCurrentregionFromEnvironment()
+    {
+        putenv('AH_CURRENT_REGION=' . self::CURRENTREGION);
+        $env = new CloudEnvironment();
+        $this->assertEquals(self::CURRENTREGION, $env->getCurrentRegion());
     }
 
     public function testProdEnvironment()
@@ -130,6 +171,44 @@ class CloudEnvironmentTest extends \PHPUnit_Framework_TestCase
         unset($_ENV['AH_SITE_GROUP']);
         $env = new CloudEnvironment();
         $env->getSiteGroup();
+    }
+
+    public function testSiteName()
+    {
+        putenv('AH_SITE_NAME=mysitedev');
+        $env = new CloudEnvironment();
+        $this->assertEquals('mysitedev', $env->getSiteName());
+    }
+
+    /**
+     * @expectedException \UnexpectedValueException
+     */
+    public function testNoSiteName()
+    {
+        putenv('AH_SITE_NAME=');
+        unset($_SERVER['AH_SITE_NAME']);
+        unset($_ENV['AH_SITE_NAME']);
+        $env = new CloudEnvironment();
+        $env->getSiteName();
+    }
+
+    public function testCurrentRegion()
+    {
+        putenv('AH_CURRENT_REGION=us-east-1');
+        $env = new CloudEnvironment();
+        $this->assertEquals('us-east-1', $env->getCurrentRegion());
+    }
+
+    /**
+     * @expectedException \UnexpectedValueException
+     */
+    public function testNoCurrentRegion()
+    {
+        putenv('AH_CURRENT_REGION=');
+        unset($_SERVER['AH_CURRENT_REGION']);
+        unset($_ENV['AH_CURRENT_REGION']);
+        $env = new CloudEnvironment();
+        $env->getCurrentRegion();
     }
 
     public function testSetCredentialsFilepath()
