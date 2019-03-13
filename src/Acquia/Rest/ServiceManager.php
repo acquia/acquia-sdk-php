@@ -218,7 +218,11 @@ class ServiceManager extends \ArrayObject
      * @return \Guzzle\Service\Client
      */
     public function getClient($group, $name)
-    {
+    {   
+        // when used with https://github.com/acquia/acquia-search-governor-php
+        // this isset fails, unless the private storage property of the 
+        // ArrayObject $this has previously been accessed. I don't know why this works but it does.
+        $foo = $this[$group];
         return isset($this[$group][$name]) ? $this[$group][$name] : null;
     }
 
