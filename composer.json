@@ -1,6 +1,7 @@
 {
     "name": "acquia/acquia-sdk-php",
     "type": "library",
+    "abandoned": "typhonius/acquia-php-sdk-v2",
     "description": "The Acquia SDK for PHP allows developers to build applications on top of Acquia services.",
     "keywords": ["acquia"],
     "homepage": "https://github.com/acquia/acquia-sdk-php",
