@@ -1,5 +1,7 @@
 ## NOTE: This repository is no longer actively maintained and has not been updated to support PHP 7.1
 
+Instead, please upgrade to [typhonius/acquia-php-sdk-v2](https://github.com/typhonius/acquia-php-sdk-v2).
+
 # Acquia SDK for PHP
 
 [![Build Status](https://travis-ci.org/acquia/acquia-sdk-php.svg?branch=master)](https://travis-ci.org/acquia/acquia-sdk-php)
