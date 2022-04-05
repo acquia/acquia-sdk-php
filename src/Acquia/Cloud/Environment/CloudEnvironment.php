@@ -18,6 +18,16 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
     /**
      * @var string
      */
+    private $sitename;
+
+    /**
+     * @var string
+     */
+    private $currentregion;
+
+    /**
+     * @var string
+     */
     private $filepath;
 
     /**
@@ -84,7 +94,7 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
     }
 
     /**
-     * @rturn string
+     * @return string
      *
      * @throws \UnexpectedValueException
      */
@@ -97,6 +107,60 @@ class CloudEnvironment extends Environment implements CloudEnvironmentInterface
             }
         }
         return $this->sitegroup;
+    }
+
+    /**
+     * @param string $sitename
+     *
+     * @return \Acquia\Cloud\Environment\CloudEnvironment
+     */
+    public function setSiteName($sitename)
+    {
+        $this->sitename = $sitename;
+        return $this;
+    }
+
+    /**
+     * @return string
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function getSiteName()
+    {
+        if (!isset($this->sitename)) {
+            $this->sitename = $this->getenv('AH_SITE_NAME');
+            if (!$this->sitename) {
+                throw new \UnexpectedValueException('Expecting environment variable AH_SITE_NAME to be set');
+            }
+        }
+        return $this->sitename;
+    }
+
+    /**
+     * @param string $currentregion
+     *
+     * @return \Acquia\Cloud\Environment\CloudEnvironment
+     */
+    public function setCurrentRegion($currentregion)
+    {
+        $this->currentregion = $currentregion;
+        return $this;
+    }
+
+    /**
+     * @return string
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function getCurrentRegion()
+    {
+        if (!isset($this->currentregion)) {
+            $this->currentregion = $this->getenv('AH_CURRENT_REGION');
+            if (!$this->currentregion) {
+                throw new \UnexpectedValueException('Expecting environment variable AH_CURRENT_REGION to be set');
+            }
+        }
+        return $this->currentregion;
     }
 
     /**
