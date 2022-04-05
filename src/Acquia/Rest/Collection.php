@@ -2,8 +2,6 @@
 
 namespace Acquia\Rest;
 
-use Guzzle\Http\Message\RequestInterface;
-
 class Collection extends \ArrayObject
 {
     /**
@@ -29,12 +27,20 @@ class Collection extends \ArrayObject
     protected $collectionProperty;
 
     /**
-     * @param \Guzzle\Http\Message\RequestInterface $request
+     * @param \GuzzleHttp\Psr7\Request|\Psr\Http\Message\ResponseInterface $dataSource
      */
-    public function __construct(RequestInterface $request)
+    public function __construct($dataSource)
     {
-        $this->response = $request->send();
-        parent::__construct($this->response->json());
+        if (is_a($dataSource, '\GuzzleHttp\Psr7\Request')) {
+            $this->response = $dataSource->send();
+        } elseif (is_a($dataSource, '\Psr\Http\Message\ResponseInterface')) {
+            $this->response = $dataSource;
+        } else {
+            throw new \InvalidArgumentException(
+                sprintf("%s can't be constructed using data from %s.", get_class($this), get_class($dataSource))
+            );
+        }
+        parent::__construct(json_decode($this->response->getBody(), TRUE));
     }
 
     /**
@@ -90,6 +96,6 @@ class Collection extends \ArrayObject
      */
     public function __toString()
     {
-        return $this->response->getBody(true);
+        return (string) $this->response->getBody();
     }
 }

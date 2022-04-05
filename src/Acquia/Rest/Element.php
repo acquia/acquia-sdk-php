@@ -2,8 +2,6 @@
 
 namespace Acquia\Rest;
 
-use Guzzle\Http\Message\Request;
-
 class Element extends \ArrayObject
 {
     /**
@@ -12,16 +10,18 @@ class Element extends \ArrayObject
     protected $idColumn = 'name';
 
     /**
-     * @param string|array|\Guzzle\Http\Message\Request $array
+     * @param string|array|\GuzzleHttp\Psr7\Request|\Psr\Http\Message\ResponseInterface $dataSource
      */
-    public function __construct($data)
+    public function __construct($dataSource)
     {
-        if ($data instanceof Request) {
-            $array = $data->send()->json();
-        } elseif (is_string($data)) {
-            $array = array($this->idColumn => $data);
+        if (is_a($dataSource, '\GuzzleHttp\Psr7\Request')) {
+            $array = json_decode($dataSource->send()->getBody(), TRUE);
+        } elseif (is_a($dataSource, '\Psr\Http\Message\ResponseInterface')) {
+            $array = json_decode($dataSource->getBody(), TRUE);
+        } elseif (is_string($dataSource)) {
+            $array = array($this->idColumn => $dataSource);
         } else {
-            $array = (array) $data;
+            $array = (array) $dataSource;
         }
         parent::__construct($array);
     }
